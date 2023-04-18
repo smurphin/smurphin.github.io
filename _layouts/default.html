@@ -11,8 +11,7 @@
   </head>
 
   <body>
-    {% include navigation.html %}
-
+    
     <header>
       <div class="container">
         <a id="a-title" href="{{ '/' | relative_url }}">
@@ -27,6 +26,14 @@
           {% endif %}
           <a href="{{ site.github.repository_url }}" class="btn btn-github"><span class="icon"></span>View on GitHub</a>
         </section>
+      </div>
+
+      <div class="container">
+        <!-- Header content -->
+      </div>
+    
+      <div style="text-align: center;">
+        {% include navigation.html %}
       </div>
     </header>
 
