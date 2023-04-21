@@ -29,7 +29,7 @@ Note: The bucket must already exist in the AWS account and must have a globally 
 
 Now you’re ready to initialise Terraform and have it ready to store state in a central S3 bucket.
 
-![Terminal output](./assets/images/terminal_output1.png)
+![Terminal output](/assets/images/terminal_output1.png)
 
 And that’s it, now when you make any changes to your Terraform config state will be synced to a central S3 bucket.
 
