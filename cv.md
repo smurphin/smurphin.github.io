@@ -1,5 +1,5 @@
 # CV
-[sourceFile](./cv/src/Darren_Murphy_CV.pdf)
+[sourceFile](./assets/files/Darren_Murphy_CV.pdf)
 
 <br/>
 
