@@ -20,7 +20,7 @@
 
 **DOB:** 6th October 1979 | **Nationality:** British | **Languages:** English (native), French (fluent)
 
-**Interests:** Triathlon, Running, Skiing, Climbing, Hiking, Chess, Theatre, Cinema, Cooking
+**Interests:** Triathlon, Running, Skiing, Climbing, Hiking, Chess, Theatre, Cinema, Cooking |
 
 ## **Summary** 
 
