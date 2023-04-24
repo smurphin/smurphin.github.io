@@ -31,6 +31,6 @@ Now you’re ready to initialise Terraform and have it ready to store state in a
 
 ![Terminal output](/assets/images/terminal_output1.png)
 
-And that’s it, now when you make any changes to your Terraform config state will be synced to a central S3 bucket.
+And that’s it, now when you make any changes to your Terraform config, the state will be synced to a central S3 bucket.
 
 I’ll add an example in here later on what to do if you’ve already been running with local state files.
