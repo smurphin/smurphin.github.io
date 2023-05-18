@@ -20,8 +20,3 @@ a {
     text-shadow: 0 0 5px rgba(104, 182, 255, 0.5);
   }
 
-ul li::before {
-    content: ">>";
-    color: royalblue;
-    margin-right: 5px;
-  }
