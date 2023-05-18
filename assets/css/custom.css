@@ -17,7 +17,7 @@ header h1 {
  
 a {
     color: royalblue;
-    text-shadow: 0 0 5px rgba(104, 182, 255, 0.5);
+    #text-shadow: 0 0 5px rgba(104, 182, 255, 0.5);
   }
 
 ul {
