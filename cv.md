@@ -1,3 +1,8 @@
+---
+layout: default
+title: CV
+---
+
 # CV
 [sourceFile](./assets/files/Darren_Murphy_CV.pdf)
 
