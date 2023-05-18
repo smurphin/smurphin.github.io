@@ -1,3 +1,11 @@
+---
+layout: post
+title:  "Configure Terraform to use an S3 backend"
+date:   2023-05-17
+categories: terraform azure AI OpenAI InfraAsCode IaC
+author: John Doe
+---
+
 # Automating Azure OpenAI Deployments with Terraform
 
 In this blog post, I'll explore an efficient way to deploy multiple Azure OpenAI instances with multiple models using Terraform. Azure OpenAI provides powerful artificial intelligence capabilities, including natural language processing and machine learning models.
