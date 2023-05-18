@@ -38,7 +38,7 @@ ul li::marker {
 header-logo {
     float: right;
     margin-top: 10px;
-    margin-right: 10px;
+    margin-left: 10px;
     width: 100px;
     height: 100px;
   }
