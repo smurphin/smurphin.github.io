@@ -2,7 +2,8 @@
 layout: post
 title:  "Configure Terraform to use an S3 backend"
 date:   2023-04-17
-categories: terraform azure AI OpenAI InfraAsCode IaC
+categories: terraform aws s3
+#author: John Doe
 ---
 
 Using S3 to store the Terraform state file allows multiple people in a team to work on the same Infra without risking the state file getting out of sync, it’s also really easy to set up.
