@@ -24,8 +24,3 @@ ul {
     list-style: none;
   }
 
-ul li::before {
-    content: ">>";
-    color: royalblue;
-    margin-right: 5px;
-  }
