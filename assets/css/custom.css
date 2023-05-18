@@ -21,7 +21,7 @@ a {
   }
 
 ul li {
-    list-style: none;
+    list-style-image: none;
   }
 
 ul li::before {
