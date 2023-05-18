@@ -1,5 +1,5 @@
-h1, h2, h3, h4, h5, h6 {
-    color: royalblue;
+header {
+    border-bottom: 1px dashed royalblue; //header;
   }
 
 header h1 {
@@ -14,3 +14,8 @@ header h1 {
 #main_content h6 {
   color: royalblue;
 }
+ 
+a {
+    color: pink;
+    text-shadow: 0 0 5px rgba(104, 182, 255, 0.5);
+  }
