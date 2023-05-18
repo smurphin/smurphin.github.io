@@ -22,3 +22,7 @@ a {
 ul {
     list-style: none;
   }
+
+ul li::before {
+    content: none;
+  }
