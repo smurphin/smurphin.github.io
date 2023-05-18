@@ -3,7 +3,7 @@ layout: post
 title:  "Configure Terraform to use an S3 backend"
 date:   2023-05-17
 categories: terraform azure AI OpenAI InfraAsCode IaC
-author: John Doe
+#author: John Doe
 ---
 
 # Automating Azure OpenAI Deployments with Terraform
