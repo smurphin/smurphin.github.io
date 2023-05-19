@@ -43,12 +43,12 @@ ul li::marker {
     height: 192px;
   }
 
-  .code.highlighter-rouge,
-  .punctuation,
-  .highlight,
-  .err {
+.code.highlighter-rouge,
+.punctuation,
+.highlight,
+.err {
     color: inherit;
     background-color: white;
-    /* Add any additional styles as needed */
+  /* Add any additional styles as needed */
   }
   
