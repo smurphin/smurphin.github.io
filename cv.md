@@ -6,9 +6,7 @@ title: CV
 # CV
 [sourceFile](./assets/files/Darren_Murphy_CV.pdf)
 
-<br/>
 
-- - -
 # **Darren Murphy**
 
 ### Chelmsford, Essex, UK 

@@ -3,7 +3,7 @@ layout: post
 title:  "Automating Azure OpenAI Deployments with Terraform"
 date:   2023-05-17
 categories: terraform azure AI OpenAI InfraAsCode IaC
-author: John Doe
+#author: John Doe
 ---
 
 In this blog post, I'll explore an efficient way to deploy multiple Azure OpenAI instances with multiple models using Terraform. Azure OpenAI provides powerful artificial intelligence capabilities, including natural language processing and machine learning models.
@@ -26,47 +26,228 @@ I needed a better way to automate this process.
 
 To overcome these challenges, I leveraged the power of Terraform and its ability to nest loops using locals. By defining a nested loop structure, I was able to create a clean and efficient solution.
 
-### Separating Files and Structure
+Before diving into the code, it's important to note that this blog post assumes you have some basic knowledge of Azure and Terraform. If you're new to Azure or Terraform, don't worry! The [Azure provider documentation](https://developer.hashicorp.com/terraform/tutorials/azure-get-started/azure-build) from HashiCorp provides a step-by-step guide on getting started with Azure and Terraform.
 
-To keep our Terraform code organized and modular, I separated it into multiple files. Here's an overview of our file structure:
+## Project Structure
 
-- `main.tf`: This file contains the main Terraform configuration, including the resource definitions and the nested loop structure.
+## Terraform Code Details
 
-- `locals.tf`: This file defines the locals used in our Terraform code, including the nested loop for cognitive deployments.
+To keep my Terraform project organized and modular, I divided it into multiple files. Here's an overview of the project structure:
 
-- `variables.tf`: This file defines the input variables used in our Terraform code, such as the deployments data structure.
 
-- `dev.tfvars`: This environment-specific file contains the values for the variables defined in `variables.tf`. It allows us to have different configurations for different environments (e.g., dev, prod).
+- `main.tf`: Contains the main Terraform configuration and provider settings.
+- `variables.tf`: Declares the variables used in the project, including the deployment configurations.
+- `dev.tfvars`: Environment-specific variables file for the development environment.
+- `locals.tf`: Defines the local values and logic for generating the cognitive deployments.
+- `resource-group.tf`:  Defines and manages the Azure resource group where the cognitive accounts and deployments will be organized and managed.
+- `dev-gpt-deployment.tf`:  Defines the configuraton for deployment of Azure cognitive accounts and OpenAI models within the accounts. 
 
-### Terraform Code Details
+Let's take a closer look at the key Terraform configuration files in the project.
 
-Here's an overview of the Terraform code used to automate the deployment of Azure OpenAI cognitive accounts and models:
+## `main.tf`
+
+In this file, I defined the Azure provider and its required version. I also configured additional provider features as needed. Here's a snippet of the `main.tf` file:
 
 ```hcl
-# main.tf
+terraform {
+  required_providers {
+    azurerm = {
+      source  = "hashicorp/azurerm"
+      version = "~> 3.54.0"
+    }
+  }
 
+  required_version = ">= 1.1.0"
+}
+
+provider "azurerm" {
+  features {}
+}
+```
+
+### `variables.tf`
+
+The variables.tf file defines the variables used throughout the project. It includes variables for the environment, subscription, resource group, deployments, allowed subnets, and model versions. Here's a snippet of the variables.tf file:
+
+```hcl
+variable "env" {}
+
+variable "subscription" {}
+
+variable "resource-group" {}
+
+variable "deployments" {
+  type = map(object({
+    location = string
+    models  = list(string)
+  }))
+}
+
+variable "allowed-subnets" {
+  default = []
+  type = list(string)
+}
+
+variable "model_versions" {
+  default = {
+    "gpt-35-turbo"     = "0301"
+    "code-davinci-002" = "1"
+    "gpt-4"            = "0314"
+  }
+  type = map(string)
+}
+
+```
+In the variables.tf file, the variables are defined using the following format:
+
+```hcl
+variable "<variable_name>" {
+  [type        = <variable_type>]
+  [default     = <default_value>]
+}
+```
+
+`<variable_name>`: This is the name of the variable you define. It should be unique within the file.
+`<variable_type>` (optional): It specifies the type of the variable, such as string, number, list, or map. If not specified, the variable type will be inferred based on the assigned value or the default value.
+`<default_value>` (optional): It represents the default value assigned to the variable if no other value is provided. If not specified, the variable is considered as required and must be provided during execution.
+
+If a variable does not have a default value defined, it means it is mandatory and must be passed to the Terraform command either directly on the command line or through a .tfvars file. 
+
+### `dev.tfvars`
+
+The `dev.tfvars` file is a Terraform variable file specifically tailored for the specific environment. It contains the values assigned to variables used in the Terraform configuration to customize and configure the infrastructure deployment for that specific environment.
+
+This file is written in plain text and follows the Terraform variable syntax. It allows you to specify values for variables defined in your Terraform configuration without modifying the actual code. By separating variable values into an external file, you can easily manage different environments and reuse the same Terraform codebase with different configurations.
+
+Here's a snippet of the `dev.tfvars` file:
+
+```hcl
+env = "dev"
+
+subscription = "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxx"
+
+resource-group = "DEV-GPT"
+
+deployments = {
+  "dev-gpt-EU-a" = {
+    location = "westeurope"
+    models  = ["gpt-35-turbo", "code-davinci-002"]
+  },
+
+  "dev-gpt-US-a" = {
+    location = "eastus"
+    models  = ["gpt-35-turbo", "gpt-4"]
+  }
+}
+
+allowed-subnets = [
+  "189.31.106.126",
+]
+```
+
+This is where the values for the variables defined in `variables.tf` are set, allowing us to use the same code for different environments.
+
+To use the `dev.tfvars` file, you can pass it to the Terraform command using the `-var-file option`. 
+For example:
+```bash
+terraform apply -var-file=dev.tfvars
+```
+
+### `locals.tf`
+
+The locals.tf file plays a crucial role in generating the cognitive deployments dynamically. It allows you to define local values and logic that can be used within your Terraform configuration. Let's dive into a detailed explanation of the `locals.tf` file.
+
+```hcl
 locals {
   cognitive_deployments = flatten([
     for deployment, values in var.deployments : [
       for model in values.models : {
         deployment_name        = deployment
-        cognitive_account_id  = azurerm_cognitive_account.AzureOAI[deployment].id
+        cognitive_account_id  = azurerm_cognitive_account.gpt-act[deployment].id
         model_name            = model
+        version               = var.model_versions[model]
       }
     ]
   ])
 }
+```
+1. The `cognitive_deployments` local value is defined as a flattened list generated using a nested for loop. This loop iterates over each deployment specified in the `var.deployments` variable, which contains the deployment configurations for each instance.
 
-resource "azurerm_cognitive_deployment" "jet-dev-gpt-deployment" {
+2. For each deployment, another nested for loop is used to iterate over the models specified in the `values.models` list. This loop generates a map for each model within the deployment.
+
+3. Within each map, the following values are assigned:
+   - `deployment_name`: The name of the deployment, which is set as the current deployment being iterated.
+   - `cognitive_account_id`: The Azure Cognitive Account ID, which is fetched using the `azurerm_cognitive_account.jet-gpt-act[deployment].id` expression. This retrieves the ID of the corresponding cognitive account based on the deployment name.
+   - `model_name`: The name of the model, which is set as the current model being iterated.
+   - `version`: The version of the model, which is fetched from the `var.model_versions` variable using the `var.model_versions[model]` expression. This retrieves the version based on the model name.
+
+4. The `cognitive_deployments` local value is generated as a flattened list, combining all the maps generated for each deployment and model. This results in a list of maps, where each map represents a specific cognitive deployment.
+
+You can use the `cognitive_deployments` local value in other parts of your Terraform configuration to reference the dynamically generated deployment configurations.
+
+## `resource-group.tf`
+
+The `resource-group.tf` file contains the definition of the Azure Resource Group resource using the `azurerm_resource_group` Terraform provider. This resource is responsible for creating and managing the Azure resource group in which the cognitive accounts and deployments will be deployed.
+
+```hcl
+resource "azurerm_resource_group" "gpt-rg" {
+    location = "westeurope" #Note: cognitive accounts can be deployed in different regions, this is just where the resource group exists
+    name     = "${var.env}-GPT"
+    tags     = {}
+
+    timeouts {}
+}
+```
+
+Explanation of the resource block:
+
+- `azurerm_resource_group`: Specifies the Azure Resource Group resource type using the `azurerm_resource_group` provider.
+- `"gpt-rg"`: Sets the resource name for referencing purposes within the Terraform configuration.
+- `location = "westeurope"`: Specifies the Azure region where the resource group will be created.
+- `name = "${var.env}-GPT"`: Sets the name of the resource group. The name is constructed using the value of the `var.env` variable, and then the `"GPT"` suffix. This allows for dynamic naming based on the environment specified in the variables.
+- `tags = {}`: Specifies any tags that should be associated with the resource group. In this case, an empty set of tags is provided, but you can customize it as per your requirements.
+- `timeouts {}`: Specifies the timeout configuration for resource operations. In this case, the default timeout values are used.
+
+The `resource-group.tf` allows for creating and managing the Azure resource group that serves as a logical container for the related resources. It ensures that all the cognitive accounts and deployments associated with the project are organized and managed within the specified resource group, providing better resource management, access control, and overall organization of resources in the Azure environment.
+
+## `dev-gpt-deployment.tf`
+
+The core deployment resources are defined in the `dev-gpt-deployment.tf` file. This file includes the `azurerm_cognitive_account` and `azurerm_cognitive_deployment` resource blocks. Here's a snippet of the `dev-gpt-deployment.tf` file:
+
+```hcl
+resource "azurerm_cognitive_account" "gpt-act" {
+    for_each = var.deployments
+    custom_subdomain_name              = each.key
+    dynamic_throttling_enabled         = false
+    kind                               = "OpenAI"
+    local_auth_enabled                 = true
+    location                           = each.value.location
+    name                               = each.key
+    outbound_network_access_restricted = false
+    public_network_access_enabled      = true
+    resource_group_name                = azurerm_resource_group.gpt-rg.name
+    sku_name                           = "S0"
+    tags                               = {}
+
+    network_acls {
+        default_action = "Deny"
+        ip_rules       = var.allowed-subnets
+    }
+
+    timeouts {}
+
+}
+
+resource "azurerm_cognitive_deployment" "dev-gpt-deployment" {
   for_each = { for idx, dep in local.cognitive_deployments : idx => dep }
 
   cognitive_account_id = each.value.cognitive_account_id
-  name                 = each.value.deployment_name
+  name                 = each.value.model_name
 
   model {
     format  = "OpenAI"
     name    = each.value.model_name
-    version = "0301"
+    version = each.value.version
   }
 
   scale {
@@ -75,13 +256,75 @@ resource "azurerm_cognitive_deployment" "jet-dev-gpt-deployment" {
 
   timeouts {}
 }
+
 ```
 
-In this code, we define a local variable `cognitive_deployments` that uses nested loops to generate a flattened list of cognitive deployment configurations. For each deployment in the `var.deployments` data structure, we iterate over its models and create a configuration object with the deployment name, cognitive account ID, and model name.
+### `azurerm_cognitive_account` Resource Block
 
-We then use the `for_each` meta-argument to iterate over the `cognitive_deployments` list and create a separate `azurerm_cognitive_deployment` resource block for each configuration. This allows us to dynamically create a cognitive deployment resource for each model in each deployment.
+The `azurerm_cognitive_account` resource block provisions a cognitive account in Azure for the GPT project. It uses the `for_each` meta-argument to iterate over the `var.deployments` variable, which contains a map of deployment configurations for different regions or environments.
 
-### Benefits and Making the Code DRY
+- `for_each`: Iterates over the `var.deployments` map to create a cognitive account for each deployment.
+- `custom_subdomain_name`: Specifies the custom subdomain name for the cognitive account i.e `dev-gpt-EU-a`.
+- `dynamic_throttling_enabled`: Determines if dynamic throttling is enabled for the cognitive account.
+- `kind`: Specifies the kind of cognitive service, which is set to "OpenAI" in this case.
+- `local_auth_enabled`: Indicates whether local authentication is enabled.
+- `location`: Specifies the location for the cognitive account, obtained from `each.value.location` i.e `westeurope`.
+- `name`: Sets the name of the cognitive account to `each.key`, which corresponds to the deployment key i.e `dev-gpt-EU-a`.
+- `outbound_network_access_restricted`: Specifies if outbound network access is restricted for the cognitive account.
+- `public_network_access_enabled`: Determines if public network access is enabled for the cognitive account.
+- `resource_group_name`: Specifies the name of the resource group where the cognitive account is created i.e `DEV-GPT`.
+- `sku_name`: Sets the SKU (service level) for the cognitive account to "S0".
+- `tags`: Specifies any tags to be associated with the cognitive account.
+- `network_acls`: Defines the network access control rules for the cognitive account, including the default action and IP rules.
+- `timeouts`: Configures timeouts for creating or updating the cognitive account.
+
+### `azurerm_cognitive_deployment` Resource Block
+
+The `azurerm_cognitive_deployment` resource block defines the deployment of cognitive models within the cognitive account. It uses the `for_each` meta-argument to iterate over the `local.cognitive_deployments` list, which contains the flattened list of deployment configurations.
+
+given the variables defined above in `variables.tf` and `dev.tfvars` we would end up with a flattened list like so
+
+```hcl
+locals {
+  cognitive_deployments = [
+    {
+      deployment_name       = "dev-gpt-EU-a"
+      cognitive_account_id  = "<cognitive-account-id>"
+      model_name            = "gpt-35-turbo"
+      version               = "0301"
+    },
+    {
+      deployment_name       = "dev-gpt-EU-a"
+      cognitive_account_id  = "<cognitive-account-id>"
+      model_name            = "code-davinci-002"
+      version               = "1"
+    },
+    {
+      deployment_name       = "dev-gpt-US-a"
+      cognitive_account_id  = "<cognitive-account-id>"
+      model_name            = "gpt-35-turbo"
+      version               = "0301"
+    },
+    {
+      deployment_name       = "dev-gpt-US-a"
+      cognitive_account_id  = "<cognitive-account-id>"
+      model_name            = "gpt-4"
+      version               = "0314"
+    }
+  ]
+}
+```
+i.e two deployments, each with specific model deployments relative to their region
+
+- `for_each`: Iterates over the `local.cognitive_deployments` list to create a cognitive deployment for each model within each deployment.
+- `cognitive_account_id`: Specifies the ID of the cognitive account associated with the deployment, obtained from `each.value.cognitive_account_id`. This is dynamicaly assigned `azurerm_cognitive_account` resource block
+- `name`: Sets the name of the cognitive deployment to `each.value.model_name`, which corresponds to the model.
+- `model`: Defines the cognitive model to be deployed, including its format, name, and version. The format is set to "OpenAI", and the name and version are obtained from `each.value.model_name` and `each.value.version`, respectively.
+- `scale`: Specifies the scale type for the deployment, which is set to "Standard" in this case.
+- `timeouts`: Configures timeouts for creating or updating the cognitive deployment.
+
+
+### Conclusion
 By using nested loops and locals, we achieved several benefits. First, we eliminated the need for repetitive resource blocks and reduced code duplication. Second, we improved maintainability by centralizing the deployment logic and reducing the chances of human error. Finally, our solution significantly reduced deployment time, allowing us to scale efficiently.
 
 In conclusion, leveraging Terraform's nested loops with locals provided a powerful and efficient solution for deploying multiple Azure OpenAI instances with multiple models. By automating the deployment process, we saved time, reduced errors, and improved maintainability. Now, we can focus on exploring the potential of Azure OpenAI without being weighed down by manual setup.
