@@ -50,11 +50,11 @@ ul li::marker {
     height: 192px;
   }
 
-code.highlighter-rouge .err,
-punctuation,
-highlight .err,
-highlight,
-err {
+.code.highlighter-rouge .err,
+.punctuation,
+.highlight .err,
+.highlight,
+.err {
     color: inherit;
     background-color: black;
   /* Add any additional styles as needed */
@@ -65,7 +65,7 @@ code.highlighter-rouge {
     color: royalblue;
   }
 
-important-statement {
+.important-statement {
     color: red;
     font-weight: bold;
   }

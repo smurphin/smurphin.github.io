@@ -332,7 +332,7 @@ locals {
   ]
 }
 ```
-**i.e two deployments, each with specific model deployments relative to their region**{: important-statement}.
+**i.e two deployments, each with specific model deployments relative to their region**{: .important-statement}.
 
 
 - `for_each`: Iterates over the `local.cognitive_deployments` list to create a cognitive deployment for each model within each deployment.
