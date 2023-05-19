@@ -13,6 +13,8 @@
     <meta charset='utf-8'>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="keywords" content="automation, AI, productivity, technology radar, cloud infrastructure, emerging technologies, IT industry, IaC, Infrastructure as code, Network as code, Network engineering, Infrastructure engineering, Ansible, Python, Cybersecurity, Infosec, IT, Github, git">
+    <meta name="description" content="Welcome to my blog where I share my knowledge and experience on automation, AI, and their practical applications in improving productivity. Stay up-to-date with the latest technology trends, cloud infrastructure, emerging technologies, and insights from the IT industry. Topics include Infrastructure as Code (IaC), Network as Code, Network engineering, Infrastructure engineering, Ansible, Python, Cybersecurity, Infosec, IT, Github, and git."> 
     <link rel="stylesheet" href="{{ '/assets/css/style.css?v=' | append: site.github.build_revision | relative_url }}">
     <link rel="stylesheet" href="{{ '/assets/css/custom.css' | relative_url }}">
     {% include head-custom.html %}
@@ -28,7 +30,7 @@
           <h1>{{ site.title | default: site.github.repository_name }}</h1>
         </a>
         <img src="{{ '/assets/images/skull_hacker1.png' | relative_url }}" class="header-logo" alt="Header Logo">
-        <h2>{{ site.description | default: site.github.project_tagline }}</h2>
+        <h2>{{ site.description_tagline | default: site.github.project_tagline }}</h2>
         
         <section id="downloads">
           {% if site.show_downloads %}

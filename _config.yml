@@ -20,13 +20,8 @@
 
 title: Darren Murphy
 email: email.darrenmurphy@gmail.com
-description: >- # this means to ignore newlines until "baseurl:"
+description_tagline: >- # this means to ignore newlines until "baseurl:"
  Full time network engineer, part time triathlete, technology lover.
- I'm passionate about automation and using AI to improve productivity. 
- I maintain a technology radar and regularly attend industry events to stay up-to-date. 
- Through this blog, I share my knowledge and experience on cloud infrastructure, emerging technologies, and their practical applications in the IT industry.
- IaC, Infrastructure as code, Network as code, Network engineering, Infrastructure engineering, Ansible, Python, Cybersecurity, Infosec, IT, Github, git.
-
 baseurl: "" # the subpath of your site, e.g. /blog
 url: "" # the base hostname & protocol for your site, e.g. http://example.com
 twitter_username: smurphin
