@@ -1,10 +1,10 @@
 header {
     border-bottom: none;
-    background: rgba(27, 27, 27, 255);
+    background: #303030;
   }
 
 body {
-    background: rgba(32, 33, 35, .5);
+    background: #303030;
   }
 
 header h1 {
