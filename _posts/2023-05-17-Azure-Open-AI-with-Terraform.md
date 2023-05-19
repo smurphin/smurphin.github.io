@@ -7,21 +7,21 @@ categories: terraform azure AI OpenAI InfraAsCode IaC
 ---
 In this blog post, I'll explore an efficient way to deploy multiple Azure OpenAI instances with multiple models using Terraform. Azure OpenAI provides powerful artificial intelligence capabilities, including natural language processing and machine learning models.
 
-- [{{ page.title }}](#-pagetitle-)
-  * [Introduction to Azure OpenAI](#introduction-to-azure-openai)
-    + [Azure OpenAI vs. OpenAI: What's the Difference?](#azure-openai-vs-openai-whats-the-difference)
-  * [The Challenge: Deploying Multiple Models to Multiple Cognitive Accounts](#the-challenge-deploying-multiple-models-to-multiple-cognitive-accounts)
-  * [The Solution: Nesting Loops with Terraform and Locals](#the-solution-nesting-loops-with-terraform-and-locals)
-  * [Project Structure](#project-structure)
-    + [main.tf](#maintf)
-    + [variables.tf](#variablestf)
-    + [dev.tfvars](#devtfvars)
-    + [locals.tf](#localstf)
-  * [resource-group.tf](#resource-grouptf)
-  * [gpt-deployment.tf](#gpt-deploymenttf)
-    + [azurerm_cognitive_account Resource Block](#azurerm_cognitive_account-resource-block)
-    + [azurerm_cognitive_deployment Resource Block](#azurerm_cognitive_deployment-resource-block)
-  * [Conclusion](#conclusion)
+- [Introduction to Azure OpenAI](#introduction-to-azure-openai)
+  * [Azure OpenAI vs. OpenAI: What's the Difference?](#azure-openai-vs-openai-whats-the-difference)
+- [The Challenge: Deploying Multiple Models to Multiple Cognitive Accounts](#the-challenge-deploying-multiple-models-to-multiple-cognitive-accounts)
+- [The Solution: Nesting Loops with Terraform and Locals](#the-solution-nesting-loops-with-terraform-and-locals)
+- [Project Structure](#project-structure)
+  * [main.tf](#maintf)
+  * [variables.tf](#variablestf)
+  * [dev.tfvars](#devtfvars)
+  * [locals.tf](#localstf)
+- [resource-group.tf](#resource-grouptf)
+- [gpt-deployment.tf](#gpt-deploymenttf)
+  * [azurerm_cognitive_account Resource Block](#azurerm_cognitive_account-resource-block)
+  * [azurerm_cognitive_deployment Resource Block](#azurerm_cognitive_deployment-resource-block)
+- [Conclusion](#conclusion)
+- [Reference code repository](#reference-code-repository)
 
 ## [Introduction to Azure OpenAI](#introduction-to-azure-openai)
 Azure OpenAI is a cloud-based service offered by Microsoft Azure that enables developers and data scientists to build and deploy cutting-edge artificial intelligence models. It provides a wide range of AI capabilities, including natural language understanding, sentiment analysis, text translation, image recognition, and more. Azure OpenAI leverages advanced machine learning algorithms to enable sophisticated AI-driven applications and solutions.
@@ -48,6 +48,8 @@ To overcome these challenges, I leveraged the power of Terraform and its ability
 Before diving into the code, it's important to note that this blog post assumes you have some basic knowledge of Azure and Terraform. I won't cover authenticating or connecting to your tenant. If you're new to Azure or Terraform, don't worry! The [Azure provider documentation](https://developer.hashicorp.com/terraform/tutorials/azure-get-started/azure-build) from HashiCorp provides a step-by-step guide on getting started with Azure and Terraform.
 
 ## [Project Structure](#project-structure)
+
+All the code referenced in this post can be found in the github repo [here](https://github.com/smurphin/azure-openai-terraform)
 
 To keep my Terraform project organized and modular, I divided it into multiple files. Here's an overview of the project structure:
 
@@ -360,3 +362,7 @@ Using Terraform now allows me to deploy multiple Cognitive accounts in different
 In conclusion, leveraging Terraform's nested loops with locals provided a powerful and efficient solution for deploying multiple Azure OpenAI instances with multiple models. By automating the deployment process, we saved time, reduced errors, and improved maintainability. Now, we can focus on exploring the potential of Azure OpenAI without being weighed down by manual setup.
 
 Happy Terraforming!
+
+## [Reference code repository](https://github.com/smurphin/azure-openai-terraform)
+
+All the code referenced above can be found [here](https://github.com/smurphin/azure-openai-terraform)
