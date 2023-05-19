@@ -1,5 +1,6 @@
 header {
     border-bottom: none;
+    background: rgba(0, 0, 0, 0.9);
   }
 
 header h1 {
@@ -44,11 +45,13 @@ ul li::marker {
   }
 
 .code.highlighter-rouge .err,
+.code.highlighter-rouge,
 .punctuation,
 .highlight .err,
+.highlight,
 .err {
     color: inherit;
-    background-color: lightgray;
+    background-color: black;
   /* Add any additional styles as needed */
   }
   
