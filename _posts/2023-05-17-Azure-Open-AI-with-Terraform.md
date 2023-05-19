@@ -5,8 +5,6 @@ date:   2023-05-17
 categories: terraform azure AI OpenAI InfraAsCode IaC
 #author: John Doe
 ---
-# {{ page.title }}
-
 In this blog post, I'll explore an efficient way to deploy multiple Azure OpenAI instances with multiple models using Terraform. Azure OpenAI provides powerful artificial intelligence capabilities, including natural language processing and machine learning models.
 
 - [{{ page.title }}](#-pagetitle-)
