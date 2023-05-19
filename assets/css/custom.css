@@ -18,6 +18,7 @@ header h1 {
 #main_content h5,
 #main_content h6 {
   color: royalblue;
+  text-shadow: none;
 }
  
 a {
