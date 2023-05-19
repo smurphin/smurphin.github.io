@@ -1,10 +1,10 @@
 header {
     border-bottom: none;
-    background: #202020;
+    background: #181818;
   }
 
 body {
-    background: #202020;
+    background: #181818;
   }
 
 header h1 {
@@ -48,13 +48,7 @@ ul li::marker {
     height: 192px;
   }
 
-code {
-   color: white;
-   background-color: black;
-  }
-
 .code.highlighter-rouge .err,
-.code.highlighter-rouge,
 .punctuation,
 .highlight .err,
 .highlight,
@@ -63,4 +57,8 @@ code {
     background-color: black;
   /* Add any additional styles as needed */
   }
-  
+
+.code.highlighter-rouge {
+    background-color: black;
+    color: white;
+  }
