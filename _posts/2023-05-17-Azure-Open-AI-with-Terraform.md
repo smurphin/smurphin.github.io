@@ -5,7 +5,6 @@ date:   2023-05-17
 categories: terraform azure AI OpenAI InfraAsCode IaC
 #author: John Doe
 ---
-# {{ page.title }}
 In this blog post, I'll explore an efficient way to deploy multiple Azure OpenAI instances with multiple models using Terraform. Azure OpenAI provides powerful artificial intelligence capabilities, including natural language processing and machine learning models.
 
 - [{{ page.title }}](#-pagetitle-)
@@ -19,7 +18,7 @@ In this blog post, I'll explore an efficient way to deploy multiple Azure OpenAI
     + [dev.tfvars](#devtfvars)
     + [locals.tf](#localstf)
   * [resource-group.tf](#resource-grouptf)
-  * [dev-gpt-deployment.tf](#dev-gpt-deploymenttf)
+  * [gpt-deployment.tf](#gpt-deploymenttf)
     + [azurerm_cognitive_account Resource Block](#azurerm_cognitive_account-resource-block)
     + [azurerm_cognitive_deployment Resource Block](#azurerm_cognitive_deployment-resource-block)
   * [Conclusion](#conclusion)
@@ -195,9 +194,11 @@ For each deployment, another nested for loop is used to iterate over the models 
 
  Within each map, the following values are assigned:
  - `deployment_name`: The name of the deployment, which is set as the current deployment being iterated.
- - `cognitive_account_id`: The Azure Cognitive Account ID, which is fetched using the `azurerm_cognitive_account.gpt-act[deployment].id` expression. This retrieves the ID of the corresponding cognitive account based on the deployment name.
+ - `cognitive_account_id`: The Azure Cognitive Account ID, which is fetched using the `azurerm_cognitive_account.gpt-act[deployment].id` expression. 
+  * This retrieves the ID of the corresponding cognitive account based on the deployment name.
  - `model_name`: The name of the model, which is set as the current model being iterated.
- - `version`: The version of the model, which is fetched from the `var.model_versions` variable using the `var.model_versions[model]` expression. This retrieves the version based on the model name.
+ - `version`: The version of the model, which is fetched from the `var.model_versions` variable using the `var.model_versions[model]` expression. 
+  * This retrieves the version based on the model name.
 
 The `cognitive_deployments` local value is generated as a flattened list, combining all the maps generated for each deployment and model
 
@@ -225,7 +226,8 @@ Explanation of the resource block:
 - `azurerm_resource_group`: Specifies the Azure Resource Group resource type using the `azurerm_resource_group` provider.
 - `"gpt-rg"`: Sets the resource name for referencing purposes within the Terraform configuration.
 - `location = "westeurope"`: Specifies the Azure region where the resource group will be created.
-- `name = "${var.env}-GPT"`: Sets the name of the resource group. The name is constructed using the value of the `var.env` variable, and then the `"GPT"` suffix. This allows for dynamic naming based on the environment specified in the variables.
+- `name = "${var.env}-GPT"`: Sets the name of the resource group. The name is constructed using the value of the `var.env` variable, and then the `"GPT"` suffix. 
+  * This allows for dynamic naming based on the environment specified in the variables.
 - `tags = {}`: Specifies any tags that should be associated with the resource group. In this case, an empty set of tags is provided, but you can customize it as per your requirements.
 - `timeouts {}`: Specifies the timeout configuration for resource operations. In this case, the default timeout values are used.
 
@@ -283,15 +285,19 @@ resource "azurerm_cognitive_deployment" "gpt-deployment" {
 The `azurerm_cognitive_account` resource block provisions a cognitive account in Azure for the GPT project. It uses the `for_each` meta-argument to iterate over the `var.deployments` variable, which contains a map of deployment configurations for different regions or environments.
 
 - `for_each`: Iterates over the `var.deployments` map to create a cognitive account for each deployment.
-- `custom_subdomain_name`: Specifies the custom subdomain name for the cognitive account i.e `dev-gpt-EU-a`.
+- `custom_subdomain_name`: Specifies the custom subdomain name for the cognitive account.
+  * i.e `dev-gpt-EU-a`.
 - `dynamic_throttling_enabled`: Determines if dynamic throttling is enabled for the cognitive account.
 - `kind`: Specifies the kind of cognitive service, which is set to "OpenAI" in this case.
 - `local_auth_enabled`: Indicates whether local authentication is enabled.
-- `location`: Specifies the location for the cognitive account, obtained from `each.value.location` i.e `westeurope`.
-- `name`: Sets the name of the cognitive account to `each.key`, which corresponds to the deployment name i.e `dev-gpt-EU-a`.
+- `location`: Specifies the location for the cognitive account, obtained from `each.value.location`.
+  * i.e `westeurope`.
+- `name`: Sets the name of the cognitive account to `each.key`, which corresponds to the deployment name.
+  * i.e `dev-gpt-EU-a`.
 - `outbound_network_access_restricted`: Specifies if outbound network access is restricted for the cognitive account.
 - `public_network_access_enabled`: Determines if public network access is enabled for the cognitive account.
-- `resource_group_name`: Specifies the name of the resource group where the cognitive account is created i.e `DEV-GPT`.
+- `resource_group_name`: Specifies the name of the resource group where the cognitive account is created.
+  * i.e `DEV-GPT`.
 - `sku_name`: Sets the SKU (service level) for the cognitive account to "S0".
 - `tags`: Specifies any tags to be associated with the cognitive account.
 - `network_acls`: Defines the network access control rules for the cognitive account, including the default action and IP rules.
@@ -340,7 +346,7 @@ locals {
 - `cognitive_account_id`: Specifies the ID of the cognitive account associated with the deployment, obtained from `each.value.cognitive_account_id`. This is dynamicaly assigned when the `azurerm_cognitive_account` resource block is deployed.
 - `name`: Sets the name of the cognitive deployment to `each.value.model_name`, which corresponds to the model.
 - `model`: Defines the cognitive model to be deployed, including its format, name, and version. The format is set to "OpenAI", and the name and version are obtained from 
-  -`each.value.model_name` and `each.value.version`, respectively.
+  * `each.value.model_name` and `each.value.version`, respectively.
 - `scale`: Specifies the scale type for the deployment, which is set to "Standard" in this case.
 - `timeouts`: Configures timeouts for creating or updating the cognitive deployment.
 
