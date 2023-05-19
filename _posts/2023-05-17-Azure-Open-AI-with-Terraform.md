@@ -21,7 +21,7 @@ In this blog post, I'll explore an efficient way to deploy multiple Azure OpenAI
   * [azurerm_cognitive_account Resource Block](#azurerm_cognitive_account-resource-block)
   * [azurerm_cognitive_deployment Resource Block](#azurerm_cognitive_deployment-resource-block)
 - [Conclusion](#conclusion)
-- [Reference code repository](#reference-code-repository)
+- [Reference code repository](https://github.com/smurphin/azure-openai-terraform)
 
 ## [Introduction to Azure OpenAI](#introduction-to-azure-openai)
 Azure OpenAI is a cloud-based service offered by Microsoft Azure that enables developers and data scientists to build and deploy cutting-edge artificial intelligence models. It provides a wide range of AI capabilities, including natural language understanding, sentiment analysis, text translation, image recognition, and more. Azure OpenAI leverages advanced machine learning algorithms to enable sophisticated AI-driven applications and solutions.
