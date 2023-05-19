@@ -42,3 +42,8 @@ ul li::marker {
     width: 192px;
     height: 192px;
   }
+
+.code.highlighter-rouge .punctuation {
+    color: inherit;
+    /* Add any additional styles as needed */
+  }
