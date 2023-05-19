@@ -48,7 +48,7 @@ ul li::marker {
 .highlight,
 .err {
     color: inherit;
-    background-color: white;
+    background-color: grey;
   /* Add any additional styles as needed */
   }
   
