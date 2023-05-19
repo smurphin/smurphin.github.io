@@ -57,7 +57,7 @@ To keep my Terraform project organized and modular, I divided it into multiple f
 - [dev.tfvars](#devtfvars): Environment-specific variables file for the development environment.
 - [locals.tf](#localstf): Defines the local values and logic for generating the cognitive deployments.
 - [resource-group.tf](#resource-grouptf): Defines and manages the Azure resource group where the cognitive accounts and deployments will be organized and managed.
-- [dev-gpt-deployment.tf](#dev-gpt-deploymenttf): Defines the configuration for deployment of Azure cognitive accounts and OpenAI models within the accounts.
+- [gpt-deployment.tf](#gpt-deploymenttf): Defines the configuration for deployment of Azure cognitive accounts and OpenAI models within the accounts.
 
 Let's take a closer look at the key Terraform configuration files in the project.
 
@@ -195,7 +195,7 @@ For each deployment, another nested for loop is used to iterate over the models 
 
  Within each map, the following values are assigned:
  - `deployment_name`: The name of the deployment, which is set as the current deployment being iterated.
- - `cognitive_account_id`: The Azure Cognitive Account ID, which is fetched using the `azurerm_cognitive_account.jet-gpt-act[deployment].id` expression. This retrieves the ID of the corresponding cognitive account based on the deployment name.
+ - `cognitive_account_id`: The Azure Cognitive Account ID, which is fetched using the `azurerm_cognitive_account.gpt-act[deployment].id` expression. This retrieves the ID of the corresponding cognitive account based on the deployment name.
  - `model_name`: The name of the model, which is set as the current model being iterated.
  - `version`: The version of the model, which is fetched from the `var.model_versions` variable using the `var.model_versions[model]` expression. This retrieves the version based on the model name.
 
@@ -229,9 +229,9 @@ Explanation of the resource block:
 - `tags = {}`: Specifies any tags that should be associated with the resource group. In this case, an empty set of tags is provided, but you can customize it as per your requirements.
 - `timeouts {}`: Specifies the timeout configuration for resource operations. In this case, the default timeout values are used.
 
-## [dev-gpt-deployment.tf](#dev-gpt-deploymenttf)
+## [gpt-deployment.tf](#gpt-deploymenttf)
 
-The core deployment resources are defined in the `dev-gpt-deployment.tf` file. This file includes the `azurerm_cognitive_account` and `azurerm_cognitive_deployment` resource blocks. Here's a snippet of the `dev-gpt-deployment.tf` file:
+The core deployment resources are defined in the `gpt-deployment.tf` file. This file includes the `azurerm_cognitive_account` and `azurerm_cognitive_deployment` resource blocks. Here's a snippet of the `gpt-deployment.tf` file:
 
 ```hcl
 resource "azurerm_cognitive_account" "gpt-act" {
@@ -257,7 +257,7 @@ resource "azurerm_cognitive_account" "gpt-act" {
 
 }
 
-resource "azurerm_cognitive_deployment" "dev-gpt-deployment" {
+resource "azurerm_cognitive_deployment" "gpt-deployment" {
   for_each = { for idx, dep in local.cognitive_deployments : idx => dep }
 
   cognitive_account_id = each.value.cognitive_account_id
