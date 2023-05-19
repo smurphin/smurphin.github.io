@@ -3,6 +3,10 @@ header {
     background: rgba(27, 27, 27, 255);
   }
 
+body {
+    background: rgba(32, 33, 35, .5);
+  }
+
 header h1 {
     color: royalblue;
   }
@@ -42,6 +46,11 @@ ul li::marker {
     margin-left: 10px;
     width: 192px;
     height: 192px;
+  }
+
+code {
+   color: white;
+   background-color: black;
   }
 
 .code.highlighter-rouge .err,
