@@ -66,6 +66,8 @@ Let's take a closer look at the key Terraform configuration files in the project
 
 In this file, I defined the Azure provider and its required version. I also configured additional provider features as needed. Here's a snippet of the `main.tf` file:
 
+<div>
+
 ```hcl
 terraform {
   required_providers {
@@ -82,6 +84,8 @@ provider "azurerm" {
   features {}
 }
 ```
+  <button class="copy-button" data-clipboard-target="pre"><span>Copy</span></button>
+<\div>
 
 ### [variables.tf](https://github.com/smurphin/azure-openai-terraform/blob/main/variables.tf){:target="_blank"}
 
