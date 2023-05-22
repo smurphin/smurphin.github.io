@@ -85,7 +85,9 @@ provider "azurerm" {
 }
 ```
   <button class="copy-button" data-clipboard-target="pre"><span>Copy</span></button>
-<\div>
+
+</div>
+
 
 ### [variables.tf](https://github.com/smurphin/azure-openai-terraform/blob/main/variables.tf){:target="_blank"}
 
