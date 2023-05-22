@@ -53,12 +53,12 @@ All the code referenced in this post can be found in the github repo [here](http
 
 To keep my Terraform project organized and modular, I divided it into multiple files. Here's an overview of the project structure:
 
-- [main.tf](#maintf): Contains the main Terraform configuration and provider settings.
-- [variables.tf](#variablestf): Declares the variables used in the project, including the deployment configurations.
-- [dev.tfvars](#devtfvars): Environment-specific variables file for the development environment.
-- [locals.tf](#localstf): Defines the local values and logic for generating the cognitive deployments.
-- [resource-group.tf](#resource-grouptf): Defines and manages the Azure resource group where the cognitive accounts and deployments will be organized and managed.
-- [gpt-deployment.tf](#gpt-deploymenttf): Defines the configuration for deployment of Azure cognitive accounts and OpenAI models within the accounts.
+- [main.tf](https://github.com/smurphin/azure-openai-terraform/blob/main/main.tf): Contains the main Terraform configuration and provider settings.
+- [variables.tf](https://github.com/smurphin/azure-openai-terraform/blob/main/variables.tf): Declares the variables used in the project, including the deployment configurations.
+- [dev.tfvars](https://github.com/smurphin/azure-openai-terraform/blob/main/environments/development/dev.tfvars): Environment-specific variables file for the development environment.
+- [locals.tf](https://github.com/smurphin/azure-openai-terraform/blob/main/locals.tf): Defines the local values and logic for generating the cognitive deployments.
+- [resource-group.tf](https://github.com/smurphin/azure-openai-terraform/blob/main/resource-group.tf): Defines and manages the Azure resource group where the cognitive accounts and deployments will be organized and managed.
+- [gpt-deployment.tf](https://github.com/smurphin/azure-openai-terraform/blob/main/gpt-deployment.tf): Defines the configuration for deployment of Azure cognitive accounts and OpenAI models within the accounts.
 
 Let's take a closer look at the key Terraform configuration files in the project.
 
