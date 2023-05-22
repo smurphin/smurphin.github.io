@@ -62,7 +62,7 @@ To keep my Terraform project organized and modular, I divided it into multiple f
 
 Let's take a closer look at the key Terraform configuration files in the project.
 
-### [main.tf](https://github.com/smurphin/azure-openai-terraform/blob/main/main.tf)
+### [main.tf](https://github.com/smurphin/azure-openai-terraform/blob/main/main.tf){:target="_blank"}
 
 In this file, I defined the Azure provider and its required version. I also configured additional provider features as needed. Here's a snippet of the `main.tf` file:
 
@@ -83,7 +83,7 @@ provider "azurerm" {
 }
 ```
 
-### [variables.tf](https://github.com/smurphin/azure-openai-terraform/blob/main/variables.tf)
+### [variables.tf](https://github.com/smurphin/azure-openai-terraform/blob/main/variables.tf){:target="_blank"}
 
 The `variables.tf` file defines the variables used throughout the project. It includes variables for the environment, subscription, resource group, deployments, allowed subnets, and model versions. Here's a snippet of the `variables.tf` file:
 
@@ -131,7 +131,7 @@ variable "<variable_name>" {
 
 **If a variable does not have a default value defined, it means it is mandatory and must be passed to the Terraform command either directly on the command line or through a `.tfvars` file.**{: .important-statement}
 
-### [dev.tfvars](https://github.com/smurphin/azure-openai-terraform/blob/main/environments/development/dev.tfvars)
+### [dev.tfvars](https://github.com/smurphin/azure-openai-terraform/blob/main/environments/development/dev.tfvars){:target="_blank"}
 
 The `dev.tfvars` file is a Terraform variable file tailored for the specific environment. It contains the values assigned to variables used in the Terraform configuration to customize and configure the infrastructure deployment for that environment.
 
@@ -171,7 +171,7 @@ For example:
 terraform apply -var-file=dev.tfvars
 ```
 
-### [locals.tf](https://github.com/smurphin/azure-openai-terraform/blob/main/locals.tf)
+### [locals.tf](https://github.com/smurphin/azure-openai-terraform/blob/main/locals.tf){:target="_blank"}
 
 The `locals.tf` file plays a crucial role in generating the cognitive deployments dynamically. It allows you to define local values and logic that can be used within your Terraform configuration. Let's dive into a detailed explanation of the `locals.tf` file.
 
@@ -208,7 +208,7 @@ This results in a list of maps, where each map represents a specific cognitive d
 
 You can use the `cognitive_deployments` local value in other parts of your Terraform configuration to reference the dynamically generated deployment configurations.
 
-## [resource-group.tf](https://github.com/smurphin/azure-openai-terraform/blob/main/resource-group.tf)
+## [resource-group.tf](https://github.com/smurphin/azure-openai-terraform/blob/main/resource-group.tf){:target="_blank"}
 
 The `resource-group.tf` file contains the definition of the Azure Resource Group resource using the `azurerm_resource_group` Terraform provider. This serves as a logical container for the related resources. It ensures that all the cognitive accounts and deployments associated with the project are organized and managed within the specified resource group, providing better resource management, access control, and overall organization of resources in the Azure environment.
 
@@ -233,7 +233,7 @@ Explanation of the resource block:
 - `tags = {}`: Specifies any tags that should be associated with the resource group. In this case, an empty set of tags is provided, but you can customize it as per your requirements.
 - `timeouts {}`: Specifies the timeout configuration for resource operations. In this case, the default timeout values are used.
 
-## [gpt-deployment.tf](https://github.com/smurphin/azure-openai-terraform/blob/main/gpt-deployment.tf)
+## [gpt-deployment.tf](https://github.com/smurphin/azure-openai-terraform/blob/main/gpt-deployment.tf){:target="_blank"}
 
 The core deployment resources are defined in the `gpt-deployment.tf` file. This file includes the `azurerm_cognitive_account` and `azurerm_cognitive_deployment` resource blocks. Here's a snippet of the `gpt-deployment.tf` file:
 
@@ -282,7 +282,7 @@ resource "azurerm_cognitive_deployment" "gpt-deployment" {
 
 ```
 
-### [azurerm_cognitive_account Resource Block](https://github.com/smurphin/azure-openai-terraform/blob/7c41318e3b761a6c2dca9f5decdc18742a021ff3/gpt-deployment.tf#L1)
+### [azurerm_cognitive_account Resource Block](https://github.com/smurphin/azure-openai-terraform/blob/7c41318e3b761a6c2dca9f5decdc18742a021ff3/gpt-deployment.tf#L1){:target="_blank"}
 
 The `azurerm_cognitive_account` resource block provisions a cognitive account in Azure for the GPT project. It uses the `for_each` meta-argument to iterate over the `var.deployments` variable, which contains a map of deployment configurations for different regions or environments.
 
@@ -305,7 +305,7 @@ The `azurerm_cognitive_account` resource block provisions a cognitive account in
 - `network_acls`: Defines the network access control rules for the cognitive account, including the default action and IP rules.
 - `timeouts`: Configures timeouts for creating or updating the cognitive account.
 
-### [azurerm_cognitive_deployment Resource Block](https://github.com/smurphin/azure-openai-terraform/blob/7c41318e3b761a6c2dca9f5decdc18742a021ff3/gpt-deployment.tf#L24)
+### [azurerm_cognitive_deployment Resource Block](https://github.com/smurphin/azure-openai-terraform/blob/7c41318e3b761a6c2dca9f5decdc18742a021ff3/gpt-deployment.tf#L24){:target="_blank"}
 
 The `azurerm_cognitive_deployment` resource block defines the deployment of cognitive models within the cognitive account. It uses the `for_each` meta-argument to iterate over the `local.cognitive_deployments` list, which contains the flattened list of deployment configurations.
 
