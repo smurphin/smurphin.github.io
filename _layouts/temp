@@ -66,15 +66,15 @@
     
           var button = document.createElement('button');
           button.className = 'btn-copy';
-          button.innerHTML = '<i class="far fa-clipboard"></i> Copy';
+          button.innerHTML = '<i class="far fa-clipboard"></i>  Copy';
           button.addEventListener('click', function() {
             var codeText = codeBlock.innerText;
     
             navigator.clipboard.writeText(codeText).then(function() {
-              button.innerHTML = '<i class="fas fa-check"></i> Copied';
+              button.textContent = 'Copied';
     
               setTimeout(function() {
-                button.innerHTML = '<i class="far fa-clipboard"></i> Copy';
+                button.textContent = 'Copy';
               }, 2000);
             }).catch(function(error) {
               console.error('Copy failed:', error);
