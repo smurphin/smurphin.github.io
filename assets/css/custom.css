@@ -96,3 +96,10 @@ code.highlighter-rouge {
     color: red;
     font-weight: normal;
   }
+
+img[alt='centered'] {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+  

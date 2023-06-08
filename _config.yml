@@ -23,7 +23,7 @@ email: email.darrenmurphy@gmail.com
 description_tagline: >- # this means to ignore newlines until "baseurl:"
  Full time network engineer, part time triathlete, technology lover.
 baseurl: "" # the subpath of your site, e.g. /blog
-url: "" # the base hostname & protocol for your site, e.g. http://example.com
+url: "https://smurphin.github.io/" # the base hostname & protocol for your site, e.g. http://example.com
 twitter_username: smurphin
 github_username:  smurphin
 google_analytics: G-42GGHBDXW6

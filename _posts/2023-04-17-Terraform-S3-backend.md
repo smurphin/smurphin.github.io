@@ -8,10 +8,13 @@ categories: terraform aws s3
 
 Using S3 to store the Terraform state file allows multiple people in a team to work on the same Infra without risking the state file getting out of sync, it’s also really easy to set up.
 
-For the purpose of this post I’ll just be running Terraform from my local machine and setting AWS credentials for my session, but it’s more secure (and flexible) to use an AWS IAM role and for your CI tool to assume that role.
+For the purpose of this post I’ll just be running Terraform from my local machine and setting AWS credentials for my session, check out [this]({{ site.baseurl }}{% post_url 2023-06-01-Get-setup-to-use-terraform-with-aws %})
+ post for more details on how I set that up.
+
 ```
  export AWS_ACCESS_KEY_ID=your_access_key_here
  export AWS_SECRET_ACCESS_KEY=your_secret_key_here
+
 ```
 Note: Adding a space in front of the EXPORT statement keeps the command out of your Bash history
 
@@ -25,6 +28,7 @@ terraform {
     region       = "eu-west-1"
   }
 }
+
 ```
 Note: The bucket must already exist in the AWS account and must have a globally unique name
 

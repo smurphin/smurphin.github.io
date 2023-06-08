@@ -1,89 +1,16 @@
-<!DOCTYPE html>
-<html lang="{{ site.lang | default: "en-US" }}">
-  <head>
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-42GGHBDXW6"></script>
-    <script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
 
-  gtag('config', 'G-42GGHBDXW6');
-    </script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.8/clipboard.min.js"></script>
-    <meta charset='utf-8'>
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="keywords" content="automation, AI, productivity, technology radar, cloud infrastructure, emerging technologies, IT industry, IaC, Infrastructure as code, Network as code, Network engineering, Infrastructure engineering, Ansible, Python, Cybersecurity, Infosec, IT, Github, git">
-    <meta name="description" content="Welcome to my blog where I share my knowledge and experience on automation, AI, and their practical applications in improving productivity. Stay up-to-date with the latest technology trends, cloud infrastructure, emerging technologies, and insights from the IT industry. Topics include Infrastructure as Code (IaC), Network as Code, Network engineering, Infrastructure engineering, Ansible, Python, Cybersecurity, Infosec, IT, Github, and git."> 
-    <link rel="stylesheet" href="{{ '/assets/css/style.css?v=' | append: site.github.build_revision | relative_url }}">
-    <link rel="stylesheet" href="{{ '/assets/css/custom.css' | relative_url }}">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-    {% include head-custom.html %}
+terraform apply -var-file=dev.tfvars
 
-{% seo %}
-  </head>
-    
-  <body>
-    
-    <header>
-      <div class="container">
-        <a id="a-title" href="{{ '/' | relative_url }}">
-          <h1>{{ site.title | default: site.github.repository_name }}</h1>
-        </a>
-        <img src="{{ '/assets/images/skull_hacker1.png' | relative_url }}" class="header-logo" alt="Header Logo">
-        <h2>{{ site.description_tagline | default: site.github.project_tagline }}</h2>
-        
-        <section id="downloads">
-          {% if site.show_downloads %}
-            <a href="{{ site.github.zip_url }}" class="btn">Download as .zip</a>
-            <a href="{{ site.github.tar_url }}" class="btn">Download as .tar.gz</a>
-          {% endif %}
-          <a href="{{ site.github.repository_url }}" class="btn btn-github"><span class="icon"></span>View on GitHub</a>
-        </section>
-      </div>
-
-      <div class="container">
-        <!-- Header content -->
-      </div>
-    
-      <div style="text-align: center;">
-        {% include navigation.html %}
-      </div>
-    </header>
-
-    <div class="container">
-      <section id="main_content">
-        {{ content }}
-      </section>
-    </div>
-    <script>
-      document.addEventListener('DOMContentLoaded', function() {
-        var codeBlocks = document.querySelectorAll('pre code');
-    
-        codeBlocks.forEach(function(codeBlock) {
-          var parentElement = codeBlock.parentNode;
-    
-          var button = document.createElement('button');
-          button.className = 'btn-copy';
-          button.innerHTML = '<i class="far fa-clipboard"></i>  Copy';
-          button.addEventListener('click', function() {
-            var codeText = codeBlock.innerText;
-    
-            navigator.clipboard.writeText(codeText).then(function() {
-              button.textContent = 'Copied';
-    
-              setTimeout(function() {
-                button.textContent = 'Copy';
-              }, 2000);
-            }).catch(function(error) {
-              console.error('Copy failed:', error);
-            });
-          });
-    
-          parentElement.insertBefore(button, codeBlock);
-        });
-      });
-    </script>
-  </body>
-</html>
+locals {
+    cognitive_deployments = flatten([
+      for deployment, values in var.deployments : [
+        for model in values.models : {
+          deployment_name        = deployment
+          cognitive_account_id  = azurerm_cognitive_account.gpt-act[deployment].id
+          model_name            = model
+          version               = var.model_versions[model]
+        }
+      ]
+    ])
+  }
+  
