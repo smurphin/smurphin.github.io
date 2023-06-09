@@ -7,7 +7,9 @@ short_title: AWS Network with Terraform
 tags: [AWS, Networking, IaC, Infrastructure, Terraform]
 #author: John Doe
 ---
-Amazon Web Services (AWS) offers a wide range of cloud computing services, one of which is networking. In this post, I'll go over the fundamentals of setting up a basic but robust and scalable network infrastructure using AWS and Terraform. To begin I'll cover the creation of a single Virtual Private Cloud (VPC), configuration of multiple Availability Zones (AZs), setting up public and private subnets, in a single region, I'll then look at adding an Internet Gateway, and Network Address Translation (NAT) Gateways.
+Amazon Web Services (AWS) offers a wide range of cloud computing services, one of which is networking. In this post, I'll go over the fundamentals of setting up a basic but robust and scalable network infrastructure using AWS and Terraform. 
+
+To begin I'll cover the creation of a single Virtual Private Cloud (VPC), configuration of multiple Availability Zones (AZs), setting up public and private subnets, in a single region, I'll then look at adding an Internet Gateway, and Network Address Translation (NAT) Gateways.
 
 ## AWS Networking: An Overview
 

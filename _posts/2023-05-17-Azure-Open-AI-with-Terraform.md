@@ -7,7 +7,9 @@ short_title: Azure OpenAI with Terraform
 tags: [Azure, Open AI, AI, IaC, Infrastructure, Terraform]
 #author: John Doe
 ---
-In this blog post, I'll explore an efficient way to deploy multiple Azure OpenAI instances with multiple models using Terraform. Azure OpenAI provides powerful artificial intelligence capabilities, including natural language processing and machine learning models.
+In this blog post, I'll explore an efficient way to deploy multiple Azure OpenAI instances with multiple models using Terraform. 
+
+Azure OpenAI provides powerful artificial intelligence capabilities, including natural language processing and machine learning models.
 
 - [Introduction to Azure OpenAI](#introduction-to-azure-openai)
   * [Azure OpenAI vs. OpenAI: What's the Difference?](#azure-openai-vs-openai-whats-the-difference)
