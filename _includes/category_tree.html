@@ -1,0 +1,48 @@
+{% comment %}
+  This code creates a nested list of categories and their associated posts.
+  It only supports one level of subcategories (e.g., Parent/Child).
+{% endcomment %}
+{% assign sorted_posts = site.posts | sort: 'title' %}
+{% assign unique_categories = "" | split: "|" %}
+
+{% for post in sorted_posts %}
+  {% for category in post.categories %}
+    {% unless unique_categories contains category %}
+      {% assign unique_categories = unique_categories | push: category %}
+    {% endunless %}
+  {% endfor %}
+{% endfor %}
+
+{% assign unique_categories = unique_categories | sort %}
+
+<ul class="category-list">
+  {% for category in unique_categories %}
+    {% assign parts = category | split: '/' %}
+    {% if parts[1] %}
+      <li class="category-item">
+        <details>
+          <summary>{{ parts[0] }}</summary>
+          <ul>
+            <li>{{ parts[1] }}</li>
+            <ul class="post-list">
+              {% for post in site.categories[category] %}
+                <li><a href="{{ post.url }}">{{ post.short_title | default: post.title }}</a></li>
+              {% endfor %}
+            </ul>
+          </ul>
+        </details>
+      </li>
+    {% else %}
+      <li class="category-item">
+        <details>
+          <summary>{{ parts[0] }}</summary>
+          <ul class="post-list">
+            {% for post in site.categories[category] %}
+              <li><a href="{{ post.url }}">{{ post.short_title | default: post.title }}</a></li>
+            {% endfor %}
+          </ul>
+        </details>
+      </li>
+    {% endif %}
+  {% endfor %}
+</ul>

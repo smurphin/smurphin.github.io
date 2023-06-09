@@ -2,7 +2,9 @@
 layout: post
 title:  "Configure Terraform to use an S3 backend"
 date:   2023-04-17
-categories: terraform aws s3
+categories: Terraform AWS
+short_title: S3 backend with Terraform
+tags: [AWS, S3, Terraform]
 #author: John Doe
 ---
 

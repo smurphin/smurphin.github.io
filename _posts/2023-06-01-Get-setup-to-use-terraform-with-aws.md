@@ -2,7 +2,9 @@
 layout: post
 title:  "Getting setup to use Terraform to manage AWS resources"
 date:   2023-06-01
-categories: terraform
+categories: Terraform AWS
+short_title: Use Terraform with AWS
+tags: [AWS, IaC, Infrastructure, Terraform]
 #author: John Doe
 ---
 A short post describing how to configure an IAM role for Terraform to interact with AWS.

@@ -43,20 +43,26 @@
           <a href="{{ site.github.repository_url }}" class="btn btn-github"><span class="icon"></span>View on GitHub</a>
         </section>
       </div>
+      <div style="text-align: right;">
+        {% include navigation.html %}
+      </div>
 
       <div class="container">
         <!-- Header content -->
       </div>
     
-      <div style="text-align: right;">
-        {% include navigation.html %}
-      </div>
+      
     </header>
 
-    <div class="container">
-      <section id="main_content">
-        {{ content }}
-      </section>
+    <div class="container main-container">
+      <div id="main-area">
+        <section id="main_content">
+          {{ content }}
+        </section>
+      </div>
+      <aside id="categories">
+        {% include category_tree.html %}
+      </aside>      
     </div>
     <script>
       document.addEventListener('DOMContentLoaded', function() {
@@ -86,5 +92,21 @@
         });
       });
     </script>
+    <script>
+      document.addEventListener('DOMContentLoaded', (event) => {
+        let categories = document.querySelectorAll('.category-item');
+      
+        categories.forEach((category) => {
+          category.addEventListener('click', (event) => {
+            let posts = category.querySelector('.category-posts');
+            if (posts.style.display === "none") {
+              posts.style.display = "block";
+            } else {
+              posts.style.display = "none";
+            }
+          });
+        });
+      });
+      </script>     
   </body>
 </html>

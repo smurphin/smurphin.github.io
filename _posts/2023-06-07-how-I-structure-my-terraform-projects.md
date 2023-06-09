@@ -2,7 +2,9 @@
 layout: post
 title:  "How I structure my Terraform projects"
 date:   2023-06-07
-categories: terraform
+categories: Terraform
+short_title: Terraform project structure
+tags: [IaC, Infrastructure, Terraform]
 #author: John Doe
 ---
 Harnessing the power of Terraform, we segment resources and utilize environment-specific `tfvars` for a nimble, scalable, and collaborative infrastructure management experience.

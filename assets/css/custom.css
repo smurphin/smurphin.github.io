@@ -102,4 +102,32 @@ img[alt='centered'] {
   margin-left: auto;
   margin-right: auto;
 }
-  
+
+.main-container {
+  display: flex;
+  justify-content: space-between;
+  max-width: 1600px;
+  margin: auto;
+}
+
+#main-area {
+  flex: 70%; /* Adjust as necessary */
+  /* Additional styles as necessary */
+}
+
+#categories {
+  flex: 30%; /* Adjust as necessary */
+  /* Additional styles as necessary */
+}
+
+.category-item {
+  cursor: pointer;
+}
+
+
+body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
