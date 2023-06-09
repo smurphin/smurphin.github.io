@@ -43,11 +43,14 @@
           <a href="{{ site.github.repository_url }}" class="btn btn-github"><span class="icon"></span>View on GitHub</a>
         </section>
       </div>
+      <div style="text-align: right;">
+        {% include navigation.html %}
+      </div>
+
       <div class="container">
         <!-- Header content -->
       </div>
-      
-      {% include navigation.html %}
+    
       
     </header>
 
@@ -56,7 +59,10 @@
         <section id="main_content">
           {{ content }}
         </section>
-      </div>   
+      </div>
+      <aside id="categories">
+        {% include category_tree.html %}
+      </aside>      
     </div>
     <script>
       document.addEventListener('DOMContentLoaded', function() {
