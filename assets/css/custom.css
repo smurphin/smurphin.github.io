@@ -124,6 +124,22 @@ img[alt='centered'] {
   cursor: pointer;
 }
 
+/* CSS rules for narrow screens */
+@media (max-width: 600px) {
+  .main-container {
+    flex-direction: column;
+  }
+
+  #main-area {
+    order: 2;
+  }
+
+  #categories {
+    order: 1;
+  }
+}
+
+
 body {
   display: flex;
   flex-direction: column;
