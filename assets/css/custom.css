@@ -103,7 +103,7 @@ img[alt='centered'] {
   margin-right: auto;
 }
 
-.main-container {
+main-container {
   display: flex;
   justify-content: space-between;
   max-width: 1200px;
