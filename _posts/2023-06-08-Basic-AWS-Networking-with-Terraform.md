@@ -143,7 +143,7 @@ variable az_2 {
 
 Note that the az variables have a default value assigned, for the most part these will be the same for every deployment, but we still have the flexibility to use different AZ's in a specific deployment (AZ's b& c for example) by setting the variable in the .tfvars file which will then take precedence.
 
-Nex, the environment specific `.tfvars` file, for the purpose of this post I'll create this in `environments\eu-west-1\dev.tfvars`
+Next, the environment specific `.tfvars` file, for the purpose of this post I'll create this in `environments\eu-west-1\dev.tfvars`
 
 ```hcl
 region = "eu-west-1"
