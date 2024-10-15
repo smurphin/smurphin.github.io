@@ -8,7 +8,17 @@ tags:
   - Misc
 ---
 
+
 <!-- toc -->
+
+- [Why markdown-toc?](#why-markdown-toc)
+- [How to Use markdown-toc](#how-to-use-markdown-toc)
+  * [Installation:](#installation)
+  * [Basic Usage:](#basic-usage)
+- [Example](#example)
+- [Conclusion](#conclusion)
+
+<!-- tocstop -->
 
 A well-structured table of contents (TOC) can significantly enhance the readability of your documents, especially when dealing with lengthy or technical content. I often find myself writing extensive posts that benefit from a clear TOC. However, manually creating and maintaining these TOCs can be tedious and time-consuming.
 
@@ -27,7 +37,7 @@ That's where [markdown-toc](https://github.com/jonschlinkert/markdown-toc){:targ
 
 Let's walk through the steps of using `markdown-toc`:
 
-### **Installation:**
+### Installation:
    Install `markdown-toc` using [npm](https://www.npmjs.com/){:target="_blank"}:
    
    ```bash
@@ -35,7 +45,7 @@ Let's walk through the steps of using `markdown-toc`:
 
    ```
 
-### **Basic Usage:**
+### Basic Usage:
    Generate a TOC for your Markdown file:
 
    Once you've written your Markdown file, make sure you have included headers for the relevant sections you want to link in your TOC
@@ -48,10 +58,8 @@ Let's walk through the steps of using `markdown-toc`:
 
    Simply insert the line
    
-   ```markdown
-   <!-- toc -->
-
-   ```
+  ![tag](/assets/images/markdown-toc-tag.png)
+     
    into the file at the location you want the TOC to be generated, save the file and run 
 
    ```bash
@@ -63,13 +71,14 @@ Let's walk through the steps of using `markdown-toc`:
 
 ## Example
 
-Here's how I used `markdown-toc` in this blog posts:
+Here's how I used `markdown-toc` in this blog post.  Add the `toc`tag into the file where I want the TOC to appear.
 
-(Add code block here)
+![before](/assets/images/markdown-toc-001.png)
 
-And here's the generated TOC:
 
-(Add TOC output here)
+run `markdown-toc -i ` against the file and here's the generated TOC inserted into my markdown file:
+
+![after](/assets/images/markdown-toc-002.png)
 
 ## Conclusion
 
@@ -79,3 +88,6 @@ You can find the code and details of the project over here -> [https://github.co
 
 
 I hope this is helpful! Please let me know if you have any feedback or questions. 😊
+
+
+
