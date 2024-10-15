@@ -7,7 +7,7 @@ short_title: Terraform project structure
 tags: [IaC, Infrastructure, Terraform]
 #author: John Doe
 ---
-Harnessing the power of Terraform, we segment resources and utilize environment-specific `tfvars` for a nimble, scalable, and collaborative infrastructure management experience.
+Harnessing the power of Terraform, I segment resources and utilize environment-specific `tfvars` for a nimble, scalable, and collaborative infrastructure management experience.
 
 ## Scaling Your Terraform Projects: A Structured Approach
 

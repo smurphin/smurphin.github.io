@@ -1,10 +1,11 @@
 header {
     border-bottom: none;
-    background: #202020;
+    background: #232323;
   }
 
 body {
-    background: #202020;
+    background: #232323;
+    font:17px/1.5 "OpenSansRegular", "Helvetica Neue", Helvetica, Arial, sans-serif;
   }
 
 header h1 {
@@ -63,6 +64,10 @@ ul li::marker {
     border-radius:10px;
   }
 
+  .btn-github .icon {
+    opacity: 0.8;
+  }
+
   .btn-copy {
     position: absolute;
     top: 14px; right: 14px;
@@ -109,12 +114,17 @@ nav {
   font-size: 24px;
 }
 
-
+.home-container {
+  display: flex;
+  justify-content: space-between;
+  max-width: 60%;
+  margin: auto;
+}
 
 .main-container {
   display: flex;
   justify-content: space-between;
-  max-width: 1200px;
+  max-width: 70%;
   margin: auto;
 }
 

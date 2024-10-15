@@ -13,8 +13,6 @@ title: CV
 
 **Email:** [email.darrenmurphy@gmail.com](mailto:email.darrenmurphy@gmail.com)
 
-**Mobile:** +44 7787 531 096 
-
 **LinkedIn:** [linkedin.com/in/darrenmurphyuk/](https://www.linkedin.com/)
 
 **Web:** [https://www.smurphin.com/](https://www.smurphin.com/)

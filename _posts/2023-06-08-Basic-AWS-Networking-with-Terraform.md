@@ -111,7 +111,7 @@ resource "aws_subnet" "private_2" {
 
 ```
 
-Note in order to concatenate two variables together we need to use the interpolation syntax in the form `"${var1}${var2}"`
+Note in order to concatenate two variables together we need to use the [interpolation syntax](https://developer.hashicorp.com/terraform/language/expressions/strings#interpolation){:target="_blank"} in the form `"${var1}${var2}"`
 
 We'll now need to create a variables file `variables.tf` where we'll define the variable keys, but we'll leave the values blank here, they'll be defined after in the environment specific `.tfvars` file
 
