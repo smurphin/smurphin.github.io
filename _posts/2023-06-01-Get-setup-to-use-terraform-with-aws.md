@@ -149,7 +149,7 @@ terraform init
 
 And that's it, you're all good to start managing infrastructure on AWS with Terraform!
 
-Check out some of my other posts to see how I configure my backend to store the state file centrally in AWS s3 [here]({{ site.baseurl }}{% post_url 2023-04-17-Terraform-S3-backend %}) some cool Infrastructure management examples we can now do such as creating a basic VPC with networking [here]({{ site.baseurl }}{% post_url 2023-06-08-Basic-AWS-Networking-with-Terraform %})
+Check out some of my other posts to see how I configure my backend to store the state file centrally in AWS s3 [here.]({{ site.baseurl }}{% post_url 2023-04-17-Terraform-S3-backend %}) Or some cool Infrastructure management examples we can now do such as creating a basic VPC with networking [here]({{ site.baseurl }}{% post_url 2023-06-08-Basic-AWS-Networking-with-Terraform %})
 
 Happy Terraforming!
 
