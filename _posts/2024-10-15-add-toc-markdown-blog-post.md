@@ -9,6 +9,12 @@ tags:
 ---
 
 
+
+
+A well-structured table of contents (TOC) can significantly enhance the readability of your documents, especially when dealing with lengthy or technical content. I often find myself writing extensive posts that benefit from a clear TOC. However, manually creating and maintaining these TOCs can be tedious and time-consuming.
+
+That's where [markdown-toc](https://github.com/jonschlinkert/markdown-toc){:target="_blank"} comes in. This handy tool automates the process of generating TOCs for your Markdown files, saving you time and effort while ensuring your content remains organized and accessible.
+
 <!-- toc -->
 
 - [Why markdown-toc?](#why-markdown-toc)
@@ -19,10 +25,6 @@ tags:
 - [Conclusion](#conclusion)
 
 <!-- tocstop -->
-
-A well-structured table of contents (TOC) can significantly enhance the readability of your documents, especially when dealing with lengthy or technical content. I often find myself writing extensive posts that benefit from a clear TOC. However, manually creating and maintaining these TOCs can be tedious and time-consuming.
-
-That's where [markdown-toc](https://github.com/jonschlinkert/markdown-toc){:target="_blank"} comes in. This handy tool automates the process of generating TOCs for your Markdown files, saving you time and effort while ensuring your content remains organized and accessible.
 
 ## Why markdown-toc?
 
