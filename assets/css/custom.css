@@ -144,17 +144,52 @@ nav {
 }
 
 /* CSS rules for narrow screens */
-@media (max-width: 600px) {
+@media (max-width: 768px) {
+  .home-container {
+    flex-direction: column;
+    max-width: 100%; /* Full width on mobile */
+    padding: 0 10px;
+  }
+  
   .main-container {
     flex-direction: column;
+    max-width: 100%; /* Full width on mobile */
+    padding: 0 10px;
   }
 
   #main-area {
     order: 2;
+    flex: 100%; /* Make the main area take up full width on mobile */
   }
 
   #categories {
     order: 1;
+    flex: 100%; /* Make categories full width on mobile */
+    margin-bottom: 20px; /* Add some space between the sections */
+  }
+
+  h1 {
+    font-size: 1.8em;
+  }
+
+  h2 {
+    font-size: 1.5em;
+  }
+
+  p {
+    font-size: 1.2em;
+  }
+
+  /* Make images responsive */
+  img {
+    max-width: 100%;
+    height: auto;
+  }
+
+  .header-logo {
+    width: 100px; /* Adjust the logo size on small screens */
+    height: 100px;
+    height: auto;
   }
 }
 
@@ -163,5 +198,24 @@ body {
   display: flex;
   flex-direction: column;
   align-items: left;
+  padding: 0;
+  margin: 0;
+}
+
+@media only screen and (max-width: 480px) {
+  /* Even more specific for very small devices (e.g., phones in portrait mode) */
+  body {
+    font-size: 1em; /* Make base font size smaller on mobile */
+  }
+
+  .header-logo {
+    width: 100px; /* Adjust the logo size on small screens */
+    height: auto;
+  }
+
+  #downloads a {
+    font-size: 0.9em;
+    padding: 8px;
+  }
 }
 
