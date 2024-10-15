@@ -1,15 +1,32 @@
 ---
 layout: post
-title:  "Creating a basic AWS network with Terraform"
-date:   2023-06-08
+title: Creating a basic AWS network with Terraform
+date: 2023-06-08T00:00:00.000Z
 categories: Terraform AWS Networking
 short_title: AWS Network with Terraform
-tags: [AWS, Networking, IaC, Infrastructure, Terraform]
-#author: John Doe
+tags:
+  - AWS
+  - Networking
+  - IaC
+  - Infrastructure
+  - Terraform
 ---
 Amazon Web Services (AWS) offers a wide range of cloud computing services, one of which is networking. In this post, I'll go over the fundamentals of setting up a basic but robust and scalable network infrastructure using AWS and Terraform. 
 
 To begin I'll cover the creation of a single Virtual Private Cloud (VPC), configuration of multiple Availability Zones (AZs), setting up public and private subnets, in a single region, I'll then look at adding an Internet Gateway, and Network Address Translation (NAT) Gateways.
+
+<!-- toc -->
+
+- [AWS Networking: An Overview](#aws-networking-an-overview)
+- [Why Deploy Multiple AZs, Public and Private Subnets?](#why-deploy-multiple-azs-public-and-private-subnets)
+- [Terraform project structure](#terraform-project-structure)
+- [Terraform state](#terraform-state)
+- [Walkthrough: Creating and Managing AWS Network with Terraform](#walkthrough-creating-and-managing-aws-network-with-terraform)
+- [Gateways](#gateways)
+- [Route tables](#route-tables)
+- [Conclusion](#conclusion)
+
+<!-- tocstop -->
 
 ## AWS Networking: An Overview
 
@@ -364,4 +381,6 @@ I hope this post has helped you understand how to set up an AWS network using Te
 In some future posts I'll build on this basic network and add some extra components, connecting to multiple VPCs, multi Region deployments etc.
 
 Happy terraforming!
+
+
 

@@ -94,7 +94,8 @@ ul li::marker {
 
 code.highlighter-rouge {
     background-color: black;
-    color: royalblue;
+    color: white;
+    font-size: 16px;
   }
 
 .important-statement {
