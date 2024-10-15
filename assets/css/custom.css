@@ -144,7 +144,7 @@ nav {
 }
 
 /* CSS rules for narrow screens */
-@media (max-width: 600px) {
+@media (max-width: 90%) {
   .main-container {
     flex-direction: column;
   }
