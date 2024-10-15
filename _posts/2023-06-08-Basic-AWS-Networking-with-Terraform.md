@@ -20,8 +20,9 @@ To begin I'll cover the creation of a single Virtual Private Cloud (VPC), config
 - [AWS Networking: An Overview](#aws-networking-an-overview)
 - [Why Deploy Multiple AZs, Public and Private Subnets?](#why-deploy-multiple-azs-public-and-private-subnets)
 - [Terraform project structure](#terraform-project-structure)
-- [Terraform state](#terraform-state)
+  * [Terraform state](#terraform-state)
 - [Walkthrough: Creating and Managing AWS Network with Terraform](#walkthrough-creating-and-managing-aws-network-with-terraform)
+  * [State file configuration](#state-file-configuration)
 - [Gateways](#gateways)
 - [Route tables](#route-tables)
 - [Conclusion](#conclusion)
@@ -56,9 +57,9 @@ The deployment of multiple AZs and the differentiation of public and private sub
 
 I'll be using my standard approach to structuring the terraform project, with individual files for specific functions and separate vars files per environment, read more about that [here]({{ site.baseurl }}{% post_url 2023-06-07-how-I-structure-my-terraform-projects %}){:target="_blank"}
 
-## Terraform state
+- ### Terraform state
 
-I'll be storing my state file in AWS S3 as described [here]({{ site.baseurl }}{% post_url 2023-04-17-Terraform-S3-backend %}){:target="_blank"}
+- I'll be storing my state file in AWS S3 as described [here]({{ site.baseurl }}{% post_url 2023-04-17-Terraform-S3-backend %}){:target="_blank"}
 
 ## Walkthrough: Creating and Managing AWS Network with Terraform
 
@@ -181,15 +182,16 @@ private_subnet_2 = "10.10.254.0/24"
 ```
 As we'll be using the default AZ's inherited from the `variables.tf` file, there's no need to set them explicitly here.
 
-We'll also need to specify the settings for the S3 backend for this environment which will be done in this file `environments\eu-west-1\dev.tfbackend`
+### State file configuration
+- We'll also need to specify the settings for the S3 backend for this environment which will be done in this file `environments\eu-west-1\dev.tfbackend`
 
 ```hcl
-bucket = "terraform-state-smurphin"
-key = "aws-networking-dev"
-region = "eu-west-1"
+  bucket = "terraform-state-smurphin"
+  key = "aws-networking-dev"
+  region = "eu-west-1"
 ```
 
-Now you have all that in place we can initialise the repository for Terraform to start managing it, we'll need to specify the variables we'll use for the backend as well, using this command will work for this example;
+- Now you have all that in place we can initialise the repository for Terraform to start managing it, we'll need to specify the variables we'll use for the backend as well, using this command will work for this example;
 
 ```bash
 
@@ -357,7 +359,7 @@ terraform plan -var-file=environments/eu-west-1/dev.tfvars
 
 ![centered](/assets/images/terraform_terminal_7.png)
 
-All looks go, so I'll go ahead and apply
+All looks good, so I'll go ahead and apply
 
 ```bash
 
@@ -381,6 +383,7 @@ I hope this post has helped you understand how to set up an AWS network using Te
 In some future posts I'll build on this basic network and add some extra components, connecting to multiple VPCs, multi Region deployments etc.
 
 Happy terraforming!
+
 
 
 

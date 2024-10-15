@@ -1,13 +1,25 @@
 ---
 layout: post
-title:  "How I structure my Terraform projects"
-date:   2023-06-07
+title: How I structure my Terraform projects
+date: 2023-06-07T00:00:00.000Z
 categories: Terraform
 short_title: Terraform project structure
-tags: [IaC, Infrastructure, Terraform]
-#author: John Doe
+tags:
+  - IaC
+  - Infrastructure
+  - Terraform
 ---
 Harnessing the power of Terraform, I segment resources and utilize environment-specific `tfvars` for a nimble, scalable, and collaborative infrastructure management experience.
+
+<!-- toc -->
+
+- [Scaling Your Terraform Projects: A Structured Approach](#scaling-your-terraform-projects-a-structured-approach)
+  * [Breaking Resources Into Separate Files](#breaking-resources-into-separate-files)
+  * [Leveraging tfvars for Environment Specific Configurations](#leveraging-tfvars-for-environment-specific-configurations)
+  * [Example Directory structure](#example-directory-structure)
+  * [Benefits](#benefits)
+
+<!-- tocstop -->
 
 ## Scaling Your Terraform Projects: A Structured Approach
 

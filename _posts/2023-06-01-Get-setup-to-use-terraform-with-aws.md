@@ -1,13 +1,26 @@
 ---
 layout: post
-title:  "Getting setup to use Terraform to manage AWS resources"
-date:   2023-06-01
+title: Getting setup to use Terraform to manage AWS resources
+date: 2023-06-01T00:00:00.000Z
 categories: Terraform AWS
 short_title: Use Terraform with AWS
-tags: [AWS, IaC, Infrastructure, Terraform]
-#author: John Doe
+tags:
+  - AWS
+  - IaC
+  - Infrastructure
+  - Terraform
 ---
 A short post describing how to configure an IAM role for Terraform to interact with AWS.
+
+<!-- toc -->
+
+- [Creating an IAM role](#creating-an-iam-role)
+  * [Create the user](#create-the-user)
+- [Create the access keys](#create-the-access-keys)
+- [Configure your client](#configure-your-client)
+- [Configure Terraform](#configure-terraform)
+
+<!-- tocstop -->
 
 ## Creating an IAM role
 
@@ -139,6 +152,7 @@ And that's it, you're all good to start managing infrastructure on AWS with Terr
 Check out some of my other posts to see how I configure my backend to store the state file centrally in AWS s3 [here]({{ site.baseurl }}{% post_url 2023-04-17-Terraform-S3-backend %}) some cool Infrastructure management examples we can now do such as creating a basic VPC with networking [here]({{ site.baseurl }}{% post_url 2023-06-08-Basic-AWS-Networking-with-Terraform %})
 
 Happy Terraforming!
+
 
 
 

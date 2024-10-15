@@ -73,10 +73,11 @@ Let's walk through the steps of using `markdown-toc`:
 
 ## Example
 
-Here's how I used `markdown-toc` in this blog post.  Add the `toc`tag into the file where I want the TOC to appear.
+Here's how I used `markdown-toc` in this blog post.  
+
+Add the `toc` tag into the file where I want the TOC to appear.
 
 ![before](/assets/images/markdown-toc-001.png)
-
 
 run `markdown-toc -i ` against the file and here's the generated TOC inserted into my markdown file:
 
