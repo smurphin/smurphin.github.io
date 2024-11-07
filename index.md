@@ -19,7 +19,7 @@ Over the past 5 years, I've shifted my focus towards cloud infrastructure, parti
 
 ## Automation and AI
 
-I'm particularly passionate about automation and leveraging AI to improve productivity and reduce operational overhead. I've worked with Okta to develop automation workflows, managing our instance as Infrastructure as Code (IaC) and have collaborated on integrating AI chatbots into Slack using Confluence, Slack & Google docs data to provide real-time support to end-users.
+I'm particularly passionate about automation and leveraging AI to improve productivity and reduce operational overhead. I've investigated options with Okta and Zscaler to develop automation workflows, moving towards managing our deployments as Infrastructure as Code (IaC) and have collaborated on integrating AI chatbots into Slack using Confluence, Slack and Google docs data to provide real-time support to end-users.
 
 ## Emerging Technologies
 
