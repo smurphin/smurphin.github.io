@@ -63,7 +63,7 @@ I'll be using my standard approach to structuring the terraform project, with in
 
 ## Walkthrough: Creating and Managing AWS Network with Terraform
 
-All of the code used here can be found in [this](https://github.com/smurphin/aws-terraform-networking){:target="_blank"} Github repo
+All of the code used here can be found in [this](https://github.com/smurphin/aws-terraform-basic-networking){:target="_blank"} Github repo
 
 Now, let's dive into setting up an AWS network with Terraform.  I'm assuming you've set up Terraform on your host and have authentication setup and your host is able to authenticate to the AWS service.  If not check out this post first [here]({{ site.baseurl }}{% post_url 2023-06-01-Get-setup-to-use-terraform-with-aws %}){:target="_blank"}
 
