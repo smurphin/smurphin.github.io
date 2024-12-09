@@ -15,7 +15,7 @@ In my early career, I focused on network and security, with expertise in designi
 
 ## Cloud Infrastructure
 
-Over the past 5 years, I've shifted my focus towards cloud infrastructure, particularly AWS and some GCP. I've worked on a wide range of projects, from deploying AWS Transit Gateway (TGW) and working with Direct Connect, to using Terraform to automate AWS environment deployment and configuring on-prem networking devices with Ansible. I've also implemented Zscaler ZIA and ZPA, leveraging APIs and Terraform to automate and streamline the deployment process.
+Over the past 7 years, I've shifted my focus towards cloud infrastructure, particularly AWS and some GCP. I've worked on a wide range of projects, from deploying AWS Transit Gateway (TGW) and working with Direct Connect, to using Terraform to automate AWS environment deployment and configuring on-prem networking devices with Ansible. I've also implemented Zscaler ZIA and ZPA, leveraging APIs and Terraform to automate and streamline the deployment process.
 
 ## Automation and AI
 
@@ -27,4 +27,4 @@ Throughout my career, I've maintained a strong interest in emerging technologies
 
 ## Personal Interests
 
-On a personal level, I'm an avid endurance athlete and have completed several triathlons, including the Helvellyn triathlon twice. I recently completed my first ultra trail run of 40 miles and have planned to participate in the London Marathon and the Suffolk Backyard Ultra later this year.
+On a personal level, I'm an avid endurance athlete and have completed several triathlons, including the Helvellyn triathlon twice. I recently completed my first ultra trail run of 40 miles, completed the London Marathon and ran the Suffolk Backyard Ultra this year.

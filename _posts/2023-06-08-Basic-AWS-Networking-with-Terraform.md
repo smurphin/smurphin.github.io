@@ -239,7 +239,7 @@ And if we look at the resource map we can see how these tie together
 
 ![centered](/assets/images/terraform_terminal_5.png)
 
-**Note that all subnets are currently associated with the default route table for this VPC (created automatically) this means that functionally all subnets act the same , whether intended to be private or public.  I'll go over that in more detail in a later post**{: .important-statement}
+**Note that all subnets are currently associated with the default route table for this VPC (created automatically) this means that functionally all subnets act the same , whether intended to be private or public.  I'll go over that in more detail below**{: .important-statement}
 
 This is a basic network setup, if it had some workloads running in one of the subnets, they would be able to communicate with instances in any of the other subnets within the VPC.
 

@@ -21,8 +21,7 @@ Using S3 to store the Terraform state file allows multiple people in a team to w
 
 <!-- tocstop -->
 
-For the purpose of this post I’ll just be running Terraform from my local machine and setting AWS credentials for my session, check out [this]({{ site.baseurl }}{% post_url 2023-06-01-Get-setup-to-use-terraform-with-aws %})
- post for more details on how I set that up.
+For the purpose of this post I’ll just be running Terraform from my local machine and setting AWS credentials for my session, check out [this]({{ site.baseurl }}{% post_url 2023-06-01-Get-setup-to-use-terraform-with-aws %}) post for more details on how I set that up.
 
 ## How to configure
 
