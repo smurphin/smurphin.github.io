@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-42GGHBDXW6"></script>
+    <script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-42GGHBDXW6');
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.8/clipboard.min.js"></script>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="keywords" content="automation, AI, productivity, technology radar, cloud infrastructure, emerging technologies, IT industry, IaC, Infrastructure as code, Network as code, Network engineering, Infrastructure engineering, Ansible, Python, Cybersecurity, Infosec, IT, Github, git">
+    <meta name="description" content="Welcome to my blog where I share my knowledge and experience on automation, AI, and their practical applications in improving productivity. Stay up-to-date with the latest technology trends, cloud infrastructure, emerging technologies, and insights from the IT industry. Topics include Infrastructure as Code (IaC), Network as Code, Network engineering, Infrastructure engineering, Ansible, Python, Cybersecurity, Infosec, IT, Github, and git."> 
+    <link rel="icon" href="/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="/assets/css/style.css?v=b74dcab777cd122bc989dbb1c76124a6ddb5970a">
+    <link rel="stylesheet" href="/assets/css/custom.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <!-- start custom head snippets, customize with your own _includes/head-custom.html file -->
+
+<!-- Setup theme-color -->
+<!-- start theme color meta headers -->
+<meta name="theme-color" content="#151515">
+<meta name="msapplication-navbutton-color" content="#151515">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<!-- end theme color meta headers -->
+
+
+<!-- Setup Google Analytics -->
+
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    ga('create', 'G-42GGHBDXW6', 'auto');
+    ga('send', 'pageview');
+  </script>
+
+
+
+<!-- You can set your favicon here -->
+<!-- link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" -->
+
+<!-- end custom head snippets -->
+
+
+<!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Creating a basic AWS network with Terraform | Darren Murphy</title>
+<meta name="generator" content="Jekyll v3.9.3" />
+<meta property="og:title" content="Creating a basic AWS network with Terraform" />
+<meta name="author" content="Darren Murphy" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Amazon Web Services (AWS) offers a wide range of cloud computing services, one of which is networking. In this post, I’ll go over the fundamentals of setting up a basic but robust and scalable network infrastructure using AWS and Terraform." />
+<meta property="og:description" content="Amazon Web Services (AWS) offers a wide range of cloud computing services, one of which is networking. In this post, I’ll go over the fundamentals of setting up a basic but robust and scalable network infrastructure using AWS and Terraform." />
+<link rel="canonical" href="http://localhost:4000/terraform/aws/networking/2023/06/08/Basic-AWS-Networking-with-Terraform.html" />
+<meta property="og:url" content="http://localhost:4000/terraform/aws/networking/2023/06/08/Basic-AWS-Networking-with-Terraform.html" />
+<meta property="og:site_name" content="Darren Murphy" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2023-06-08T01:00:00+01:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Creating a basic AWS network with Terraform" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Darren Murphy"},"dateModified":"2023-06-08T01:00:00+01:00","datePublished":"2023-06-08T01:00:00+01:00","description":"Amazon Web Services (AWS) offers a wide range of cloud computing services, one of which is networking. In this post, I’ll go over the fundamentals of setting up a basic but robust and scalable network infrastructure using AWS and Terraform.","headline":"Creating a basic AWS network with Terraform","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/terraform/aws/networking/2023/06/08/Basic-AWS-Networking-with-Terraform.html"},"url":"http://localhost:4000/terraform/aws/networking/2023/06/08/Basic-AWS-Networking-with-Terraform.html"}</script>
+<!-- End Jekyll SEO tag -->
+
+  </head>
+    
+  <body>
+    
+    <header>
+      <div class="container">
+        <a id="a-title" href="/">
+          <h1>Darren Murphy</h1>
+        </a>
+        <img src="/assets/images/skull_hacker1.png" class="header-logo" alt="Header Logo">
+        <h2>Full time network engineer, part time triathlete, technology lover.</h2>
+        
+        <section id="downloads">
+          
+          <a href="https://github.com/smurphin/smurphin.github.io" class="btn btn-github"><span class="icon"></span>View on GitHub</a>
+        </section>
+        <nav>
+    
+      <a href="/" >Home</a>
+    
+      <a href="/blog.html" >Blog</a>
+    
+      <a href="/cv.html" >CV</a>
+    
+  </nav>
+      </div>    
+    </header>
+
+    <div class="container home-container">
+      <div id="main-area">
+        <section id="main_content">
+          <small>8 June 2023</small>
+<h1>Creating a basic AWS network with Terraform</h1>
+
+<p class="view">by Darren Murphy</p>
+
+<p>Amazon Web Services (AWS) offers a wide range of cloud computing services, one of which is networking. In this post, I’ll go over the fundamentals of setting up a basic but robust and scalable network infrastructure using AWS and Terraform.</p>
+
+<p>To begin I’ll cover the creation of a single Virtual Private Cloud (VPC), configuration of multiple Availability Zones (AZs), setting up public and private subnets, in a single region, I’ll then look at adding an Internet Gateway, and Network Address Translation (NAT) Gateways.</p>
+
+<!-- toc -->
+
+<ul>
+  <li><a href="#aws-networking-an-overview">AWS Networking: An Overview</a></li>
+  <li><a href="#why-deploy-multiple-azs-public-and-private-subnets">Why Deploy Multiple AZs, Public and Private Subnets?</a></li>
+  <li><a href="#terraform-project-structure">Terraform project structure</a>
+    <ul>
+      <li><a href="#terraform-state">Terraform state</a></li>
+    </ul>
+  </li>
+  <li><a href="#walkthrough-creating-and-managing-aws-network-with-terraform">Walkthrough: Creating and Managing AWS Network with Terraform</a>
+    <ul>
+      <li><a href="#state-file-configuration">State file configuration</a></li>
+    </ul>
+  </li>
+  <li><a href="#gateways">Gateways</a></li>
+  <li><a href="#route-tables">Route tables</a></li>
+  <li><a href="#conclusion">Conclusion</a></li>
+</ul>
+
+<!-- tocstop -->
+
+<h2 id="aws-networking-an-overview">AWS Networking: An Overview</h2>
+
+<p>AWS provides scalable and highly reliable networking services which allow businesses to design and implement a network infrastructure meeting their specific requirements. Core components of AWS networking include:</p>
+
+<ul>
+  <li>
+    <p><strong>AWS Account:</strong> is an Amazon Web Services identity that you use to log in and access AWS services. Each AWS account has its own resources, separate from other accounts, and its own limits on each AWS service. It is essentially your own workspace within the vast expanse of AWS cloud services.</p>
+  </li>
+  <li>
+    <p><strong>AWS Region:</strong> is a physical location around the world where AWS clusters data centers. Each AWS Region is designed to be isolated from the other AWS Regions. This achieves the greatest possible fault tolerance and stability.- <strong>VPC:</strong> Virtual Private Cloud allows you to provision a logically isolated section of the AWS Cloud where you can launch AWS resources in a virtual network defined by you.</p>
+  </li>
+  <li>
+    <p><strong>Subnets:</strong> A subnet is a range of IP addresses in your VPC. You can launch AWS resources into a subnet that you select.</p>
+  </li>
+  <li>
+    <p><strong>Availability Zones (AZs):</strong> AZs are essentially isolated and physically separate locations within regions from which cloud services originate and operate. They are physically separated within a geographic region and are designed to minimize failures. With multiple AZs, your resources can remain resilient against potential outages.</p>
+  </li>
+  <li>
+    <p>The following diagram gives an overview of these components and their relation to each other</p>
+  </li>
+</ul>
+
+<p><img src="/assets/images/AWS_single_act_single_region_single_vpc.png" alt="centered" /></p>
+
+<h2 id="why-deploy-multiple-azs-public-and-private-subnets">Why Deploy Multiple AZs, Public and Private Subnets?</h2>
+
+<p>The deployment of multiple AZs and the differentiation of public and private subnets within your VPC allows you to increase availability, fault tolerance, and scalability of your applications.</p>
+
+<ul>
+  <li>
+    <p><strong>Multiple AZs:</strong> By deploying your resources across multiple AZs, you can ensure high availability and fault tolerance. If one AZ becomes unavailable, traffic can be directed to resources in another, ensuring your applications remain up and running.</p>
+  </li>
+  <li>
+    <p><strong>Public and Private Subnets:</strong> This design provides an extra layer of security by limiting the exposure of your resources. Resources that must be publicly accessible are placed in a public subnet with routes to the Internet Gateway. Those that don’t require internet access are placed in a private subnet, improving security.</p>
+  </li>
+</ul>
+
+<h2 id="terraform-project-structure">Terraform project structure</h2>
+
+<p>I’ll be using my standard approach to structuring the terraform project, with individual files for specific functions and separate vars files per environment, read more about that <a href="/terraform/2023/06/07/how-I-structure-my-terraform-projects.html" target="_blank">here</a></p>
+
+<ul>
+  <li>
+    <h3 id="terraform-state">Terraform state</h3>
+  </li>
+  <li>I’ll be storing my state file in AWS S3 as described <a href="/terraform/aws/2023/04/17/Terraform-S3-backend.html" target="_blank">here</a></li>
+</ul>
+
+<h2 id="walkthrough-creating-and-managing-aws-network-with-terraform">Walkthrough: Creating and Managing AWS Network with Terraform</h2>
+
+<p>All of the code used here can be found in <a href="https://github.com/smurphin/aws-terraform-basic-networking" target="_blank">this</a> Github repo</p>
+
+<p>Now, let’s dive into setting up an AWS network with Terraform.  I’m assuming you’ve set up Terraform on your host and have authentication setup and your host is able to authenticate to the AWS service.  If not check out this post first <a href="/terraform/aws/2023/06/01/Get-setup-to-use-terraform-with-aws.html" target="_blank">here</a></p>
+
+<p>starting with a new directory called <code class="language-plaintext highlighter-rouge">aws-terraform-networking</code> let’s get the main.tf file setup first of all, setting the backend and required providers.</p>
+
+<div class="language-hcl highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">terraform</span> <span class="p">{</span>
+<span class="c1"># configure the backend for remote state file storage</span>
+  <span class="nx">backend</span> <span class="s2">"s3"</span> <span class="p">{}</span>
+  
+  <span class="nx">required_providers</span> <span class="p">{</span>
+      <span class="nx">aws</span> <span class="p">=</span> <span class="p">{</span>
+        <span class="nx">source</span>  <span class="p">=</span> <span class="s2">"hashicorp/aws"</span>
+        <span class="nx">version</span> <span class="p">=</span> <span class="s2">"~&gt; 4.0"</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1"># Required provider</span>
+<span class="nx">provider</span> <span class="s2">"aws"</span> <span class="p">{</span>
+  <span class="nx">region</span> <span class="p">=</span> <span class="nx">var</span><span class="err">.</span><span class="nx">region</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>The next step is to create files for the networking components, I’m going to break these out into <code class="language-plaintext highlighter-rouge">vpc.tf</code> and <code class="language-plaintext highlighter-rouge">subnets.tf</code> we’re also going to tokenise the code so that we can define environment specific variables and use the same code for multiple deployments.  So we’ll also need to create a <code class="language-plaintext highlighter-rouge">variables.tf</code> file and an enviroment specific <code class="language-plaintext highlighter-rouge">.tfvars</code> file for each environment</p>
+
+<p>firstly the <code class="language-plaintext highlighter-rouge">vpc.tf</code></p>
+
+<div class="language-hcl highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Creating a VPC</span>
+<span class="nx">resource</span> <span class="s2">"aws_vpc"</span> <span class="s2">"vpc_1"</span> <span class="p">{</span>
+  <span class="nx">cidr_block</span> <span class="p">=</span> <span class="nx">var</span><span class="err">.</span><span class="nx">vpc_cidr</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>and the the <code class="language-plaintext highlighter-rouge">subnets.tf</code></p>
+
+<div class="language-hcl highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Creating public subnets</span>
+<span class="nx">resource</span> <span class="s2">"aws_subnet"</span> <span class="s2">"public_1"</span> <span class="p">{</span>
+  <span class="nx">vpc_id</span>     <span class="p">=</span> <span class="nx">aws_vpc</span><span class="err">.</span><span class="nx">vpc_1</span><span class="err">.</span><span class="nx">id</span>
+  <span class="nx">cidr_block</span> <span class="p">=</span> <span class="nx">var</span><span class="err">.</span><span class="nx">public_subnet_1</span>
+  <span class="nx">availability_zone</span> <span class="p">=</span> <span class="s2">"${var.region}${var.az_1}"</span>
+<span class="p">}</span>
+
+<span class="nx">resource</span> <span class="s2">"aws_subnet"</span> <span class="s2">"public_2"</span> <span class="p">{</span>
+  <span class="nx">vpc_id</span>     <span class="p">=</span> <span class="nx">aws_vpc</span><span class="err">.</span><span class="nx">vpc_1</span><span class="err">.</span><span class="nx">id</span>
+  <span class="nx">cidr_block</span> <span class="p">=</span> <span class="nx">var</span><span class="err">.</span><span class="nx">public_subnet_2</span>
+  <span class="nx">availability_zone</span> <span class="p">=</span> <span class="s2">"${var.region}${var.az_2}"</span>
+<span class="p">}</span>
+
+<span class="c1"># Creating private subnets</span>
+<span class="nx">resource</span> <span class="s2">"aws_subnet"</span> <span class="s2">"private_1"</span> <span class="p">{</span>
+  <span class="nx">vpc_id</span>     <span class="p">=</span> <span class="nx">aws_vpc</span><span class="err">.</span><span class="nx">vpc_1</span><span class="err">.</span><span class="nx">id</span>
+  <span class="nx">cidr_block</span> <span class="p">=</span> <span class="nx">var</span><span class="err">.</span><span class="nx">private_subnet_1</span>
+  <span class="nx">availability_zone</span> <span class="p">=</span> <span class="s2">"${var.region}${var.az_1}"</span>
+<span class="p">}</span>
+
+<span class="nx">resource</span> <span class="s2">"aws_subnet"</span> <span class="s2">"private_2"</span> <span class="p">{</span>
+  <span class="nx">vpc_id</span>     <span class="p">=</span> <span class="nx">aws_vpc</span><span class="err">.</span><span class="nx">vpc_1</span><span class="err">.</span><span class="nx">id</span>
+  <span class="nx">cidr_block</span> <span class="p">=</span> <span class="nx">var</span><span class="err">.</span><span class="nx">private_subnet_2</span>
+  <span class="nx">availability_zone</span> <span class="p">=</span> <span class="s2">"${var.region}${var.az_2}"</span>
+<span class="p">}</span>
+
+</code></pre></div></div>
+
+<p>Note in order to concatenate two variables together we need to use the <a href="https://developer.hashicorp.com/terraform/language/expressions/strings#interpolation" target="_blank">interpolation syntax</a> in the form <code class="language-plaintext highlighter-rouge">"${var1}${var2}"</code></p>
+
+<p>We’ll now need to create a variables file <code class="language-plaintext highlighter-rouge">variables.tf</code> where we’ll define the variable keys, but we’ll leave the values blank here, they’ll be defined after in the environment specific <code class="language-plaintext highlighter-rouge">.tfvars</code> file</p>
+
+<div class="language-hcl highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">variable</span> <span class="nx">region</span> <span class="p">{}</span>
+
+<span class="nx">variable</span> <span class="nx">s3_bucket</span> <span class="p">{}</span>
+
+<span class="nx">variable</span> <span class="nx">s3_key</span> <span class="p">{}</span>
+
+<span class="nx">variable</span> <span class="nx">vpc_cidr</span> <span class="p">{}</span>
+
+<span class="nx">variable</span> <span class="nx">public_subnet_1</span> <span class="p">{}</span>
+
+<span class="nx">variable</span> <span class="nx">public_subnet_2</span> <span class="p">{}</span>
+
+<span class="nx">variable</span> <span class="nx">private_subnet_1</span> <span class="p">{}</span>
+
+<span class="nx">variable</span> <span class="nx">private_subnet_2</span> <span class="p">{}</span>
+
+<span class="nx">variable</span> <span class="nx">az_1</span> <span class="p">{</span>
+  <span class="nx">default</span> <span class="p">=</span> <span class="s2">"a"</span>
+<span class="p">}</span>
+
+<span class="nx">variable</span> <span class="nx">az_2</span> <span class="p">{</span>
+  <span class="nx">default</span> <span class="p">=</span> <span class="s2">"b"</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Note that the az variables have a default value assigned, for the most part these will be the same for every deployment, but we still have the flexibility to use different AZ’s in a specific deployment (AZ’s b&amp; c for example) by setting the variable in the .tfvars file which will then take precedence.</p>
+
+<p>Next, the environment specific <code class="language-plaintext highlighter-rouge">.tfvars</code> file, for the purpose of this post I’ll create this in <code class="language-plaintext highlighter-rouge">environments\eu-west-1\dev.tfvars</code></p>
+
+<div class="language-hcl highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">region</span> <span class="err">=</span> <span class="s2">"eu-west-1"</span>
+
+<span class="nx">s3_bucket</span> <span class="err">=</span> <span class="s2">"terraform-state-smurphin"</span>
+
+<span class="nx">s3_key</span> <span class="err">=</span> <span class="s2">"aws-networking"</span>
+
+<span class="nx">vpc_cidr</span> <span class="err">=</span> <span class="s2">"10.10.0.0/16"</span>
+
+<span class="nx">public_subnet_1</span> <span class="err">=</span> <span class="s2">"10.10.1.0/24"</span>
+
+<span class="nx">public_subnet_2</span> <span class="err">=</span> <span class="s2">"10.10.2.0/24"</span>
+
+<span class="nx">private_subnet_1</span> <span class="err">=</span> <span class="s2">"10.10.255.0/24"</span>
+
+<span class="nx">private_subnet_2</span> <span class="err">=</span> <span class="s2">"10.10.254.0/24"</span>
+</code></pre></div></div>
+<p>As we’ll be using the default AZ’s inherited from the <code class="language-plaintext highlighter-rouge">variables.tf</code> file, there’s no need to set them explicitly here.</p>
+
+<h3 id="state-file-configuration">State file configuration</h3>
+<ul>
+  <li>We’ll also need to specify the settings for the S3 backend for this environment which will be done in this file <code class="language-plaintext highlighter-rouge">environments\eu-west-1\dev.tfbackend</code></li>
+</ul>
+
+<div class="language-hcl highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="nx">bucket</span> <span class="err">=</span> <span class="s2">"terraform-state-smurphin"</span>
+  <span class="nx">key</span> <span class="err">=</span> <span class="s2">"aws-networking-dev"</span>
+  <span class="nx">region</span> <span class="err">=</span> <span class="s2">"eu-west-1"</span>
+</code></pre></div></div>
+
+<ul>
+  <li>Now you have all that in place we can initialise the repository for Terraform to start managing it, we’ll need to specify the variables we’ll use for the backend as well, using this command will work for this example;</li>
+</ul>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+terraform init <span class="nt">-backend-config</span><span class="o">=</span>environments/eu-west-1/dev.tfbackend
+
+</code></pre></div></div>
+
+<p><img src="/assets/images/terraform_terminal_1.png" alt="centered" /></p>
+
+<p>Once the repo is initialised we’re ready to start deploying our infrastructure, first we can run a <code class="language-plaintext highlighter-rouge">terraform-plan</code> to make sure it’s going to do what we expect, remembering to pass the environment specific variables file.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+terraform plan <span class="nt">-var-file</span><span class="o">=</span>environments/eu-west-1/dev.tfvars
+
+</code></pre></div></div>
+
+<p>That should give us an output similar to the below</p>
+
+<p><img src="/assets/images/terraform_terminal_2.png" alt="centered" /></p>
+
+<p>It looks like everything is ready to go!  We can now deploy the code with <code class="language-plaintext highlighter-rouge">terraform-apply</code></p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+terraform apply <span class="nt">-var-file</span><span class="o">=</span>environments/eu-west-1/dev.tfvars
+
+</code></pre></div></div>
+
+<p>You’ll be shown the details again of what Terraform will deploy and be prompted to confirm the actions, if all looks good type <code class="language-plaintext highlighter-rouge">yes</code> and watch as Terraform deploys your network infrastructure in a matter of seconds.</p>
+
+<p><img src="/assets/images/terraform_terminal_3.png" alt="centered" /></p>
+
+<p>We can go over to the Amazon console and confirm that the resources have actually been deployed.</p>
+
+<p>we see our new VPC</p>
+
+<p><img src="/assets/images/terraform_terminal_4.png" alt="centered" /></p>
+
+<p>Our new subnets have been configured across 2 availability zones</p>
+
+<p><img src="/assets/images/terraform_terminal_6.png" alt="centered" /></p>
+
+<p>And if we look at the resource map we can see how these tie together</p>
+
+<p><img src="/assets/images/terraform_terminal_5.png" alt="centered" /></p>
+
+<p><strong class="important-statement">Note that all subnets are currently associated with the default route table for this VPC (created automatically) this means that functionally all subnets act the same , whether intended to be private or public.  I’ll go over that in more detail below</strong></p>
+
+<p>This is a basic network setup, if it had some workloads running in one of the subnets, they would be able to communicate with instances in any of the other subnets within the VPC.</p>
+
+<p><strong class="important-statement">It’s important to note, within a VPC it’s possible to route between any of the subnets, public and private are just logical concepts and are only relevant for connections from outside the VPC, if you wish to restrict traffic flow between subnets within the VPC then security policies need to be used.</strong></p>
+
+<p>Now we have the basic components in place we need to connect them to the world outside of the VPC, either the internet or other VPCs, AWS accounts, physical data centres etc.  For this post I’m going to focus on creating internet connectivity and I’ll build on the other types of connectivity in separate posts.</p>
+
+<p>We need to add some additional components to our Infrastructure to provide connectivity outside of the VPC</p>
+
+<h2 id="gateways">Gateways</h2>
+
+<ul>
+  <li><strong>Internet Gateways:</strong> An Internet Gateway is a horizontally scalable, redundant, and highly available VPC component that allows communication between instances in your VPC and the internet.</li>
+  <li><strong>NAT Gateways:</strong> A NAT Gateway enables instances in a private subnet to connect to the internet or other AWS services but prevents the internet from initiating a connection with those instances.  The NAT Gateway is deployed into the public subnet with an Elastic IP and the route table of the provate subnet will send internet bound traffic via the Nat Gateway.  One Nat Gateway per availability zone should be deployed for resiliency.</li>
+</ul>
+
+<p>our network topology will look like the below</p>
+
+<p><img src="/assets/images/AWS_single_act_single_region_single_vpc_w_gws.drawio.png" alt="centered" /></p>
+
+<p>we’ll create a <code class="language-plaintext highlighter-rouge">gateways.tf</code> file to look after those components</p>
+
+<div class="language-hcl highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Creating an Internet Gateway and attaching it to the VPC</span>
+<span class="nx">resource</span> <span class="s2">"aws_internet_gateway"</span> <span class="s2">"igw"</span> <span class="p">{</span>
+  <span class="nx">vpc_id</span> <span class="p">=</span> <span class="nx">aws_vpc</span><span class="err">.</span><span class="nx">vpc_1</span><span class="err">.</span><span class="nx">id</span>
+<span class="p">}</span>
+
+<span class="c1"># Creating NAT Gateways</span>
+<span class="nx">resource</span> <span class="s2">"aws_nat_gateway"</span> <span class="s2">"nat_gw_az_a"</span> <span class="p">{</span>
+  <span class="nx">subnet_id</span>     <span class="p">=</span> <span class="nx">aws_subnet</span><span class="err">.</span><span class="nx">public_1</span><span class="err">.</span><span class="nx">id</span>
+  <span class="nx">allocation_id</span> <span class="p">=</span> <span class="nx">aws_eip</span><span class="err">.</span><span class="nx">nat_az_a</span><span class="err">.</span><span class="nx">id</span>
+<span class="p">}</span>
+
+<span class="nx">resource</span> <span class="s2">"aws_nat_gateway"</span> <span class="s2">"nat_gw_az_b"</span> <span class="p">{</span>
+  <span class="nx">subnet_id</span>     <span class="p">=</span> <span class="nx">aws_subnet</span><span class="err">.</span><span class="nx">public_2</span><span class="err">.</span><span class="nx">id</span>
+  <span class="nx">allocation_id</span> <span class="p">=</span> <span class="nx">aws_eip</span><span class="err">.</span><span class="nx">nat_az_b</span><span class="err">.</span><span class="nx">id</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>we’ll also need Elastic IPs to associate with the Nat GWs, we’ll create those in <code class="language-plaintext highlighter-rouge">elastic_ips.tf</code></p>
+
+<div class="language-hcl highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">#Allocate Elastic IPs for the Nat Gateways to use</span>
+<span class="nx">resource</span> <span class="s2">"aws_eip"</span> <span class="s2">"nat_az_a"</span> <span class="p">{</span>
+  <span class="nx">vpc</span> <span class="p">=</span> <span class="kc">true</span>
+<span class="p">}</span>
+
+<span class="nx">resource</span> <span class="s2">"aws_eip"</span> <span class="s2">"nat_az_b"</span> <span class="p">{</span>
+  <span class="nx">vpc</span> <span class="p">=</span> <span class="kc">true</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="route-tables">Route tables</h2>
+
+<p>Finally we’ll need to tell our instances how to route to their destinations, as well as preventing inbound internet connectivity to the private subnets.</p>
+
+<p><strong>Route Tables:</strong> are used to direct network traffic within your VPC. Each subnet in your VPC is associated with a route table that controls its traffic flow. Route tables consist of routes that dictate where the traffic from your subnet is directed. For instance, if instances in a subnet need to access the internet, a route pointing all traffic (0.0.0.0/0) to an internet gateway can be added to the route table.</p>
+
+<p>Route tables can be shared by multiple subnets if the routing policy is the same, so for our use case we only need a single public route table, but two private route tables as their destinations will be different NAT Gateways in order to maximise resiliency, we’ll manage these in <code class="language-plaintext highlighter-rouge">route_tables.tf</code></p>
+
+<div class="language-hcl highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="c1"># Creating a route table for the public subnet</span>
+<span class="nx">resource</span> <span class="s2">"aws_route_table"</span> <span class="s2">"public"</span> <span class="p">{</span>
+  <span class="nx">vpc_id</span> <span class="p">=</span> <span class="nx">aws_vpc</span><span class="err">.</span><span class="nx">vpc_1</span><span class="err">.</span><span class="nx">id</span>
+  <span class="nx">route</span> <span class="p">{</span>
+    <span class="nx">cidr_block</span> <span class="p">=</span> <span class="s2">"0.0.0.0/0"</span>
+    <span class="nx">gateway_id</span> <span class="p">=</span> <span class="nx">aws_internet_gateway</span><span class="err">.</span><span class="nx">igw</span><span class="err">.</span><span class="nx">id</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1"># Creating a route table for the private subnet</span>
+<span class="nx">resource</span> <span class="s2">"aws_route_table"</span> <span class="s2">"private_1"</span> <span class="p">{</span>
+  <span class="nx">vpc_id</span> <span class="p">=</span> <span class="nx">aws_vpc</span><span class="err">.</span><span class="nx">vpc_1</span><span class="err">.</span><span class="nx">id</span>
+  <span class="nx">route</span> <span class="p">{</span>
+    <span class="nx">cidr_block</span> <span class="p">=</span> <span class="s2">"0.0.0.0/0"</span>
+    <span class="nx">nat_gateway_id</span> <span class="p">=</span> <span class="nx">aws_nat_gateway</span><span class="err">.</span><span class="nx">nat_gw_az_a</span><span class="err">.</span><span class="nx">id</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="nx">resource</span> <span class="s2">"aws_route_table"</span> <span class="s2">"private_2"</span> <span class="p">{</span>
+  <span class="nx">vpc_id</span> <span class="p">=</span> <span class="nx">aws_vpc</span><span class="err">.</span><span class="nx">vpc_1</span><span class="err">.</span><span class="nx">id</span>
+  <span class="nx">route</span> <span class="p">{</span>
+    <span class="nx">cidr_block</span> <span class="p">=</span> <span class="s2">"0.0.0.0/0"</span>
+    <span class="nx">nat_gateway_id</span> <span class="p">=</span> <span class="nx">aws_nat_gateway</span><span class="err">.</span><span class="nx">nat_gw_az_b</span><span class="err">.</span><span class="nx">id</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1"># Associating the public subnets with their route table</span>
+<span class="nx">resource</span> <span class="s2">"aws_route_table_association"</span> <span class="s2">"public_1"</span> <span class="p">{</span>
+  <span class="nx">subnet_id</span>      <span class="p">=</span> <span class="nx">aws_subnet</span><span class="err">.</span><span class="nx">public_1</span><span class="err">.</span><span class="nx">id</span>
+  <span class="nx">route_table_id</span> <span class="p">=</span> <span class="nx">aws_route_table</span><span class="err">.</span><span class="nx">public</span><span class="err">.</span><span class="nx">id</span>
+<span class="p">}</span>
+
+<span class="nx">resource</span> <span class="s2">"aws_route_table_association"</span> <span class="s2">"public_2"</span> <span class="p">{</span>
+  <span class="nx">subnet_id</span>      <span class="p">=</span> <span class="nx">aws_subnet</span><span class="err">.</span><span class="nx">public_2</span><span class="err">.</span><span class="nx">id</span>
+  <span class="nx">route_table_id</span> <span class="p">=</span> <span class="nx">aws_route_table</span><span class="err">.</span><span class="nx">public</span><span class="err">.</span><span class="nx">id</span>
+<span class="p">}</span>
+
+<span class="c1"># Associating the private subnets with their route tables</span>
+<span class="nx">resource</span> <span class="s2">"aws_route_table_association"</span> <span class="s2">"private_1"</span> <span class="p">{</span>
+  <span class="nx">subnet_id</span>      <span class="p">=</span> <span class="nx">aws_subnet</span><span class="err">.</span><span class="nx">private_1</span><span class="err">.</span><span class="nx">id</span>
+  <span class="nx">route_table_id</span> <span class="p">=</span> <span class="nx">aws_route_table</span><span class="err">.</span><span class="nx">private_1</span><span class="err">.</span><span class="nx">id</span>
+<span class="p">}</span>
+
+<span class="nx">resource</span> <span class="s2">"aws_route_table_association"</span> <span class="s2">"private_2"</span> <span class="p">{</span>
+  <span class="nx">subnet_id</span>      <span class="p">=</span> <span class="nx">aws_subnet</span><span class="err">.</span><span class="nx">private_2</span><span class="err">.</span><span class="nx">id</span>
+  <span class="nx">route_table_id</span> <span class="p">=</span> <span class="nx">aws_route_table</span><span class="err">.</span><span class="nx">private_2</span><span class="err">.</span><span class="nx">id</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Now we’re ready to run a plan and make sure everything looks ready to go</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+terraform plan <span class="nt">-var-file</span><span class="o">=</span>environments/eu-west-1/dev.tfvars
+
+</code></pre></div></div>
+
+<p><img src="/assets/images/terraform_terminal_7.png" alt="centered" /></p>
+
+<p>All looks good, so I’ll go ahead and apply</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+terraform apply <span class="nt">-var-file</span><span class="o">=</span>environments/eu-west-1/dev.tfvars
+
+</code></pre></div></div>
+<p>And after a minute or two we now have 12 new resources deployed and associated correctly.</p>
+
+<p><img src="/assets/images/terraform_terminal_8.png" alt="centered" /></p>
+
+<p>If we take a look in the AWS console we can also see all of the resources deployed in the VPC, and even see how they are associated with each other.</p>
+
+<p><img src="/assets/images/terraform_terminal_9.png" alt="centered" /></p>
+
+<h2 id="conclusion">Conclusion</h2>
+
+<p>AWS networking is a vast and powerful domain that enables businesses to tailor network infrastructure to their specific needs. The combination of multiple AZs and the use of public and private subnets allows for a resilient, secure, and scalable infrastructure. Using Terraform this can be very simple to setup and manage, as well as replicate to other environments, ensuring that deployments are always consistent.</p>
+
+<p>I hope this post has helped you understand how to set up an AWS network using Terraform.</p>
+
+<p>In some future posts I’ll build on this basic network and add some extra components, connecting to multiple VPCs, multi Region deployments etc.</p>
+
+<p>Happy terraforming!</p>
+
+
+
+
+  <small>tags: <em>AWS</em> - <em>Networking</em> - <em>IaC</em> - <em>Infrastructure</em> - <em>Terraform</em></small>
+
+
+<script src="https://utteranc.es/client.js"
+        repo="smurphin/smurphin.github.io"
+        issue-term="pathname"
+        theme="github-dark"
+        crossorigin="anonymous"
+        async>
+</script>
+        </section>
+      </div>   
+    </div>
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        var codeBlocks = document.querySelectorAll('pre code');
+    
+        codeBlocks.forEach(function(codeBlock) {
+          var parentElement = codeBlock.parentNode;
+    
+          var button = document.createElement('button');
+          button.className = 'btn-copy';
+          button.innerHTML = '<i class="far fa-clipboard"></i> Copy';
+          button.addEventListener('click', function() {
+            var codeText = codeBlock.innerText;
+    
+            navigator.clipboard.writeText(codeText).then(function() {
+              button.innerHTML = '<i class="fas fa-check"></i> Copied';
+    
+              setTimeout(function() {
+                button.innerHTML = '<i class="far fa-clipboard"></i> Copy';
+              }, 2000);
+            }).catch(function(error) {
+              console.error('Copy failed:', error);
+            });
+          });
+    
+          parentElement.insertBefore(button, codeBlock);
+        });
+      });
+    </script>
+    <script>
+      document.addEventListener('DOMContentLoaded', (event) => {
+        let categories = document.querySelectorAll('.category-item');
+      
+        categories.forEach((category) => {
+          category.addEventListener('click', (event) => {
+            let posts = category.querySelector('.category-posts');
+            if (posts.style.display === "none") {
+              posts.style.display = "block";
+            } else {
+              posts.style.display = "none";
+            }
+          });
+        });
+      });
+      </script>     
+  </body>
+</html>

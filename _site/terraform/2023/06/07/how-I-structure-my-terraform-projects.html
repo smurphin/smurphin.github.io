@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-42GGHBDXW6"></script>
+    <script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-42GGHBDXW6');
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.8/clipboard.min.js"></script>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="keywords" content="automation, AI, productivity, technology radar, cloud infrastructure, emerging technologies, IT industry, IaC, Infrastructure as code, Network as code, Network engineering, Infrastructure engineering, Ansible, Python, Cybersecurity, Infosec, IT, Github, git">
+    <meta name="description" content="Welcome to my blog where I share my knowledge and experience on automation, AI, and their practical applications in improving productivity. Stay up-to-date with the latest technology trends, cloud infrastructure, emerging technologies, and insights from the IT industry. Topics include Infrastructure as Code (IaC), Network as Code, Network engineering, Infrastructure engineering, Ansible, Python, Cybersecurity, Infosec, IT, Github, and git."> 
+    <link rel="icon" href="/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="/assets/css/style.css?v=b74dcab777cd122bc989dbb1c76124a6ddb5970a">
+    <link rel="stylesheet" href="/assets/css/custom.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <!-- start custom head snippets, customize with your own _includes/head-custom.html file -->
+
+<!-- Setup theme-color -->
+<!-- start theme color meta headers -->
+<meta name="theme-color" content="#151515">
+<meta name="msapplication-navbutton-color" content="#151515">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<!-- end theme color meta headers -->
+
+
+<!-- Setup Google Analytics -->
+
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    ga('create', 'G-42GGHBDXW6', 'auto');
+    ga('send', 'pageview');
+  </script>
+
+
+
+<!-- You can set your favicon here -->
+<!-- link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" -->
+
+<!-- end custom head snippets -->
+
+
+<!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>How I structure my Terraform projects | Darren Murphy</title>
+<meta name="generator" content="Jekyll v3.9.3" />
+<meta property="og:title" content="How I structure my Terraform projects" />
+<meta name="author" content="Darren Murphy" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Harnessing the power of Terraform, I segment resources and utilize environment-specific tfvars for a nimble, scalable, and collaborative infrastructure management experience." />
+<meta property="og:description" content="Harnessing the power of Terraform, I segment resources and utilize environment-specific tfvars for a nimble, scalable, and collaborative infrastructure management experience." />
+<link rel="canonical" href="http://localhost:4000/terraform/2023/06/07/how-I-structure-my-terraform-projects.html" />
+<meta property="og:url" content="http://localhost:4000/terraform/2023/06/07/how-I-structure-my-terraform-projects.html" />
+<meta property="og:site_name" content="Darren Murphy" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2023-06-07T01:00:00+01:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="How I structure my Terraform projects" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Darren Murphy"},"dateModified":"2023-06-07T01:00:00+01:00","datePublished":"2023-06-07T01:00:00+01:00","description":"Harnessing the power of Terraform, I segment resources and utilize environment-specific tfvars for a nimble, scalable, and collaborative infrastructure management experience.","headline":"How I structure my Terraform projects","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/terraform/2023/06/07/how-I-structure-my-terraform-projects.html"},"url":"http://localhost:4000/terraform/2023/06/07/how-I-structure-my-terraform-projects.html"}</script>
+<!-- End Jekyll SEO tag -->
+
+  </head>
+    
+  <body>
+    
+    <header>
+      <div class="container">
+        <a id="a-title" href="/">
+          <h1>Darren Murphy</h1>
+        </a>
+        <img src="/assets/images/skull_hacker1.png" class="header-logo" alt="Header Logo">
+        <h2>Full time network engineer, part time triathlete, technology lover.</h2>
+        
+        <section id="downloads">
+          
+          <a href="https://github.com/smurphin/smurphin.github.io" class="btn btn-github"><span class="icon"></span>View on GitHub</a>
+        </section>
+        <nav>
+    
+      <a href="/" >Home</a>
+    
+      <a href="/blog.html" >Blog</a>
+    
+      <a href="/cv.html" >CV</a>
+    
+  </nav>
+      </div>    
+    </header>
+
+    <div class="container home-container">
+      <div id="main-area">
+        <section id="main_content">
+          <small>7 June 2023</small>
+<h1>How I structure my Terraform projects</h1>
+
+<p class="view">by Darren Murphy</p>
+
+<p>Harnessing the power of Terraform, I segment resources and utilize environment-specific <code class="language-plaintext highlighter-rouge">tfvars</code> for a nimble, scalable, and collaborative infrastructure management experience.</p>
+
+<!-- toc -->
+
+<ul>
+  <li><a href="#scaling-your-terraform-projects-a-structured-approach">Scaling Your Terraform Projects: A Structured Approach</a>
+    <ul>
+      <li><a href="#breaking-resources-into-separate-files">Breaking Resources Into Separate Files</a></li>
+      <li><a href="#leveraging-tfvars-for-environment-specific-configurations">Leveraging tfvars for Environment Specific Configurations</a></li>
+      <li><a href="#example-directory-structure">Example Directory structure</a></li>
+      <li><a href="#benefits">Benefits</a></li>
+    </ul>
+  </li>
+</ul>
+
+<!-- tocstop -->
+
+<h2 id="scaling-your-terraform-projects-a-structured-approach">Scaling Your Terraform Projects: A Structured Approach</h2>
+
+<p>As cloud practitioners, we should always strive for scalability, reusability, maintainability and probably some other ilities, not just in our infrastructure, but also in our Infrastructure as Code (IaC) projects. One of the many benefits of using a tool like Terraform is that it allows for creating and managing resources in a structured and organized way. In this post, I’ll explain my approach to scaling Terraform projects by breaking resources into separate files and managing different environments with distinct <code class="language-plaintext highlighter-rouge">tfvars</code> files.</p>
+
+<h3 id="breaking-resources-into-separate-files">Breaking Resources Into Separate Files</h3>
+
+<p>When it comes to managing resources in Terraform, one of the best practices I adhere to is separating similar resources into distinct files. This not only keeps your codebase organized but also enhances readability and maintainability.</p>
+
+<p>Instead of having a monolithic <code class="language-plaintext highlighter-rouge">main.tf</code> file containing all resources, I prefer to split them up. For instance, all EC2 related resources could go into <code class="language-plaintext highlighter-rouge">ec2.tf</code> or even a file per service, VPC related resources into <code class="language-plaintext highlighter-rouge">vpc.tf</code>, and so forth. This means, anyone who looks at the project structure can immediately identify where specific resource configurations reside.</p>
+
+<h3 id="leveraging-tfvars-for-environment-specific-configurations">Leveraging tfvars for Environment Specific Configurations</h3>
+
+<p>The power of Terraform does not end at organizing resources. With <code class="language-plaintext highlighter-rouge">tfvars</code> files, Terraform offers a way to manage environment-specific configurations. Each environment (like development, staging, production) can have its own <code class="language-plaintext highlighter-rouge">tfvars</code> file, for example, <code class="language-plaintext highlighter-rouge">dev.tfvars</code>, <code class="language-plaintext highlighter-rouge">staging.tfvars</code>, and <code class="language-plaintext highlighter-rouge">prod.tfvars</code>. These files hold the variable values specific to their respective environments.  I like to keep these in separate folders specifying the environment and avoiding any potential conflicts of having them in the root directory.</p>
+
+<p>When executing Terraform code, you can specify which <code class="language-plaintext highlighter-rouge">tfvars</code> file to use with the <code class="language-plaintext highlighter-rouge">-var-file</code> flag, like so:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>terraform apply <span class="nt">-var-file</span><span class="o">=</span>dev.tfvars
+
+</code></pre></div></div>
+
+<p>This allows the same Terraform codebase to be used across multiple environments while preserving the specific configurations each environment needs.</p>
+
+<h3 id="example-directory-structure">Example Directory structure</h3>
+
+<p>An example of how this may look is shown below</p>
+
+<p><img src="/assets/images/terraform_structure_example.png" alt="centered" /></p>
+
+<h3 id="benefits">Benefits</h3>
+
+<p>This approach to structuring Terraform projects has numerous benefits:</p>
+
+<ul>
+  <li>
+    <p><strong>Scalability</strong>: As your infrastructure grows, your Terraform codebase can scale without becoming cluttered or difficult to navigate.</p>
+  </li>
+  <li>
+    <p><strong>Maintainability</strong>: It’s easier to update or debug your configuration when resources are separated into logical files.</p>
+  </li>
+  <li>
+    <p><strong>Reusability</strong>: By parameterizing your configurations with variables and utilizing <code class="language-plaintext highlighter-rouge">tfvars</code> files for different environments, the same codebase can be reused across multiple contexts, reducing duplication and potential errors.</p>
+  </li>
+  <li>
+    <p><strong>Collaboration</strong>: It’s easier for team members to understand, navigate, and collaborate on a codebase that is well-structured and organized.</p>
+  </li>
+</ul>
+
+<p>In conclusion, taking the time to thoughtfully structure your Terraform projects in a scalable and organized manner will pay off in the long run as your infrastructure evolves and grows. It’s an investment that will save you time and effort in the future, and make your infrastructure management tasks more efficient and less error-prone.</p>
+
+<p>Take a look at how I set up a centralised state file to further help with collaboration <a href="/terraform/aws/2023/04/17/Terraform-S3-backend.html">here</a></p>
+
+
+
+  <small>tags: <em>IaC</em> - <em>Infrastructure</em> - <em>Terraform</em></small>
+
+
+<script src="https://utteranc.es/client.js"
+        repo="smurphin/smurphin.github.io"
+        issue-term="pathname"
+        theme="github-dark"
+        crossorigin="anonymous"
+        async>
+</script>
+        </section>
+      </div>   
+    </div>
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        var codeBlocks = document.querySelectorAll('pre code');
+    
+        codeBlocks.forEach(function(codeBlock) {
+          var parentElement = codeBlock.parentNode;
+    
+          var button = document.createElement('button');
+          button.className = 'btn-copy';
+          button.innerHTML = '<i class="far fa-clipboard"></i> Copy';
+          button.addEventListener('click', function() {
+            var codeText = codeBlock.innerText;
+    
+            navigator.clipboard.writeText(codeText).then(function() {
+              button.innerHTML = '<i class="fas fa-check"></i> Copied';
+    
+              setTimeout(function() {
+                button.innerHTML = '<i class="far fa-clipboard"></i> Copy';
+              }, 2000);
+            }).catch(function(error) {
+              console.error('Copy failed:', error);
+            });
+          });
+    
+          parentElement.insertBefore(button, codeBlock);
+        });
+      });
+    </script>
+    <script>
+      document.addEventListener('DOMContentLoaded', (event) => {
+        let categories = document.querySelectorAll('.category-item');
+      
+        categories.forEach((category) => {
+          category.addEventListener('click', (event) => {
+            let posts = category.querySelector('.category-posts');
+            if (posts.style.display === "none") {
+              posts.style.display = "block";
+            } else {
+              posts.style.display = "none";
+            }
+          });
+        });
+      });
+      </script>     
+  </body>
+</html>

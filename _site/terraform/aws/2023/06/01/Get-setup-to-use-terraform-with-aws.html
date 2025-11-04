@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-42GGHBDXW6"></script>
+    <script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-42GGHBDXW6');
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.8/clipboard.min.js"></script>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="keywords" content="automation, AI, productivity, technology radar, cloud infrastructure, emerging technologies, IT industry, IaC, Infrastructure as code, Network as code, Network engineering, Infrastructure engineering, Ansible, Python, Cybersecurity, Infosec, IT, Github, git">
+    <meta name="description" content="Welcome to my blog where I share my knowledge and experience on automation, AI, and their practical applications in improving productivity. Stay up-to-date with the latest technology trends, cloud infrastructure, emerging technologies, and insights from the IT industry. Topics include Infrastructure as Code (IaC), Network as Code, Network engineering, Infrastructure engineering, Ansible, Python, Cybersecurity, Infosec, IT, Github, and git."> 
+    <link rel="icon" href="/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="/assets/css/style.css?v=b74dcab777cd122bc989dbb1c76124a6ddb5970a">
+    <link rel="stylesheet" href="/assets/css/custom.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <!-- start custom head snippets, customize with your own _includes/head-custom.html file -->
+
+<!-- Setup theme-color -->
+<!-- start theme color meta headers -->
+<meta name="theme-color" content="#151515">
+<meta name="msapplication-navbutton-color" content="#151515">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<!-- end theme color meta headers -->
+
+
+<!-- Setup Google Analytics -->
+
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    ga('create', 'G-42GGHBDXW6', 'auto');
+    ga('send', 'pageview');
+  </script>
+
+
+
+<!-- You can set your favicon here -->
+<!-- link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" -->
+
+<!-- end custom head snippets -->
+
+
+<!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Getting setup to use Terraform to manage AWS resources | Darren Murphy</title>
+<meta name="generator" content="Jekyll v3.9.3" />
+<meta property="og:title" content="Getting setup to use Terraform to manage AWS resources" />
+<meta name="author" content="Darren Murphy" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="A short post describing how to configure an IAM role for Terraform to interact with AWS." />
+<meta property="og:description" content="A short post describing how to configure an IAM role for Terraform to interact with AWS." />
+<link rel="canonical" href="http://localhost:4000/terraform/aws/2023/06/01/Get-setup-to-use-terraform-with-aws.html" />
+<meta property="og:url" content="http://localhost:4000/terraform/aws/2023/06/01/Get-setup-to-use-terraform-with-aws.html" />
+<meta property="og:site_name" content="Darren Murphy" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2023-06-01T01:00:00+01:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Getting setup to use Terraform to manage AWS resources" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Darren Murphy"},"dateModified":"2023-06-01T01:00:00+01:00","datePublished":"2023-06-01T01:00:00+01:00","description":"A short post describing how to configure an IAM role for Terraform to interact with AWS.","headline":"Getting setup to use Terraform to manage AWS resources","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/terraform/aws/2023/06/01/Get-setup-to-use-terraform-with-aws.html"},"url":"http://localhost:4000/terraform/aws/2023/06/01/Get-setup-to-use-terraform-with-aws.html"}</script>
+<!-- End Jekyll SEO tag -->
+
+  </head>
+    
+  <body>
+    
+    <header>
+      <div class="container">
+        <a id="a-title" href="/">
+          <h1>Darren Murphy</h1>
+        </a>
+        <img src="/assets/images/skull_hacker1.png" class="header-logo" alt="Header Logo">
+        <h2>Full time network engineer, part time triathlete, technology lover.</h2>
+        
+        <section id="downloads">
+          
+          <a href="https://github.com/smurphin/smurphin.github.io" class="btn btn-github"><span class="icon"></span>View on GitHub</a>
+        </section>
+        <nav>
+    
+      <a href="/" >Home</a>
+    
+      <a href="/blog.html" >Blog</a>
+    
+      <a href="/cv.html" >CV</a>
+    
+  </nav>
+      </div>    
+    </header>
+
+    <div class="container home-container">
+      <div id="main-area">
+        <section id="main_content">
+          <small>1 June 2023</small>
+<h1>Getting setup to use Terraform to manage AWS resources</h1>
+
+<p class="view">by Darren Murphy</p>
+
+<p>A short post describing how to configure an IAM role for Terraform to interact with AWS.</p>
+
+<!-- toc -->
+
+<ul>
+  <li><a href="#creating-an-iam-role">Creating an IAM role</a>
+    <ul>
+      <li><a href="#create-the-user">Create the user</a></li>
+    </ul>
+  </li>
+  <li><a href="#create-the-access-keys">Create the access keys</a></li>
+  <li><a href="#configure-your-client">Configure your client</a></li>
+  <li><a href="#configure-terraform">Configure Terraform</a></li>
+</ul>
+
+<!-- tocstop -->
+
+<h2 id="creating-an-iam-role">Creating an IAM role</h2>
+
+<p>Best practice is to have a dedicated AWS user with an access key and secret that Terraform can use to manage your AWS resources, this user should be limited to only configure the resources it needs to.</p>
+
+<p>For the purpose of this post, I’ll configure a user that will have access to networking and S3 functions, as I need my code to manage different resources I can add the permissions I need.  The user won’t have console access or a password, so will only be able to interact via the AWS CLI (using Terraform in our case) with an access key and secret, which will be stored securely away from the rest of the code.</p>
+
+<h3 id="create-the-user">Create the user</h3>
+
+<p>Firstly log in to the console of your <a href="https://us-east-1.console.aws.amazon.com/iamv2/home?region=eu-west-1#/home" target="_blank">AWS account</a> with a user that has the rights to create new users and browse to the IAM service.</p>
+
+<p>Once in the Identity and Access Management (IAM) console, click users on the left and click the “Add users” button on the top right corner</p>
+
+<p>On the next screen enter a username, in the example below I’ve used <code class="language-plaintext highlighter-rouge">smurphin-terraform</code>.  Leave the “Provide access to the console” checkbox unticked</p>
+
+<p><img src="/assets/images/iam_role/create_iam_role_1.png" alt="centered" /></p>
+
+<p>Click “Next”</p>
+
+<p>The next screen is where you define the permissions you want to give to the user, if you don’t have any groups configured here, click “Create group” and configure a group that has access to the resources you’d like to configure. There is excellent documentation for IAM from AWS <a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/introduction.html" target="_blank">here</a></p>
+
+<p>In the example below I’m selecting my previously created groups for <code class="language-plaintext highlighter-rouge">Networking</code> and <code class="language-plaintext highlighter-rouge">S3</code></p>
+
+<p><img src="/assets/images/iam_role/create_iam_role_2.png" alt="centered" /></p>
+
+<p>Click “Next”</p>
+
+<p>The next page is simply an opportunity to review and then create the user.</p>
+
+<p><img src="/assets/images/iam_role/create_iam_role_3.png" alt="centered" /></p>
+
+<p>If you’re happy with how it looks, click “Create user”</p>
+
+<p>You’ll then get confirmation that the user is created and see the new user in the IAM console.</p>
+
+<p><img src="/assets/images/iam_role/create_iam_role_4.png" alt="centered" /></p>
+
+<h2 id="create-the-access-keys">Create the access keys</h2>
+
+<p>Now we need to create an access key and secret for the user.  Click on the user name, you’ll see the details of that user and the permissions that are granted via the group(s)</p>
+
+<p><img src="/assets/images/iam_role/create_iam_role_5.png" alt="centered" /></p>
+
+<p>Click on the “Security credentials” tab</p>
+
+<p>About halfway down you’ll see the Access keys section</p>
+
+<p><img src="/assets/images/iam_role/create_iam_role_6.png" alt="centered" /></p>
+
+<p>click “Create access key”</p>
+
+<p>Select the “Application running outside AWS” option which makes the most sense for this use case, take note of the best practice guidance.</p>
+
+<p><img src="/assets/images/iam_role/create_iam_role_7.png" alt="centered" /></p>
+
+<p>click “Next”</p>
+
+<p>Add a tag if you wish</p>
+
+<p><img src="/assets/images/iam_role/create_iam_role_8.png" alt="centered" /></p>
+
+<p>click “Create access key”</p>
+
+<p>You’ll receive confirmation that the access key has been created, copy the access key and secret access key and store them somewhere safe</p>
+
+<p><img src="/assets/images/iam_role/create_iam_role_9.png" alt="centered" /></p>
+
+<p>click “Done”</p>
+
+<h2 id="configure-your-client">Configure your client</h2>
+
+<p>We’ve now got all we need to authorise Terraform to interact with AWS.  I’m not going to cover how to install Terraform for your particular operating system here, there are plenty of guides out there and the Hashicorp docs are great to get Terraform installed, check them out <a href="https://developer.hashicorp.com/terraform/downloads" target="_blank">here</a></p>
+
+<p>If running Linux or MacOS you can export the keys in your terminal environment so they are valid for as long as your terminal session is active using the following</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="nb">export </span><span class="nv">AWS_ACCESS_KEY_ID</span><span class="o">=</span>XXXXXXXXXXXXXXXXXX
+ <span class="nb">export </span><span class="nv">AWS_SECRET_ACCESS_KEY</span><span class="o">=</span>XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+
+</code></pre></div></div>
+<p><strong class="important-statement">Putting a space in front of the command will hide it from your bash history</strong></p>
+
+<p><strong class="important-statement">Remember to update with your own credentials</strong></p>
+
+<p>For windows you can use a similar concept from a command prompt</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SET <span class="nv">AWS_ACCESS_KEY_ID</span><span class="o">=</span>XXXXXXXXXXXXXXXXXX
+SET <span class="nv">AWS_SECRET_ACCESS_KEY</span><span class="o">=</span>XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+
+</code></pre></div></div>
+
+<p>you can also set these values within your Terraform code, but this is bad practice and increases the risk of accidently sharing the keys.</p>
+
+<h2 id="configure-terraform">Configure Terraform</h2>
+
+<p>Lastly we need to tell Terraform to use the AWS provider.  In our <code class="language-plaintext highlighter-rouge">main.tf</code> file we need to add the following</p>
+
+<div class="language-hcl highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">terraform</span> <span class="p">{</span>
+  <span class="nx">required_providers</span> <span class="p">{</span>
+      <span class="nx">aws</span> <span class="p">=</span> <span class="p">{</span>
+        <span class="nx">source</span>  <span class="p">=</span> <span class="s2">"hashicorp/aws"</span>
+        <span class="nx">version</span> <span class="p">=</span> <span class="s2">"~&gt; 4.0"</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="nx">provider</span> <span class="s2">"aws"</span> <span class="p">{</span>
+ <span class="nx">region</span> <span class="p">=</span> <span class="nx">eu</span><span class="err">-</span><span class="nx">west</span><span class="err">-</span><span class="mi">1</span>
+
+<span class="p">}</span>
+
+</code></pre></div></div>
+
+<p><strong class="important-statement">The region is hard coded as eu-west-1 in this example, update for your region, or check out some of my other posts to see how I use a variable for different environments</strong></p>
+
+<p>Once you have this, you just need to initialise the directory to run terraform using <code class="language-plaintext highlighter-rouge">terraform init</code></p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>terraform init
+
+</code></pre></div></div>
+
+<p><img src="/assets/images/iam_role/create_iam_role_10.png" alt="centered" /></p>
+
+<p>And that’s it, you’re all good to start managing infrastructure on AWS with Terraform!</p>
+
+<p>Check out some of my other posts to see how I configure my backend to store the state file centrally in AWS s3 <a href="/terraform/aws/2023/04/17/Terraform-S3-backend.html">here.</a> Or some cool Infrastructure management examples we can now do such as creating a basic VPC with networking <a href="/terraform/aws/networking/2023/06/08/Basic-AWS-Networking-with-Terraform.html">here</a></p>
+
+<p>Happy Terraforming!</p>
+
+
+
+
+  <small>tags: <em>AWS</em> - <em>IaC</em> - <em>Infrastructure</em> - <em>Terraform</em></small>
+
+
+<script src="https://utteranc.es/client.js"
+        repo="smurphin/smurphin.github.io"
+        issue-term="pathname"
+        theme="github-dark"
+        crossorigin="anonymous"
+        async>
+</script>
+        </section>
+      </div>   
+    </div>
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        var codeBlocks = document.querySelectorAll('pre code');
+    
+        codeBlocks.forEach(function(codeBlock) {
+          var parentElement = codeBlock.parentNode;
+    
+          var button = document.createElement('button');
+          button.className = 'btn-copy';
+          button.innerHTML = '<i class="far fa-clipboard"></i> Copy';
+          button.addEventListener('click', function() {
+            var codeText = codeBlock.innerText;
+    
+            navigator.clipboard.writeText(codeText).then(function() {
+              button.innerHTML = '<i class="fas fa-check"></i> Copied';
+    
+              setTimeout(function() {
+                button.innerHTML = '<i class="far fa-clipboard"></i> Copy';
+              }, 2000);
+            }).catch(function(error) {
+              console.error('Copy failed:', error);
+            });
+          });
+    
+          parentElement.insertBefore(button, codeBlock);
+        });
+      });
+    </script>
+    <script>
+      document.addEventListener('DOMContentLoaded', (event) => {
+        let categories = document.querySelectorAll('.category-item');
+      
+        categories.forEach((category) => {
+          category.addEventListener('click', (event) => {
+            let posts = category.querySelector('.category-posts');
+            if (posts.style.display === "none") {
+              posts.style.display = "block";
+            } else {
+              posts.style.display = "none";
+            }
+          });
+        });
+      });
+      </script>     
+  </body>
+</html>

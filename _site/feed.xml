@@ -1,0 +1,1269 @@
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.3">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2025-11-04T11:24:33+00:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Darren Murphy</title><author><name>Darren Murphy</name></author><entry><title type="html">Bash Git Prompt For Branch Awareness</title><link href="http://localhost:4000/2025/11/04/Bash-Git-Prompt-for-Branch-Awareness.html" rel="alternate" type="text/html" title="Bash Git Prompt For Branch Awareness" /><published>2025-11-04T00:00:00+00:00</published><updated>2025-11-04T00:00:00+00:00</updated><id>http://localhost:4000/2025/11/04/Bash-Git-Prompt-for-Branch-Awareness</id><content type="html" xml:base="http://localhost:4000/2025/11/04/Bash-Git-Prompt-for-Branch-Awareness.html">&lt;p&gt;This guide adds a minimal, colorful prompt to your Bash terminal in Ubuntu/WSL that shows the current Git branch.&lt;/p&gt;
+
+&lt;!-- toc --&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;#introduction&quot;&gt;Introduction&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#%F0%9F%9B%A0%EF%B8%8F-simple-bash-git-prompt-setup&quot;&gt;🛠️ Simple Bash Git Prompt Setup&lt;/a&gt;
+    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#1-open-your-bashrc-file&quot;&gt;1. Open your &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;.bashrc&lt;/code&gt; file&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#2-paste-the-custom-code&quot;&gt;2. Paste the custom code&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#3-save-and-reload&quot;&gt;3. Save and Reload&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#final-thoughts&quot;&gt;&lt;strong&gt;Final Thoughts&lt;/strong&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;!-- tocstop --&gt;
+
+&lt;h2 id=&quot;introduction&quot;&gt;Introduction&lt;/h2&gt;
+&lt;p&gt;As an infrastructure specialist constantly dealing with various environments and repositories—especially when using &lt;strong&gt;Terraform&lt;/strong&gt; or &lt;strong&gt;Ansible&lt;/strong&gt; to manage cloud infrastructure—it’s incredibly easy to lose track of which Git branch you’re currently operating in. We’ve all been there: accidentally committing to &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;main&lt;/code&gt; instead of a feature branch, or trying to pull from a branch that doesn’t exist locally.&lt;/p&gt;
+
+&lt;p&gt;For someone like me, who values &lt;strong&gt;automation&lt;/strong&gt; and a &lt;strong&gt;smooth workflow&lt;/strong&gt; to reduce operational overhead, this cognitive slip-up is a huge productivity killer.&lt;/p&gt;
+
+&lt;p&gt;A simple, colorful &lt;strong&gt;Git prompt&lt;/strong&gt; in your terminal is a game-changer. It gives instant visual feedback, helping you avoid mistakes and keep your development or infrastructure-as-code repos perfectly in sync.&lt;/p&gt;
+
+&lt;p&gt;Here is the quick guide to setting up a minimal, colorful prompt in your Bash terminal (Ubuntu/WSL) that clearly displays the current Git branch.&lt;/p&gt;
+
+&lt;h2 id=&quot;️-simple-bash-git-prompt-setup&quot;&gt;🛠️ Simple Bash Git Prompt Setup&lt;/h2&gt;
+
+&lt;h3 id=&quot;1-open-your-bashrc-file&quot;&gt;1. Open your &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;.bashrc&lt;/code&gt; file&lt;/h3&gt;
+
+&lt;p&gt;In your terminal, run the following command to open your Bash configuration file for editing:&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;nano ~/.bashrc
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;2-paste-the-custom-code&quot;&gt;2. Paste the custom code&lt;/h3&gt;
+
+&lt;p&gt;Scroll to the very bottom of the file and paste this entire code block. This code block defines a function to grab the branch name and then sets the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;PS1&lt;/code&gt; variable to include colored components, including the output of the new function.&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;# --- Custom Git Prompt ---&lt;/span&gt;
+
+&lt;span class=&quot;c&quot;&gt;# Function to get git branch name&lt;/span&gt;
+parse_git_branch&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;nb&quot;&gt;local &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;branch&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;$(&lt;/span&gt;git branch &lt;span class=&quot;nt&quot;&gt;--show-current&lt;/span&gt; 2&amp;gt; /dev/null&lt;span class=&quot;si&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-n&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$branch&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;then
+    &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot; (&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;branch&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;)&quot;&lt;/span&gt; &lt;span class=&quot;c&quot;&gt;# Note the space and parentheses&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;fi&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;c&quot;&gt;# Define color codes&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;COLOR_RESET&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&apos;\[\033[00m\]&apos;&lt;/span&gt; &lt;span class=&quot;c&quot;&gt;# Resets all colors and effects&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;COLOR_USER&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&apos;\[\033[01;36m\]&apos;&lt;/span&gt; &lt;span class=&quot;c&quot;&gt;# Bold Cyan&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;COLOR_HOST&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&apos;\[\033[00;36m\]&apos;&lt;/span&gt; &lt;span class=&quot;c&quot;&gt;# Cyan&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;COLOR_DIR&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&apos;\[\033[01;33m\]&apos;&lt;/span&gt;  &lt;span class=&quot;c&quot;&gt;# Bold Yellow&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;COLOR_GIT&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&apos;\[\033[00;32m\]&apos;&lt;/span&gt;  &lt;span class=&quot;c&quot;&gt;# Green - Highlight the branch name!&lt;/span&gt;
+
+&lt;span class=&quot;c&quot;&gt;# Build the prompt: [user]@[host]:[directory] (git-branch-name)$&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;export &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;PS1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;COLOR_USER&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\u&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;COLOR_HOST&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;@&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\h&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;COLOR_RESET&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;COLOR_DIR&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\w&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;COLOR_GIT&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\$&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;(parse_git_branch)&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;COLOR_RESET&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\$&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt; &quot;&lt;/span&gt;
+
+&lt;span class=&quot;c&quot;&gt;# --- End Custom Git Prompt ---&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;3-save-and-reload&quot;&gt;3. Save and Reload&lt;/h3&gt;
+
+&lt;p&gt;Follow these steps to save the changes to your &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;.bashrc&lt;/code&gt; file:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Press &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Ctrl+X&lt;/code&gt; to exit the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;nano&lt;/code&gt; editor.&lt;/li&gt;
+  &lt;li&gt;Press &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Y&lt;/code&gt; to confirm you want to save.&lt;/li&gt;
+  &lt;li&gt;Press &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Enter&lt;/code&gt; to confirm the file name (&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;.bashrc&lt;/code&gt;).&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Finally, reload your terminal configuration for the changes to take effect immediately:&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;source&lt;/span&gt; ~/.bashrc
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Now, when you navigate into a Git-initialized directory, you’ll see the branch name clearly displayed in &lt;strong&gt;green&lt;/strong&gt;, right before the command prompt!  If it’s not a Git directory your prompt will work just like before.&lt;/p&gt;
+
+&lt;h2 id=&quot;final-thoughts&quot;&gt;&lt;strong&gt;Final Thoughts&lt;/strong&gt;&lt;/h2&gt;
+
+&lt;p&gt;It’s the small, simple quality-of-life automations like this that truly compound to create a more efficient and less error-prone work environment.&lt;/p&gt;
+
+&lt;p&gt;Happy automating!&lt;/p&gt;</content><author><name>Darren Murphy</name></author><summary type="html">This guide adds a minimal, colorful prompt to your Bash terminal in Ubuntu/WSL that shows the current Git branch.</summary></entry><entry><title type="html">Table of Contents creation for Markdown with markdown-toc</title><link href="http://localhost:4000/misc/2024/10/15/add-toc-markdown-blog-post.html" rel="alternate" type="text/html" title="Table of Contents creation for Markdown with markdown-toc" /><published>2024-10-15T01:00:00+01:00</published><updated>2024-10-15T01:00:00+01:00</updated><id>http://localhost:4000/misc/2024/10/15/add-toc-markdown-blog-post</id><content type="html" xml:base="http://localhost:4000/misc/2024/10/15/add-toc-markdown-blog-post.html">&lt;p&gt;A well-structured table of contents (TOC) can significantly enhance the readability of your documents, especially when dealing with lengthy or technical content. I often find myself writing extensive posts that benefit from a clear TOC. However, manually creating and maintaining these TOCs can be tedious and time-consuming.&lt;/p&gt;
+
+&lt;p&gt;That’s where &lt;a href=&quot;https://github.com/jonschlinkert/markdown-toc&quot; target=&quot;_blank&quot;&gt;markdown-toc&lt;/a&gt; comes in. This handy tool automates the process of generating TOCs for your Markdown files, saving you time and effort while ensuring your content remains organized and accessible.&lt;/p&gt;
+
+&lt;!-- toc --&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;#why-markdown-toc&quot;&gt;Why markdown-toc?&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#how-to-use-markdown-toc&quot;&gt;How to Use markdown-toc&lt;/a&gt;
+    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#installation&quot;&gt;Installation:&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#basic-usage&quot;&gt;Basic Usage:&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#example&quot;&gt;Example&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#conclusion&quot;&gt;Conclusion&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;!-- tocstop --&gt;
+
+&lt;h2 id=&quot;why-markdown-toc&quot;&gt;Why markdown-toc?&lt;/h2&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://github.com/jonschlinkert/markdown-toc&quot; target=&quot;_blank&quot;&gt;markdown-toc&lt;/a&gt; stands out for its simplicity and effectiveness. Here’s what I appreciate most about it:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;Ease of use:&lt;/strong&gt; A straightforward command-line interface makes it incredibly easy to use.&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Flexibility:&lt;/strong&gt;  You can customize the TOC generation to match your preferences, such as specifying heading levels and list styles.&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Accuracy:&lt;/strong&gt; &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;markdown-toc&lt;/code&gt; reliably identifies headings in your Markdown files and generates accurate links.&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Integration:&lt;/strong&gt; It seamlessly integrates into your existing workflow, whether you prefer using scripts or your favorite text editor.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;how-to-use-markdown-toc&quot;&gt;How to Use markdown-toc&lt;/h2&gt;
+
+&lt;p&gt;Let’s walk through the steps of using &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;markdown-toc&lt;/code&gt;:&lt;/p&gt;
+
+&lt;h3 id=&quot;installation&quot;&gt;Installation:&lt;/h3&gt;
+&lt;p&gt;Install &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;markdown-toc&lt;/code&gt; using &lt;a href=&quot;https://www.npmjs.com/&quot; target=&quot;_blank&quot;&gt;npm&lt;/a&gt;:&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;   npm &lt;span class=&quot;nb&quot;&gt;install&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-g&lt;/span&gt; markdown-toc
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;basic-usage&quot;&gt;Basic Usage:&lt;/h3&gt;
+&lt;p&gt;Generate a TOC for your Markdown file:&lt;/p&gt;
+
+&lt;p&gt;Once you’ve written your Markdown file, make sure you have included headers for the relevant sections you want to link in your TOC&lt;/p&gt;
+&lt;div class=&quot;language-markdown highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;   # For Header 1
+   ## For header 2
+   ### for header 3
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;and so on;&lt;/p&gt;
+
+&lt;p&gt;Simply insert the line&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/markdown-toc-tag.png&quot; alt=&quot;tag&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;into the file at the location you want the TOC to be generated, save the file and run&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;   markdown-toc &lt;span class=&quot;nt&quot;&gt;-i&lt;/span&gt; your_filename
+   
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;and, as if by magic your file will now have a TOC included!&lt;/p&gt;
+
+&lt;h2 id=&quot;example&quot;&gt;Example&lt;/h2&gt;
+
+&lt;p&gt;Here’s how I used &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;markdown-toc&lt;/code&gt; in this blog post.&lt;/p&gt;
+
+&lt;p&gt;Add the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;toc&lt;/code&gt; tag into the file where I want the TOC to appear.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/markdown-toc-001.png&quot; alt=&quot;before&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;run &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;markdown-toc -i &lt;/code&gt; against the file and here’s the generated TOC inserted into my markdown file:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/markdown-toc-002.png&quot; alt=&quot;after&quot; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;conclusion&quot;&gt;Conclusion&lt;/h2&gt;
+
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;markdown-toc&lt;/code&gt; is a valuable tool for anyone working with Markdown. It simplifies the process of creating and managing TOCs, making your content more organized and user-friendly. Give it a try and see how it can improve your workflow!&lt;/p&gt;
+
+&lt;p&gt;You can find the code and details of the project over here -&amp;gt; &lt;a href=&quot;https://github.com/jonschlinkert/markdown-toc&quot; target=&quot;_blank&quot;&gt;https://github.com/jonschlinkert/markdown-toc&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;I hope this is helpful! Please let me know if you have any feedback or questions. 😊&lt;/p&gt;</content><author><name>Darren Murphy</name></author><category term="Misc" /><category term="Misc" /><summary type="html">A well-structured table of contents (TOC) can significantly enhance the readability of your documents, especially when dealing with lengthy or technical content. I often find myself writing extensive posts that benefit from a clear TOC. However, manually creating and maintaining these TOCs can be tedious and time-consuming.</summary></entry><entry><title type="html">Creating a basic AWS network with Terraform</title><link href="http://localhost:4000/terraform/aws/networking/2023/06/08/Basic-AWS-Networking-with-Terraform.html" rel="alternate" type="text/html" title="Creating a basic AWS network with Terraform" /><published>2023-06-08T01:00:00+01:00</published><updated>2023-06-08T01:00:00+01:00</updated><id>http://localhost:4000/terraform/aws/networking/2023/06/08/Basic-AWS-Networking-with-Terraform</id><content type="html" xml:base="http://localhost:4000/terraform/aws/networking/2023/06/08/Basic-AWS-Networking-with-Terraform.html">&lt;p&gt;Amazon Web Services (AWS) offers a wide range of cloud computing services, one of which is networking. In this post, I’ll go over the fundamentals of setting up a basic but robust and scalable network infrastructure using AWS and Terraform.&lt;/p&gt;
+
+&lt;p&gt;To begin I’ll cover the creation of a single Virtual Private Cloud (VPC), configuration of multiple Availability Zones (AZs), setting up public and private subnets, in a single region, I’ll then look at adding an Internet Gateway, and Network Address Translation (NAT) Gateways.&lt;/p&gt;
+
+&lt;!-- toc --&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;#aws-networking-an-overview&quot;&gt;AWS Networking: An Overview&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#why-deploy-multiple-azs-public-and-private-subnets&quot;&gt;Why Deploy Multiple AZs, Public and Private Subnets?&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#terraform-project-structure&quot;&gt;Terraform project structure&lt;/a&gt;
+    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#terraform-state&quot;&gt;Terraform state&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#walkthrough-creating-and-managing-aws-network-with-terraform&quot;&gt;Walkthrough: Creating and Managing AWS Network with Terraform&lt;/a&gt;
+    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#state-file-configuration&quot;&gt;State file configuration&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#gateways&quot;&gt;Gateways&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#route-tables&quot;&gt;Route tables&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#conclusion&quot;&gt;Conclusion&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;!-- tocstop --&gt;
+
+&lt;h2 id=&quot;aws-networking-an-overview&quot;&gt;AWS Networking: An Overview&lt;/h2&gt;
+
+&lt;p&gt;AWS provides scalable and highly reliable networking services which allow businesses to design and implement a network infrastructure meeting their specific requirements. Core components of AWS networking include:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;strong&gt;AWS Account:&lt;/strong&gt; is an Amazon Web Services identity that you use to log in and access AWS services. Each AWS account has its own resources, separate from other accounts, and its own limits on each AWS service. It is essentially your own workspace within the vast expanse of AWS cloud services.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;strong&gt;AWS Region:&lt;/strong&gt; is a physical location around the world where AWS clusters data centers. Each AWS Region is designed to be isolated from the other AWS Regions. This achieves the greatest possible fault tolerance and stability.- &lt;strong&gt;VPC:&lt;/strong&gt; Virtual Private Cloud allows you to provision a logically isolated section of the AWS Cloud where you can launch AWS resources in a virtual network defined by you.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;strong&gt;Subnets:&lt;/strong&gt; A subnet is a range of IP addresses in your VPC. You can launch AWS resources into a subnet that you select.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;strong&gt;Availability Zones (AZs):&lt;/strong&gt; AZs are essentially isolated and physically separate locations within regions from which cloud services originate and operate. They are physically separated within a geographic region and are designed to minimize failures. With multiple AZs, your resources can remain resilient against potential outages.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;The following diagram gives an overview of these components and their relation to each other&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/AWS_single_act_single_region_single_vpc.png&quot; alt=&quot;centered&quot; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;why-deploy-multiple-azs-public-and-private-subnets&quot;&gt;Why Deploy Multiple AZs, Public and Private Subnets?&lt;/h2&gt;
+
+&lt;p&gt;The deployment of multiple AZs and the differentiation of public and private subnets within your VPC allows you to increase availability, fault tolerance, and scalability of your applications.&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;strong&gt;Multiple AZs:&lt;/strong&gt; By deploying your resources across multiple AZs, you can ensure high availability and fault tolerance. If one AZ becomes unavailable, traffic can be directed to resources in another, ensuring your applications remain up and running.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;strong&gt;Public and Private Subnets:&lt;/strong&gt; This design provides an extra layer of security by limiting the exposure of your resources. Resources that must be publicly accessible are placed in a public subnet with routes to the Internet Gateway. Those that don’t require internet access are placed in a private subnet, improving security.&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;terraform-project-structure&quot;&gt;Terraform project structure&lt;/h2&gt;
+
+&lt;p&gt;I’ll be using my standard approach to structuring the terraform project, with individual files for specific functions and separate vars files per environment, read more about that &lt;a href=&quot;/terraform/2023/06/07/how-I-structure-my-terraform-projects.html&quot; target=&quot;_blank&quot;&gt;here&lt;/a&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;h3 id=&quot;terraform-state&quot;&gt;Terraform state&lt;/h3&gt;
+  &lt;/li&gt;
+  &lt;li&gt;I’ll be storing my state file in AWS S3 as described &lt;a href=&quot;/terraform/aws/2023/04/17/Terraform-S3-backend.html&quot; target=&quot;_blank&quot;&gt;here&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;walkthrough-creating-and-managing-aws-network-with-terraform&quot;&gt;Walkthrough: Creating and Managing AWS Network with Terraform&lt;/h2&gt;
+
+&lt;p&gt;All of the code used here can be found in &lt;a href=&quot;https://github.com/smurphin/aws-terraform-basic-networking&quot; target=&quot;_blank&quot;&gt;this&lt;/a&gt; Github repo&lt;/p&gt;
+
+&lt;p&gt;Now, let’s dive into setting up an AWS network with Terraform.  I’m assuming you’ve set up Terraform on your host and have authentication setup and your host is able to authenticate to the AWS service.  If not check out this post first &lt;a href=&quot;/terraform/aws/2023/06/01/Get-setup-to-use-terraform-with-aws.html&quot; target=&quot;_blank&quot;&gt;here&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;starting with a new directory called &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;aws-terraform-networking&lt;/code&gt; let’s get the main.tf file setup first of all, setting the backend and required providers.&lt;/p&gt;
+
+&lt;div class=&quot;language-hcl highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nx&quot;&gt;terraform&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;# configure the backend for remote state file storage&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;backend&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;s3&quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{}&lt;/span&gt;
+  
+  &lt;span class=&quot;nx&quot;&gt;required_providers&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+      &lt;span class=&quot;nx&quot;&gt;aws&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;nx&quot;&gt;source&lt;/span&gt;  &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;hashicorp/aws&quot;&lt;/span&gt;
+        &lt;span class=&quot;nx&quot;&gt;version&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;~&amp;gt; 4.0&quot;&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;# Required provider&lt;/span&gt;
+&lt;span class=&quot;nx&quot;&gt;provider&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;aws&quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;region&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;var&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;region&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;The next step is to create files for the networking components, I’m going to break these out into &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;vpc.tf&lt;/code&gt; and &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;subnets.tf&lt;/code&gt; we’re also going to tokenise the code so that we can define environment specific variables and use the same code for multiple deployments.  So we’ll also need to create a &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;variables.tf&lt;/code&gt; file and an enviroment specific &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;.tfvars&lt;/code&gt; file for each environment&lt;/p&gt;
+
+&lt;p&gt;firstly the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;vpc.tf&lt;/code&gt;&lt;/p&gt;
+
+&lt;div class=&quot;language-hcl highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c1&quot;&gt;# Creating a VPC&lt;/span&gt;
+&lt;span class=&quot;nx&quot;&gt;resource&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;aws_vpc&quot;&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;vpc_1&quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;cidr_block&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;var&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;vpc_cidr&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;and the the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;subnets.tf&lt;/code&gt;&lt;/p&gt;
+
+&lt;div class=&quot;language-hcl highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c1&quot;&gt;# Creating public subnets&lt;/span&gt;
+&lt;span class=&quot;nx&quot;&gt;resource&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;aws_subnet&quot;&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;public_1&quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;vpc_id&lt;/span&gt;     &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;aws_vpc&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;vpc_1&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;id&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;cidr_block&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;var&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;public_subnet_1&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;availability_zone&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;${var.region}${var.az_1}&quot;&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;nx&quot;&gt;resource&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;aws_subnet&quot;&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;public_2&quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;vpc_id&lt;/span&gt;     &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;aws_vpc&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;vpc_1&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;id&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;cidr_block&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;var&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;public_subnet_2&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;availability_zone&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;${var.region}${var.az_2}&quot;&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;# Creating private subnets&lt;/span&gt;
+&lt;span class=&quot;nx&quot;&gt;resource&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;aws_subnet&quot;&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;private_1&quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;vpc_id&lt;/span&gt;     &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;aws_vpc&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;vpc_1&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;id&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;cidr_block&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;var&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;private_subnet_1&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;availability_zone&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;${var.region}${var.az_1}&quot;&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;nx&quot;&gt;resource&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;aws_subnet&quot;&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;private_2&quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;vpc_id&lt;/span&gt;     &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;aws_vpc&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;vpc_1&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;id&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;cidr_block&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;var&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;private_subnet_2&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;availability_zone&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;${var.region}${var.az_2}&quot;&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Note in order to concatenate two variables together we need to use the &lt;a href=&quot;https://developer.hashicorp.com/terraform/language/expressions/strings#interpolation&quot; target=&quot;_blank&quot;&gt;interpolation syntax&lt;/a&gt; in the form &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;&quot;${var1}${var2}&quot;&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;We’ll now need to create a variables file &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;variables.tf&lt;/code&gt; where we’ll define the variable keys, but we’ll leave the values blank here, they’ll be defined after in the environment specific &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;.tfvars&lt;/code&gt; file&lt;/p&gt;
+
+&lt;div class=&quot;language-hcl highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nx&quot;&gt;variable&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;region&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{}&lt;/span&gt;
+
+&lt;span class=&quot;nx&quot;&gt;variable&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;s3_bucket&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{}&lt;/span&gt;
+
+&lt;span class=&quot;nx&quot;&gt;variable&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;s3_key&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{}&lt;/span&gt;
+
+&lt;span class=&quot;nx&quot;&gt;variable&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;vpc_cidr&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{}&lt;/span&gt;
+
+&lt;span class=&quot;nx&quot;&gt;variable&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;public_subnet_1&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{}&lt;/span&gt;
+
+&lt;span class=&quot;nx&quot;&gt;variable&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;public_subnet_2&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{}&lt;/span&gt;
+
+&lt;span class=&quot;nx&quot;&gt;variable&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;private_subnet_1&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{}&lt;/span&gt;
+
+&lt;span class=&quot;nx&quot;&gt;variable&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;private_subnet_2&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{}&lt;/span&gt;
+
+&lt;span class=&quot;nx&quot;&gt;variable&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;az_1&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;default&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;a&quot;&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;nx&quot;&gt;variable&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;az_2&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;default&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;b&quot;&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Note that the az variables have a default value assigned, for the most part these will be the same for every deployment, but we still have the flexibility to use different AZ’s in a specific deployment (AZ’s b&amp;amp; c for example) by setting the variable in the .tfvars file which will then take precedence.&lt;/p&gt;
+
+&lt;p&gt;Next, the environment specific &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;.tfvars&lt;/code&gt; file, for the purpose of this post I’ll create this in &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;environments\eu-west-1\dev.tfvars&lt;/code&gt;&lt;/p&gt;
+
+&lt;div class=&quot;language-hcl highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nx&quot;&gt;region&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;eu-west-1&quot;&lt;/span&gt;
+
+&lt;span class=&quot;nx&quot;&gt;s3_bucket&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;terraform-state-smurphin&quot;&lt;/span&gt;
+
+&lt;span class=&quot;nx&quot;&gt;s3_key&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;aws-networking&quot;&lt;/span&gt;
+
+&lt;span class=&quot;nx&quot;&gt;vpc_cidr&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;10.10.0.0/16&quot;&lt;/span&gt;
+
+&lt;span class=&quot;nx&quot;&gt;public_subnet_1&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;10.10.1.0/24&quot;&lt;/span&gt;
+
+&lt;span class=&quot;nx&quot;&gt;public_subnet_2&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;10.10.2.0/24&quot;&lt;/span&gt;
+
+&lt;span class=&quot;nx&quot;&gt;private_subnet_1&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;10.10.255.0/24&quot;&lt;/span&gt;
+
+&lt;span class=&quot;nx&quot;&gt;private_subnet_2&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;10.10.254.0/24&quot;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;As we’ll be using the default AZ’s inherited from the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;variables.tf&lt;/code&gt; file, there’s no need to set them explicitly here.&lt;/p&gt;
+
+&lt;h3 id=&quot;state-file-configuration&quot;&gt;State file configuration&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;We’ll also need to specify the settings for the S3 backend for this environment which will be done in this file &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;environments\eu-west-1\dev.tfbackend&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;language-hcl highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;  &lt;span class=&quot;nx&quot;&gt;bucket&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;terraform-state-smurphin&quot;&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;key&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;aws-networking-dev&quot;&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;region&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;eu-west-1&quot;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Now you have all that in place we can initialise the repository for Terraform to start managing it, we’ll need to specify the variables we’ll use for the backend as well, using this command will work for this example;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;
+terraform init &lt;span class=&quot;nt&quot;&gt;-backend-config&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;environments/eu-west-1/dev.tfbackend
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/terraform_terminal_1.png&quot; alt=&quot;centered&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Once the repo is initialised we’re ready to start deploying our infrastructure, first we can run a &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;terraform-plan&lt;/code&gt; to make sure it’s going to do what we expect, remembering to pass the environment specific variables file.&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;
+terraform plan &lt;span class=&quot;nt&quot;&gt;-var-file&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;environments/eu-west-1/dev.tfvars
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;That should give us an output similar to the below&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/terraform_terminal_2.png&quot; alt=&quot;centered&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;It looks like everything is ready to go!  We can now deploy the code with &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;terraform-apply&lt;/code&gt;&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;
+terraform apply &lt;span class=&quot;nt&quot;&gt;-var-file&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;environments/eu-west-1/dev.tfvars
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;You’ll be shown the details again of what Terraform will deploy and be prompted to confirm the actions, if all looks good type &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;yes&lt;/code&gt; and watch as Terraform deploys your network infrastructure in a matter of seconds.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/terraform_terminal_3.png&quot; alt=&quot;centered&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;We can go over to the Amazon console and confirm that the resources have actually been deployed.&lt;/p&gt;
+
+&lt;p&gt;we see our new VPC&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/terraform_terminal_4.png&quot; alt=&quot;centered&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Our new subnets have been configured across 2 availability zones&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/terraform_terminal_6.png&quot; alt=&quot;centered&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;And if we look at the resource map we can see how these tie together&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/terraform_terminal_5.png&quot; alt=&quot;centered&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;strong class=&quot;important-statement&quot;&gt;Note that all subnets are currently associated with the default route table for this VPC (created automatically) this means that functionally all subnets act the same , whether intended to be private or public.  I’ll go over that in more detail below&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;This is a basic network setup, if it had some workloads running in one of the subnets, they would be able to communicate with instances in any of the other subnets within the VPC.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong class=&quot;important-statement&quot;&gt;It’s important to note, within a VPC it’s possible to route between any of the subnets, public and private are just logical concepts and are only relevant for connections from outside the VPC, if you wish to restrict traffic flow between subnets within the VPC then security policies need to be used.&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;Now we have the basic components in place we need to connect them to the world outside of the VPC, either the internet or other VPCs, AWS accounts, physical data centres etc.  For this post I’m going to focus on creating internet connectivity and I’ll build on the other types of connectivity in separate posts.&lt;/p&gt;
+
+&lt;p&gt;We need to add some additional components to our Infrastructure to provide connectivity outside of the VPC&lt;/p&gt;
+
+&lt;h2 id=&quot;gateways&quot;&gt;Gateways&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;Internet Gateways:&lt;/strong&gt; An Internet Gateway is a horizontally scalable, redundant, and highly available VPC component that allows communication between instances in your VPC and the internet.&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;NAT Gateways:&lt;/strong&gt; A NAT Gateway enables instances in a private subnet to connect to the internet or other AWS services but prevents the internet from initiating a connection with those instances.  The NAT Gateway is deployed into the public subnet with an Elastic IP and the route table of the provate subnet will send internet bound traffic via the Nat Gateway.  One Nat Gateway per availability zone should be deployed for resiliency.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;our network topology will look like the below&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/AWS_single_act_single_region_single_vpc_w_gws.drawio.png&quot; alt=&quot;centered&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;we’ll create a &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;gateways.tf&lt;/code&gt; file to look after those components&lt;/p&gt;
+
+&lt;div class=&quot;language-hcl highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c1&quot;&gt;# Creating an Internet Gateway and attaching it to the VPC&lt;/span&gt;
+&lt;span class=&quot;nx&quot;&gt;resource&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;aws_internet_gateway&quot;&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;igw&quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;vpc_id&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;aws_vpc&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;vpc_1&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;id&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;# Creating NAT Gateways&lt;/span&gt;
+&lt;span class=&quot;nx&quot;&gt;resource&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;aws_nat_gateway&quot;&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;nat_gw_az_a&quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;subnet_id&lt;/span&gt;     &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;aws_subnet&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;public_1&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;id&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;allocation_id&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;aws_eip&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;nat_az_a&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;id&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;nx&quot;&gt;resource&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;aws_nat_gateway&quot;&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;nat_gw_az_b&quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;subnet_id&lt;/span&gt;     &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;aws_subnet&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;public_2&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;id&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;allocation_id&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;aws_eip&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;nat_az_b&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;id&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;we’ll also need Elastic IPs to associate with the Nat GWs, we’ll create those in &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;elastic_ips.tf&lt;/code&gt;&lt;/p&gt;
+
+&lt;div class=&quot;language-hcl highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c1&quot;&gt;#Allocate Elastic IPs for the Nat Gateways to use&lt;/span&gt;
+&lt;span class=&quot;nx&quot;&gt;resource&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;aws_eip&quot;&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;nat_az_a&quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;vpc&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;true&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;nx&quot;&gt;resource&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;aws_eip&quot;&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;nat_az_b&quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;vpc&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;true&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;route-tables&quot;&gt;Route tables&lt;/h2&gt;
+
+&lt;p&gt;Finally we’ll need to tell our instances how to route to their destinations, as well as preventing inbound internet connectivity to the private subnets.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Route Tables:&lt;/strong&gt; are used to direct network traffic within your VPC. Each subnet in your VPC is associated with a route table that controls its traffic flow. Route tables consist of routes that dictate where the traffic from your subnet is directed. For instance, if instances in a subnet need to access the internet, a route pointing all traffic (0.0.0.0/0) to an internet gateway can be added to the route table.&lt;/p&gt;
+
+&lt;p&gt;Route tables can be shared by multiple subnets if the routing policy is the same, so for our use case we only need a single public route table, but two private route tables as their destinations will be different NAT Gateways in order to maximise resiliency, we’ll manage these in &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;route_tables.tf&lt;/code&gt;&lt;/p&gt;
+
+&lt;div class=&quot;language-hcl highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;
+&lt;span class=&quot;c1&quot;&gt;# Creating a route table for the public subnet&lt;/span&gt;
+&lt;span class=&quot;nx&quot;&gt;resource&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;aws_route_table&quot;&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;public&quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;vpc_id&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;aws_vpc&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;vpc_1&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;id&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;route&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;nx&quot;&gt;cidr_block&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;0.0.0.0/0&quot;&lt;/span&gt;
+    &lt;span class=&quot;nx&quot;&gt;gateway_id&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;aws_internet_gateway&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;igw&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;id&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;# Creating a route table for the private subnet&lt;/span&gt;
+&lt;span class=&quot;nx&quot;&gt;resource&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;aws_route_table&quot;&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;private_1&quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;vpc_id&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;aws_vpc&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;vpc_1&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;id&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;route&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;nx&quot;&gt;cidr_block&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;0.0.0.0/0&quot;&lt;/span&gt;
+    &lt;span class=&quot;nx&quot;&gt;nat_gateway_id&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;aws_nat_gateway&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;nat_gw_az_a&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;id&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;nx&quot;&gt;resource&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;aws_route_table&quot;&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;private_2&quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;vpc_id&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;aws_vpc&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;vpc_1&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;id&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;route&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;nx&quot;&gt;cidr_block&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;0.0.0.0/0&quot;&lt;/span&gt;
+    &lt;span class=&quot;nx&quot;&gt;nat_gateway_id&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;aws_nat_gateway&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;nat_gw_az_b&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;id&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;# Associating the public subnets with their route table&lt;/span&gt;
+&lt;span class=&quot;nx&quot;&gt;resource&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;aws_route_table_association&quot;&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;public_1&quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;subnet_id&lt;/span&gt;      &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;aws_subnet&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;public_1&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;id&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;route_table_id&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;aws_route_table&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;public&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;id&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;nx&quot;&gt;resource&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;aws_route_table_association&quot;&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;public_2&quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;subnet_id&lt;/span&gt;      &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;aws_subnet&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;public_2&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;id&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;route_table_id&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;aws_route_table&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;public&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;id&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;# Associating the private subnets with their route tables&lt;/span&gt;
+&lt;span class=&quot;nx&quot;&gt;resource&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;aws_route_table_association&quot;&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;private_1&quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;subnet_id&lt;/span&gt;      &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;aws_subnet&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;private_1&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;id&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;route_table_id&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;aws_route_table&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;private_1&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;id&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;nx&quot;&gt;resource&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;aws_route_table_association&quot;&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;private_2&quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;subnet_id&lt;/span&gt;      &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;aws_subnet&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;private_2&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;id&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;route_table_id&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;aws_route_table&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;private_2&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;id&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Now we’re ready to run a plan and make sure everything looks ready to go&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;
+terraform plan &lt;span class=&quot;nt&quot;&gt;-var-file&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;environments/eu-west-1/dev.tfvars
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/terraform_terminal_7.png&quot; alt=&quot;centered&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;All looks good, so I’ll go ahead and apply&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;
+terraform apply &lt;span class=&quot;nt&quot;&gt;-var-file&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;environments/eu-west-1/dev.tfvars
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;And after a minute or two we now have 12 new resources deployed and associated correctly.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/terraform_terminal_8.png&quot; alt=&quot;centered&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;If we take a look in the AWS console we can also see all of the resources deployed in the VPC, and even see how they are associated with each other.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/terraform_terminal_9.png&quot; alt=&quot;centered&quot; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;conclusion&quot;&gt;Conclusion&lt;/h2&gt;
+
+&lt;p&gt;AWS networking is a vast and powerful domain that enables businesses to tailor network infrastructure to their specific needs. The combination of multiple AZs and the use of public and private subnets allows for a resilient, secure, and scalable infrastructure. Using Terraform this can be very simple to setup and manage, as well as replicate to other environments, ensuring that deployments are always consistent.&lt;/p&gt;
+
+&lt;p&gt;I hope this post has helped you understand how to set up an AWS network using Terraform.&lt;/p&gt;
+
+&lt;p&gt;In some future posts I’ll build on this basic network and add some extra components, connecting to multiple VPCs, multi Region deployments etc.&lt;/p&gt;
+
+&lt;p&gt;Happy terraforming!&lt;/p&gt;</content><author><name>Darren Murphy</name></author><category term="Terraform" /><category term="AWS" /><category term="Networking" /><category term="AWS" /><category term="Networking" /><category term="IaC" /><category term="Infrastructure" /><category term="Terraform" /><summary type="html">Amazon Web Services (AWS) offers a wide range of cloud computing services, one of which is networking. In this post, I’ll go over the fundamentals of setting up a basic but robust and scalable network infrastructure using AWS and Terraform.</summary></entry><entry><title type="html">How I structure my Terraform projects</title><link href="http://localhost:4000/terraform/2023/06/07/how-I-structure-my-terraform-projects.html" rel="alternate" type="text/html" title="How I structure my Terraform projects" /><published>2023-06-07T01:00:00+01:00</published><updated>2023-06-07T01:00:00+01:00</updated><id>http://localhost:4000/terraform/2023/06/07/how-I-structure-my-terraform-projects</id><content type="html" xml:base="http://localhost:4000/terraform/2023/06/07/how-I-structure-my-terraform-projects.html">&lt;p&gt;Harnessing the power of Terraform, I segment resources and utilize environment-specific &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;tfvars&lt;/code&gt; for a nimble, scalable, and collaborative infrastructure management experience.&lt;/p&gt;
+
+&lt;!-- toc --&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;#scaling-your-terraform-projects-a-structured-approach&quot;&gt;Scaling Your Terraform Projects: A Structured Approach&lt;/a&gt;
+    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#breaking-resources-into-separate-files&quot;&gt;Breaking Resources Into Separate Files&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#leveraging-tfvars-for-environment-specific-configurations&quot;&gt;Leveraging tfvars for Environment Specific Configurations&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#example-directory-structure&quot;&gt;Example Directory structure&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#benefits&quot;&gt;Benefits&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;!-- tocstop --&gt;
+
+&lt;h2 id=&quot;scaling-your-terraform-projects-a-structured-approach&quot;&gt;Scaling Your Terraform Projects: A Structured Approach&lt;/h2&gt;
+
+&lt;p&gt;As cloud practitioners, we should always strive for scalability, reusability, maintainability and probably some other ilities, not just in our infrastructure, but also in our Infrastructure as Code (IaC) projects. One of the many benefits of using a tool like Terraform is that it allows for creating and managing resources in a structured and organized way. In this post, I’ll explain my approach to scaling Terraform projects by breaking resources into separate files and managing different environments with distinct &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;tfvars&lt;/code&gt; files.&lt;/p&gt;
+
+&lt;h3 id=&quot;breaking-resources-into-separate-files&quot;&gt;Breaking Resources Into Separate Files&lt;/h3&gt;
+
+&lt;p&gt;When it comes to managing resources in Terraform, one of the best practices I adhere to is separating similar resources into distinct files. This not only keeps your codebase organized but also enhances readability and maintainability.&lt;/p&gt;
+
+&lt;p&gt;Instead of having a monolithic &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;main.tf&lt;/code&gt; file containing all resources, I prefer to split them up. For instance, all EC2 related resources could go into &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ec2.tf&lt;/code&gt; or even a file per service, VPC related resources into &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;vpc.tf&lt;/code&gt;, and so forth. This means, anyone who looks at the project structure can immediately identify where specific resource configurations reside.&lt;/p&gt;
+
+&lt;h3 id=&quot;leveraging-tfvars-for-environment-specific-configurations&quot;&gt;Leveraging tfvars for Environment Specific Configurations&lt;/h3&gt;
+
+&lt;p&gt;The power of Terraform does not end at organizing resources. With &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;tfvars&lt;/code&gt; files, Terraform offers a way to manage environment-specific configurations. Each environment (like development, staging, production) can have its own &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;tfvars&lt;/code&gt; file, for example, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;dev.tfvars&lt;/code&gt;, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;staging.tfvars&lt;/code&gt;, and &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;prod.tfvars&lt;/code&gt;. These files hold the variable values specific to their respective environments.  I like to keep these in separate folders specifying the environment and avoiding any potential conflicts of having them in the root directory.&lt;/p&gt;
+
+&lt;p&gt;When executing Terraform code, you can specify which &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;tfvars&lt;/code&gt; file to use with the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;-var-file&lt;/code&gt; flag, like so:&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;terraform apply &lt;span class=&quot;nt&quot;&gt;-var-file&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;dev.tfvars
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;This allows the same Terraform codebase to be used across multiple environments while preserving the specific configurations each environment needs.&lt;/p&gt;
+
+&lt;h3 id=&quot;example-directory-structure&quot;&gt;Example Directory structure&lt;/h3&gt;
+
+&lt;p&gt;An example of how this may look is shown below&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/terraform_structure_example.png&quot; alt=&quot;centered&quot; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;benefits&quot;&gt;Benefits&lt;/h3&gt;
+
+&lt;p&gt;This approach to structuring Terraform projects has numerous benefits:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;strong&gt;Scalability&lt;/strong&gt;: As your infrastructure grows, your Terraform codebase can scale without becoming cluttered or difficult to navigate.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;strong&gt;Maintainability&lt;/strong&gt;: It’s easier to update or debug your configuration when resources are separated into logical files.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;strong&gt;Reusability&lt;/strong&gt;: By parameterizing your configurations with variables and utilizing &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;tfvars&lt;/code&gt; files for different environments, the same codebase can be reused across multiple contexts, reducing duplication and potential errors.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;strong&gt;Collaboration&lt;/strong&gt;: It’s easier for team members to understand, navigate, and collaborate on a codebase that is well-structured and organized.&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;In conclusion, taking the time to thoughtfully structure your Terraform projects in a scalable and organized manner will pay off in the long run as your infrastructure evolves and grows. It’s an investment that will save you time and effort in the future, and make your infrastructure management tasks more efficient and less error-prone.&lt;/p&gt;
+
+&lt;p&gt;Take a look at how I set up a centralised state file to further help with collaboration &lt;a href=&quot;/terraform/aws/2023/04/17/Terraform-S3-backend.html&quot;&gt;here&lt;/a&gt;&lt;/p&gt;</content><author><name>Darren Murphy</name></author><category term="Terraform" /><category term="IaC" /><category term="Infrastructure" /><category term="Terraform" /><summary type="html">Harnessing the power of Terraform, I segment resources and utilize environment-specific tfvars for a nimble, scalable, and collaborative infrastructure management experience.</summary></entry><entry><title type="html">Getting setup to use Terraform to manage AWS resources</title><link href="http://localhost:4000/terraform/aws/2023/06/01/Get-setup-to-use-terraform-with-aws.html" rel="alternate" type="text/html" title="Getting setup to use Terraform to manage AWS resources" /><published>2023-06-01T01:00:00+01:00</published><updated>2023-06-01T01:00:00+01:00</updated><id>http://localhost:4000/terraform/aws/2023/06/01/Get-setup-to-use-terraform-with-aws</id><content type="html" xml:base="http://localhost:4000/terraform/aws/2023/06/01/Get-setup-to-use-terraform-with-aws.html">&lt;p&gt;A short post describing how to configure an IAM role for Terraform to interact with AWS.&lt;/p&gt;
+
+&lt;!-- toc --&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;#creating-an-iam-role&quot;&gt;Creating an IAM role&lt;/a&gt;
+    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#create-the-user&quot;&gt;Create the user&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#create-the-access-keys&quot;&gt;Create the access keys&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#configure-your-client&quot;&gt;Configure your client&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#configure-terraform&quot;&gt;Configure Terraform&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;!-- tocstop --&gt;
+
+&lt;h2 id=&quot;creating-an-iam-role&quot;&gt;Creating an IAM role&lt;/h2&gt;
+
+&lt;p&gt;Best practice is to have a dedicated AWS user with an access key and secret that Terraform can use to manage your AWS resources, this user should be limited to only configure the resources it needs to.&lt;/p&gt;
+
+&lt;p&gt;For the purpose of this post, I’ll configure a user that will have access to networking and S3 functions, as I need my code to manage different resources I can add the permissions I need.  The user won’t have console access or a password, so will only be able to interact via the AWS CLI (using Terraform in our case) with an access key and secret, which will be stored securely away from the rest of the code.&lt;/p&gt;
+
+&lt;h3 id=&quot;create-the-user&quot;&gt;Create the user&lt;/h3&gt;
+
+&lt;p&gt;Firstly log in to the console of your &lt;a href=&quot;https://us-east-1.console.aws.amazon.com/iamv2/home?region=eu-west-1#/home&quot; target=&quot;_blank&quot;&gt;AWS account&lt;/a&gt; with a user that has the rights to create new users and browse to the IAM service.&lt;/p&gt;
+
+&lt;p&gt;Once in the Identity and Access Management (IAM) console, click users on the left and click the “Add users” button on the top right corner&lt;/p&gt;
+
+&lt;p&gt;On the next screen enter a username, in the example below I’ve used &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;smurphin-terraform&lt;/code&gt;.  Leave the “Provide access to the console” checkbox unticked&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/iam_role/create_iam_role_1.png&quot; alt=&quot;centered&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Click “Next”&lt;/p&gt;
+
+&lt;p&gt;The next screen is where you define the permissions you want to give to the user, if you don’t have any groups configured here, click “Create group” and configure a group that has access to the resources you’d like to configure. There is excellent documentation for IAM from AWS &lt;a href=&quot;https://docs.aws.amazon.com/IAM/latest/UserGuide/introduction.html&quot; target=&quot;_blank&quot;&gt;here&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;In the example below I’m selecting my previously created groups for &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Networking&lt;/code&gt; and &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;S3&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/iam_role/create_iam_role_2.png&quot; alt=&quot;centered&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Click “Next”&lt;/p&gt;
+
+&lt;p&gt;The next page is simply an opportunity to review and then create the user.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/iam_role/create_iam_role_3.png&quot; alt=&quot;centered&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;If you’re happy with how it looks, click “Create user”&lt;/p&gt;
+
+&lt;p&gt;You’ll then get confirmation that the user is created and see the new user in the IAM console.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/iam_role/create_iam_role_4.png&quot; alt=&quot;centered&quot; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;create-the-access-keys&quot;&gt;Create the access keys&lt;/h2&gt;
+
+&lt;p&gt;Now we need to create an access key and secret for the user.  Click on the user name, you’ll see the details of that user and the permissions that are granted via the group(s)&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/iam_role/create_iam_role_5.png&quot; alt=&quot;centered&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Click on the “Security credentials” tab&lt;/p&gt;
+
+&lt;p&gt;About halfway down you’ll see the Access keys section&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/iam_role/create_iam_role_6.png&quot; alt=&quot;centered&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;click “Create access key”&lt;/p&gt;
+
+&lt;p&gt;Select the “Application running outside AWS” option which makes the most sense for this use case, take note of the best practice guidance.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/iam_role/create_iam_role_7.png&quot; alt=&quot;centered&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;click “Next”&lt;/p&gt;
+
+&lt;p&gt;Add a tag if you wish&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/iam_role/create_iam_role_8.png&quot; alt=&quot;centered&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;click “Create access key”&lt;/p&gt;
+
+&lt;p&gt;You’ll receive confirmation that the access key has been created, copy the access key and secret access key and store them somewhere safe&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/iam_role/create_iam_role_9.png&quot; alt=&quot;centered&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;click “Done”&lt;/p&gt;
+
+&lt;h2 id=&quot;configure-your-client&quot;&gt;Configure your client&lt;/h2&gt;
+
+&lt;p&gt;We’ve now got all we need to authorise Terraform to interact with AWS.  I’m not going to cover how to install Terraform for your particular operating system here, there are plenty of guides out there and the Hashicorp docs are great to get Terraform installed, check them out &lt;a href=&quot;https://developer.hashicorp.com/terraform/downloads&quot; target=&quot;_blank&quot;&gt;here&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;If running Linux or MacOS you can export the keys in your terminal environment so they are valid for as long as your terminal session is active using the following&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt; &lt;span class=&quot;nb&quot;&gt;export &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;AWS_ACCESS_KEY_ID&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;XXXXXXXXXXXXXXXXXX
+ &lt;span class=&quot;nb&quot;&gt;export &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;AWS_SECRET_ACCESS_KEY&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;&lt;strong class=&quot;important-statement&quot;&gt;Putting a space in front of the command will hide it from your bash history&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;strong class=&quot;important-statement&quot;&gt;Remember to update with your own credentials&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;For windows you can use a similar concept from a command prompt&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;SET &lt;span class=&quot;nv&quot;&gt;AWS_ACCESS_KEY_ID&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;XXXXXXXXXXXXXXXXXX
+SET &lt;span class=&quot;nv&quot;&gt;AWS_SECRET_ACCESS_KEY&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;you can also set these values within your Terraform code, but this is bad practice and increases the risk of accidently sharing the keys.&lt;/p&gt;
+
+&lt;h2 id=&quot;configure-terraform&quot;&gt;Configure Terraform&lt;/h2&gt;
+
+&lt;p&gt;Lastly we need to tell Terraform to use the AWS provider.  In our &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;main.tf&lt;/code&gt; file we need to add the following&lt;/p&gt;
+
+&lt;div class=&quot;language-hcl highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nx&quot;&gt;terraform&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;required_providers&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+      &lt;span class=&quot;nx&quot;&gt;aws&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;nx&quot;&gt;source&lt;/span&gt;  &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;hashicorp/aws&quot;&lt;/span&gt;
+        &lt;span class=&quot;nx&quot;&gt;version&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;~&amp;gt; 4.0&quot;&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;nx&quot;&gt;provider&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;aws&quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+ &lt;span class=&quot;nx&quot;&gt;region&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;eu&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;west&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;
+
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;strong class=&quot;important-statement&quot;&gt;The region is hard coded as eu-west-1 in this example, update for your region, or check out some of my other posts to see how I use a variable for different environments&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;Once you have this, you just need to initialise the directory to run terraform using &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;terraform init&lt;/code&gt;&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;terraform init
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/iam_role/create_iam_role_10.png&quot; alt=&quot;centered&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;And that’s it, you’re all good to start managing infrastructure on AWS with Terraform!&lt;/p&gt;
+
+&lt;p&gt;Check out some of my other posts to see how I configure my backend to store the state file centrally in AWS s3 &lt;a href=&quot;/terraform/aws/2023/04/17/Terraform-S3-backend.html&quot;&gt;here.&lt;/a&gt; Or some cool Infrastructure management examples we can now do such as creating a basic VPC with networking &lt;a href=&quot;/terraform/aws/networking/2023/06/08/Basic-AWS-Networking-with-Terraform.html&quot;&gt;here&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;Happy Terraforming!&lt;/p&gt;</content><author><name>Darren Murphy</name></author><category term="Terraform" /><category term="AWS" /><category term="AWS" /><category term="IaC" /><category term="Infrastructure" /><category term="Terraform" /><summary type="html">A short post describing how to configure an IAM role for Terraform to interact with AWS.</summary></entry><entry><title type="html">Automating Azure OpenAI Deployments with Terraform</title><link href="http://localhost:4000/terraform/azure/ai/2023/05/17/Azure-Open-AI-with-Terraform.html" rel="alternate" type="text/html" title="Automating Azure OpenAI Deployments with Terraform" /><published>2023-05-17T00:00:00+01:00</published><updated>2023-05-17T00:00:00+01:00</updated><id>http://localhost:4000/terraform/azure/ai/2023/05/17/Azure-Open-AI-with-Terraform</id><content type="html" xml:base="http://localhost:4000/terraform/azure/ai/2023/05/17/Azure-Open-AI-with-Terraform.html">&lt;p&gt;In this blog post, I’ll explore an efficient way to deploy multiple Azure OpenAI instances with multiple models using Terraform.&lt;/p&gt;
+
+&lt;p&gt;Azure OpenAI provides powerful artificial intelligence capabilities, including natural language processing and machine learning models.&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;#introduction-to-azure-openai&quot;&gt;Introduction to Azure OpenAI&lt;/a&gt;
+    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#azure-openai-vs-openai-whats-the-difference&quot;&gt;Azure OpenAI vs. OpenAI: What’s the Difference?&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#the-challenge-deploying-multiple-models-to-multiple-cognitive-accounts&quot;&gt;The Challenge: Deploying Multiple Models to Multiple Cognitive Accounts&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#the-solution-nesting-loops-with-terraform-and-locals&quot;&gt;The Solution: Nesting Loops with Terraform and Locals&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#project-structure&quot;&gt;Project Structure&lt;/a&gt;
+    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#maintf&quot;&gt;main.tf&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#variablestf&quot;&gt;variables.tf&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#devtfvars&quot;&gt;dev.tfvars&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#localstf&quot;&gt;locals.tf&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#resource-grouptf&quot;&gt;resource-group.tf&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#gpt-deploymenttf&quot;&gt;gpt-deployment.tf&lt;/a&gt;
+    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#azurerm_cognitive_account-resource-block&quot;&gt;azurerm_cognitive_account Resource Block&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#azurerm_cognitive_deployment-resource-block&quot;&gt;azurerm_cognitive_deployment Resource Block&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#conclusion&quot;&gt;Conclusion&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/smurphin/azure-openai-terraform&quot;&gt;Reference code repository&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;introduction-to-azure-openai&quot;&gt;&lt;a href=&quot;#introduction-to-azure-openai&quot;&gt;Introduction to Azure OpenAI&lt;/a&gt;&lt;/h2&gt;
+&lt;p&gt;Azure OpenAI is a cloud-based service offered by Microsoft Azure that enables developers and data scientists to build and deploy cutting-edge artificial intelligence models. It provides a wide range of AI capabilities, including natural language understanding, sentiment analysis, text translation, image recognition, and more. Azure OpenAI leverages advanced machine learning algorithms to enable sophisticated AI-driven applications and solutions.&lt;/p&gt;
+
+&lt;h3 id=&quot;azure-openai-vs-openai-whats-the-difference&quot;&gt;&lt;a href=&quot;#azure-openai-vs-openai-whats-the-difference&quot;&gt;Azure OpenAI vs. OpenAI: What’s the Difference?&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;While both Azure OpenAI and OpenAI are related to artificial intelligence, they serve different purposes. OpenAI is an independent research organization focused on developing advanced AI models and technologies. On the other hand, Azure OpenAI is a cloud service provided by Microsoft Azure that integrates OpenAI’s models and technologies into the Azure ecosystem. Azure OpenAI enables users to leverage OpenAI’s models easily and integrate them into their own applications and workflows within the Azure cloud environment.&lt;/p&gt;
+
+&lt;h2 id=&quot;the-challenge-deploying-multiple-models-to-multiple-cognitive-accounts&quot;&gt;&lt;a href=&quot;#the-challenge-deploying-multiple-models-to-multiple-cognitive-accounts&quot;&gt;The Challenge: Deploying Multiple Models to Multiple Cognitive Accounts&lt;/a&gt;&lt;/h2&gt;
+
+&lt;p&gt;For a recent hackathon I had a requirement to deploy multiple Azure OpenAI cognitive accounts, with all of the available deployment models available.  Due to demand current Microsoft restrictions restrict how many cognitive AI deployments can be made per tenant, as well as API rate limits per deployment.&lt;/p&gt;
+
+&lt;p&gt;We decided to deploy the maximum number of deployments possible (3 per region at time of writing) Manually creating and configuring each cognitive account and deployment model individually through the Azure portal GUI was a tedious and error-prone process.&lt;/p&gt;
+
+&lt;p&gt;In addition there are different models available in different regions, GPT-4 is only available in the US region for example, so it couldn’t be just a simple copy / paste or loop exercise.&lt;/p&gt;
+
+&lt;p&gt;Similarly, defining multiple resource blocks in Terraform for each cognitive deployment account was not an ideal solution either. It would result in repetitive code and decreased maintainability.&lt;/p&gt;
+
+&lt;p&gt;I needed a better way to automate this process.&lt;/p&gt;
+
+&lt;h2 id=&quot;the-solution-nesting-loops-with-terraform-and-locals&quot;&gt;&lt;a href=&quot;#the-solution-nesting-loops-with-terraform-and-locals&quot;&gt;The Solution: Nesting Loops with Terraform and Locals&lt;/a&gt;&lt;/h2&gt;
+
+&lt;p&gt;To overcome these challenges, I leveraged the power of Terraform and its ability to nest loops using locals. By defining a nested loop structure, I was able to create a clean and efficient solution.&lt;/p&gt;
+
+&lt;p&gt;Before diving into the code, it’s important to note that this blog post assumes you have some basic knowledge of Azure and Terraform. I won’t cover authenticating or connecting to your tenant. If you’re new to Azure or Terraform, don’t worry! The &lt;a href=&quot;https://developer.hashicorp.com/terraform/tutorials/azure-get-started/azure-build&quot;&gt;Azure provider documentation&lt;/a&gt; from HashiCorp provides a step-by-step guide on getting started with Azure and Terraform.&lt;/p&gt;
+
+&lt;h2 id=&quot;project-structure&quot;&gt;&lt;a href=&quot;#project-structure&quot;&gt;Project Structure&lt;/a&gt;&lt;/h2&gt;
+
+&lt;p&gt;All the code referenced in this post can be found in the github repo &lt;a href=&quot;https://github.com/smurphin/azure-openai-terraform&quot;&gt;here&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;To keep my Terraform project organized and modular, I divided it into multiple files. Here’s an overview of the project structure:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;#maintf&quot;&gt;main.tf&lt;/a&gt;: Contains the main Terraform configuration and provider settings.&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#variablestf&quot;&gt;variables.tf&lt;/a&gt;: Declares the variables used in the project, including the deployment configurations.&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#devtfvars&quot;&gt;dev.tfvars&lt;/a&gt;: Environment-specific variables file for the development environment.&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#localstf&quot;&gt;locals.tf&lt;/a&gt;: Defines the local values and logic for generating the cognitive deployments.&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#resource-grouptf&quot;&gt;resource-group.tf&lt;/a&gt;: Defines and manages the Azure resource group where the cognitive accounts and deployments will be organized and managed.&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#gpt-deploymenttf&quot;&gt;gpt-deployment.tf&lt;/a&gt;: Defines the configuration for deployment of Azure cognitive accounts and OpenAI models within the accounts.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Let’s take a closer look at the key Terraform configuration files in the project.&lt;/p&gt;
+
+&lt;h3 id=&quot;maintf&quot;&gt;&lt;a href=&quot;https://github.com/smurphin/azure-openai-terraform/blob/main/main.tf&quot; target=&quot;_blank&quot;&gt;main.tf&lt;/a&gt;&lt;/h3&gt;
+
+&lt;p&gt;In this file, I defined the Azure provider and its required version. I also configured additional provider features as needed. Here’s a snippet of the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;main.tf&lt;/code&gt; file:&lt;/p&gt;
+
+&lt;div class=&quot;language-hcl highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nx&quot;&gt;terraform&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;required_providers&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;nx&quot;&gt;azurerm&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+      &lt;span class=&quot;nx&quot;&gt;source&lt;/span&gt;  &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;hashicorp/azurerm&quot;&lt;/span&gt;
+      &lt;span class=&quot;nx&quot;&gt;version&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;~&amp;gt; 3.54.0&quot;&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+  &lt;span class=&quot;nx&quot;&gt;required_version&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&amp;gt;= 1.1.0&quot;&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;nx&quot;&gt;provider&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;azurerm&quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;features&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{}&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;variablestf&quot;&gt;&lt;a href=&quot;https://github.com/smurphin/azure-openai-terraform/blob/main/variables.tf&quot; target=&quot;_blank&quot;&gt;variables.tf&lt;/a&gt;&lt;/h3&gt;
+
+&lt;p&gt;The &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;variables.tf&lt;/code&gt; file defines the variables used throughout the project. It includes variables for the environment, subscription, resource group, deployments, allowed subnets, and model versions. Here’s a snippet of the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;variables.tf&lt;/code&gt; file:&lt;/p&gt;
+
+&lt;div class=&quot;language-hcl highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nx&quot;&gt;variable&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;env&quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{}&lt;/span&gt;
+
+&lt;span class=&quot;nx&quot;&gt;variable&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;subscription&quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{}&lt;/span&gt;
+
+&lt;span class=&quot;nx&quot;&gt;variable&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;resource-group&quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{}&lt;/span&gt;
+
+&lt;span class=&quot;nx&quot;&gt;variable&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;deployments&quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;type&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;map&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;object&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;nx&quot;&gt;location&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;string&lt;/span&gt;
+    &lt;span class=&quot;nx&quot;&gt;models&lt;/span&gt;  &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;list&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;string&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;))&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;nx&quot;&gt;variable&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;allowed-subnets&quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;default&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[]&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;type&lt;/span&gt;    &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;list&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;string&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;nx&quot;&gt;variable&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;model_versions&quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;default&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;s2&quot;&gt;&quot;gpt-35-turbo&quot;&lt;/span&gt;     &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;0301&quot;&lt;/span&gt;
+    &lt;span class=&quot;s2&quot;&gt;&quot;code-davinci-002&quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;1&quot;&lt;/span&gt;
+    &lt;span class=&quot;s2&quot;&gt;&quot;gpt-4&quot;&lt;/span&gt;            &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;0314&quot;&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;type&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;map&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;string&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;In the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;variables.tf&lt;/code&gt; file, the variables are defined using the following format:&lt;/p&gt;
+
+&lt;div class=&quot;language-hcl highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nx&quot;&gt;variable&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&amp;lt;variable_name&amp;gt;&quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;type&lt;/span&gt;        &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;variable_type&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;&amp;gt;&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;default&lt;/span&gt;     &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;default_value&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;&amp;lt;variable_name&amp;gt;&lt;/code&gt;: This is the name of the variable you define. It should be unique within the file.&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;&amp;lt;variable_type&amp;gt;&lt;/code&gt; (optional): It specifies the type of the variable, such as string, number, list, or map. If not specified, the variable type will be inferred based on the assigned value or the default value.&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;&amp;lt;default_value&amp;gt;&lt;/code&gt; (optional): It represents the default value assigned to the variable if no other value is provided. If not specified, the variable is considered as required and must be provided during execution.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;strong class=&quot;important-statement&quot;&gt;If a variable does not have a default value defined, it means it is mandatory and must be passed to the Terraform command either directly on the command line or through a &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;.tfvars&lt;/code&gt; file.&lt;/strong&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;devtfvars&quot;&gt;&lt;a href=&quot;https://github.com/smurphin/azure-openai-terraform/blob/main/environments/development/dev.tfvars&quot; target=&quot;_blank&quot;&gt;dev.tfvars&lt;/a&gt;&lt;/h3&gt;
+
+&lt;p&gt;The &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;dev.tfvars&lt;/code&gt; file is a Terraform variable file tailored for the specific environment. It contains the values assigned to variables used in the Terraform configuration to customize and configure the infrastructure deployment for that environment.&lt;/p&gt;
+
+&lt;p&gt;This file is written in plain text and follows the Terraform variable syntax. It allows you to specify values for variables defined in your Terraform configuration without modifying the actual code. By separating variable values into an external file, you can easily manage different environments and reuse the same Terraform codebase with different configurations.&lt;/p&gt;
+
+&lt;p&gt;Here’s a snippet of the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;dev.tfvars&lt;/code&gt; file:&lt;/p&gt;
+
+&lt;div class=&quot;language-hcl highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nx&quot;&gt;env&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;dev&quot;&lt;/span&gt;
+
+&lt;span class=&quot;nx&quot;&gt;subscription&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxx&quot;&lt;/span&gt;
+
+&lt;span class=&quot;nx&quot;&gt;resource&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;group&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;DEV-GPT&quot;&lt;/span&gt;
+
+&lt;span class=&quot;nx&quot;&gt;deployments&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;s2&quot;&gt;&quot;dev-gpt-EU-a&quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;nx&quot;&gt;location&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;westeurope&quot;&lt;/span&gt;
+    &lt;span class=&quot;nx&quot;&gt;models&lt;/span&gt;  &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;gpt-35-turbo&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;code-davinci-002&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;,&lt;/span&gt;
+
+  &lt;span class=&quot;s2&quot;&gt;&quot;dev-gpt-US-a&quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;nx&quot;&gt;location&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;eastus&quot;&lt;/span&gt;
+    &lt;span class=&quot;nx&quot;&gt;models&lt;/span&gt;  &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;gpt-35-turbo&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;gpt-4&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;nx&quot;&gt;allowed&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;subnets&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;
+  &lt;span class=&quot;s2&quot;&gt;&quot;189.31.106.126&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;This is where the environment specific values for the variables defined in &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;variables.tf&lt;/code&gt; are set, allowing us to use the same code for different environments.&lt;/p&gt;
+
+&lt;p&gt;To use the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;dev.tfvars&lt;/code&gt; file, you can pass it to the Terraform command line using the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;-var-file&lt;/code&gt; option. 
+For example:&lt;/p&gt;
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;
+terraform apply &lt;span class=&quot;nt&quot;&gt;-var-file&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;dev.tfvars
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;localstf&quot;&gt;&lt;a href=&quot;https://github.com/smurphin/azure-openai-terraform/blob/main/locals.tf&quot; target=&quot;_blank&quot;&gt;locals.tf&lt;/a&gt;&lt;/h3&gt;
+
+&lt;p&gt;The &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;locals.tf&lt;/code&gt; file plays a crucial role in generating the cognitive deployments dynamically. It allows you to define local values and logic that can be used within your Terraform configuration. Let’s dive into a detailed explanation of the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;locals.tf&lt;/code&gt; file.&lt;/p&gt;
+
+&lt;div class=&quot;language-hcl highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nx&quot;&gt;locals&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;cognitive_deployments&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;flatten&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;
+    &lt;span class=&quot;nx&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;deployment&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;values&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;var&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;deployments&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;
+      &lt;span class=&quot;nx&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;model&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;values&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;models&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;nx&quot;&gt;deployment_name&lt;/span&gt;        &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;deployment&lt;/span&gt;
+        &lt;span class=&quot;nx&quot;&gt;cognitive_account_id&lt;/span&gt;  &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;azurerm_cognitive_account&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;gpt&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;act&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;deployment&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;id&lt;/span&gt;
+        &lt;span class=&quot;nx&quot;&gt;model_name&lt;/span&gt;            &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;model&lt;/span&gt;
+        &lt;span class=&quot;nx&quot;&gt;version&lt;/span&gt;               &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;var&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;model_versions&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;model&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;The &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;cognitive_deployments&lt;/code&gt; local value is defined as a flattened list generated using a nested for loop. This loop iterates over each deployment specified in the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;var.deployments&lt;/code&gt; variable, which contains the deployment configurations for each instance.&lt;/p&gt;
+
+&lt;p&gt;For each deployment, another nested for loop is used to iterate over the models specified in the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;values.models&lt;/code&gt; list. This loop generates a map for each model within the deployment.&lt;/p&gt;
+
+&lt;p&gt;Within each map, the following values are assigned:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;deployment_name&lt;/code&gt;: The name of the deployment, which is set as the current deployment being iterated.&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;cognitive_account_id&lt;/code&gt;: The Azure Cognitive Account ID, which is fetched using the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;azurerm_cognitive_account.gpt-act[deployment].id&lt;/code&gt; expression.&lt;/li&gt;
+  &lt;li&gt;This retrieves the ID of the corresponding cognitive account based on the deployment name.&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;model_name&lt;/code&gt;: The name of the model, which is set as the current model being iterated.&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;version&lt;/code&gt;: The version of the model, which is fetched from the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;var.model_versions&lt;/code&gt; variable using the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;var.model_versions[model]&lt;/code&gt; expression.&lt;/li&gt;
+  &lt;li&gt;This retrieves the version based on the model name.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;The &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;cognitive_deployments&lt;/code&gt; local value is generated as a flattened list, combining all the maps generated for each deployment and model&lt;/p&gt;
+
+&lt;p&gt;This results in a list of maps, where each map represents a specific cognitive deployment.&lt;/p&gt;
+
+&lt;p&gt;You can use the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;cognitive_deployments&lt;/code&gt; local value in other parts of your Terraform configuration to reference the dynamically generated deployment configurations.&lt;/p&gt;
+
+&lt;h2 id=&quot;resource-grouptf&quot;&gt;&lt;a href=&quot;https://github.com/smurphin/azure-openai-terraform/blob/main/resource-group.tf&quot; target=&quot;_blank&quot;&gt;resource-group.tf&lt;/a&gt;&lt;/h2&gt;
+
+&lt;p&gt;The &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;resource-group.tf&lt;/code&gt; file contains the definition of the Azure Resource Group resource using the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;azurerm_resource_group&lt;/code&gt; Terraform provider. This serves as a logical container for the related resources. It ensures that all the cognitive accounts and deployments associated with the project are organized and managed within the specified resource group, providing better resource management, access control, and overall organization of resources in the Azure environment.&lt;/p&gt;
+
+&lt;div class=&quot;language-hcl highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nx&quot;&gt;resource&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;azurerm_resource_group&quot;&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;gpt-rg&quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;nx&quot;&gt;location&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;westeurope&quot;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;#Note: cognitive accounts can be deployed in different regions&lt;/span&gt;
+    &lt;span class=&quot;c1&quot;&gt;#this is just where the resource group exists&lt;/span&gt;
+    &lt;span class=&quot;nx&quot;&gt;name&lt;/span&gt;     &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;${var.env}-GPT&quot;&lt;/span&gt;
+    &lt;span class=&quot;nx&quot;&gt;tags&lt;/span&gt;     &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{}&lt;/span&gt;
+
+    &lt;span class=&quot;nx&quot;&gt;timeouts&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{}&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Explanation of the resource block:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;azurerm_resource_group&lt;/code&gt;: Specifies the Azure Resource Group resource type using the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;azurerm_resource_group&lt;/code&gt; provider.&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;&quot;gpt-rg&quot;&lt;/code&gt;: Sets the resource name for referencing purposes within the Terraform configuration.&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;location = &quot;westeurope&quot;&lt;/code&gt;: Specifies the Azure region where the resource group will be created.&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;name = &quot;${var.env}-GPT&quot;&lt;/code&gt;: Sets the name of the resource group. The name is constructed using the value of the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;var.env&lt;/code&gt; variable, and then the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;&quot;GPT&quot;&lt;/code&gt; suffix.
+    &lt;ul&gt;
+      &lt;li&gt;This allows for dynamic naming based on the environment specified in the variables.&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;tags = {}&lt;/code&gt;: Specifies any tags that should be associated with the resource group. In this case, an empty set of tags is provided, but you can customize it as per your requirements.&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;timeouts {}&lt;/code&gt;: Specifies the timeout configuration for resource operations. In this case, the default timeout values are used.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;gpt-deploymenttf&quot;&gt;&lt;a href=&quot;https://github.com/smurphin/azure-openai-terraform/blob/main/gpt-deployment.tf&quot; target=&quot;_blank&quot;&gt;gpt-deployment.tf&lt;/a&gt;&lt;/h2&gt;
+
+&lt;p&gt;The core deployment resources are defined in the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;gpt-deployment.tf&lt;/code&gt; file. This file includes the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;azurerm_cognitive_account&lt;/code&gt; and &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;azurerm_cognitive_deployment&lt;/code&gt; resource blocks. Here’s a snippet of the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;gpt-deployment.tf&lt;/code&gt; file:&lt;/p&gt;
+
+&lt;div class=&quot;language-hcl highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nx&quot;&gt;resource&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;azurerm_cognitive_account&quot;&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;gpt-act&quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;nx&quot;&gt;for_each&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;var&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;deployments&lt;/span&gt;
+    &lt;span class=&quot;nx&quot;&gt;custom_subdomain_name&lt;/span&gt;              &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;each&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;key&lt;/span&gt;
+    &lt;span class=&quot;nx&quot;&gt;dynamic_throttling_enabled&lt;/span&gt;         &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;false&lt;/span&gt;
+    &lt;span class=&quot;nx&quot;&gt;kind&lt;/span&gt;                               &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;OpenAI&quot;&lt;/span&gt;
+    &lt;span class=&quot;nx&quot;&gt;local_auth_enabled&lt;/span&gt;                 &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;true&lt;/span&gt;
+    &lt;span class=&quot;nx&quot;&gt;location&lt;/span&gt;                           &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;each&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;value&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;location&lt;/span&gt;
+    &lt;span class=&quot;nx&quot;&gt;name&lt;/span&gt;                               &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;each&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;key&lt;/span&gt;
+    &lt;span class=&quot;nx&quot;&gt;outbound_network_access_restricted&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;false&lt;/span&gt;
+    &lt;span class=&quot;nx&quot;&gt;public_network_access_enabled&lt;/span&gt;      &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;true&lt;/span&gt;
+    &lt;span class=&quot;nx&quot;&gt;resource_group_name&lt;/span&gt;                &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;azurerm_resource_group&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;gpt&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;rg&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;name&lt;/span&gt;
+    &lt;span class=&quot;nx&quot;&gt;sku_name&lt;/span&gt;                           &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;S0&quot;&lt;/span&gt;
+    &lt;span class=&quot;nx&quot;&gt;tags&lt;/span&gt;                               &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{}&lt;/span&gt;
+
+    &lt;span class=&quot;nx&quot;&gt;network_acls&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;nx&quot;&gt;default_action&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;Deny&quot;&lt;/span&gt;
+        &lt;span class=&quot;nx&quot;&gt;ip_rules&lt;/span&gt;       &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;var&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;allowed&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;subnets&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+    &lt;span class=&quot;nx&quot;&gt;timeouts&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{}&lt;/span&gt;
+
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;nx&quot;&gt;resource&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;azurerm_cognitive_deployment&quot;&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;gpt-deployment&quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;for_each&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;idx&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;dep&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;local&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;cognitive_deployments&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;idx&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;dep&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+  &lt;span class=&quot;nx&quot;&gt;cognitive_account_id&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;each&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;value&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;cognitive_account_id&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;name&lt;/span&gt;                 &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;each&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;value&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;model_name&lt;/span&gt;
+
+  &lt;span class=&quot;nx&quot;&gt;model&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;nx&quot;&gt;format&lt;/span&gt;  &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;OpenAI&quot;&lt;/span&gt;
+    &lt;span class=&quot;nx&quot;&gt;name&lt;/span&gt;    &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;each&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;value&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;model_name&lt;/span&gt;
+    &lt;span class=&quot;nx&quot;&gt;version&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;each&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;value&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;version&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+  &lt;span class=&quot;nx&quot;&gt;scale&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;nx&quot;&gt;type&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;Standard&quot;&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+  &lt;span class=&quot;nx&quot;&gt;timeouts&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{}&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;azurerm_cognitive_account-resource-block&quot;&gt;&lt;a href=&quot;https://github.com/smurphin/azure-openai-terraform/blob/7c41318e3b761a6c2dca9f5decdc18742a021ff3/gpt-deployment.tf#L1&quot; target=&quot;_blank&quot;&gt;azurerm_cognitive_account Resource Block&lt;/a&gt;&lt;/h3&gt;
+
+&lt;p&gt;The &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;azurerm_cognitive_account&lt;/code&gt; resource block provisions a cognitive account in Azure for the GPT project. It uses the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;for_each&lt;/code&gt; meta-argument to iterate over the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;var.deployments&lt;/code&gt; variable, which contains a map of deployment configurations for different regions or environments.&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;for_each&lt;/code&gt;: Iterates over the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;var.deployments&lt;/code&gt; map to create a cognitive account for each deployment.&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;custom_subdomain_name&lt;/code&gt;: Specifies the custom subdomain name for the cognitive account.
+    &lt;ul&gt;
+      &lt;li&gt;i.e &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;dev-gpt-EU-a&lt;/code&gt;.&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;dynamic_throttling_enabled&lt;/code&gt;: Determines if dynamic throttling is enabled for the cognitive account.&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;kind&lt;/code&gt;: Specifies the kind of cognitive service, which is set to “OpenAI” in this case.&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;local_auth_enabled&lt;/code&gt;: Indicates whether local authentication is enabled.&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;location&lt;/code&gt;: Specifies the location for the cognitive account, obtained from &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;each.value.location&lt;/code&gt;.
+    &lt;ul&gt;
+      &lt;li&gt;i.e &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;westeurope&lt;/code&gt;.&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;name&lt;/code&gt;: Sets the name of the cognitive account to &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;each.key&lt;/code&gt;, which corresponds to the deployment name.
+    &lt;ul&gt;
+      &lt;li&gt;i.e &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;dev-gpt-EU-a&lt;/code&gt;.&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;outbound_network_access_restricted&lt;/code&gt;: Specifies if outbound network access is restricted for the cognitive account.&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;public_network_access_enabled&lt;/code&gt;: Determines if public network access is enabled for the cognitive account.&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;resource_group_name&lt;/code&gt;: Specifies the name of the resource group where the cognitive account is created.
+    &lt;ul&gt;
+      &lt;li&gt;i.e &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;DEV-GPT&lt;/code&gt;.&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;sku_name&lt;/code&gt;: Sets the SKU (service level) for the cognitive account to “S0”.&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;tags&lt;/code&gt;: Specifies any tags to be associated with the cognitive account.&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;network_acls&lt;/code&gt;: Defines the network access control rules for the cognitive account, including the default action and IP rules.&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;timeouts&lt;/code&gt;: Configures timeouts for creating or updating the cognitive account.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;azurerm_cognitive_deployment-resource-block&quot;&gt;&lt;a href=&quot;https://github.com/smurphin/azure-openai-terraform/blob/7c41318e3b761a6c2dca9f5decdc18742a021ff3/gpt-deployment.tf#L24&quot; target=&quot;_blank&quot;&gt;azurerm_cognitive_deployment Resource Block&lt;/a&gt;&lt;/h3&gt;
+
+&lt;p&gt;The &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;azurerm_cognitive_deployment&lt;/code&gt; resource block defines the deployment of cognitive models within the cognitive account. It uses the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;for_each&lt;/code&gt; meta-argument to iterate over the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;local.cognitive_deployments&lt;/code&gt; list, which contains the flattened list of deployment configurations.&lt;/p&gt;
+
+&lt;p&gt;given the variables defined above in &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;variables.tf&lt;/code&gt; and &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;dev.tfvars&lt;/code&gt; we would end up with a flattened list like so&lt;/p&gt;
+
+&lt;div class=&quot;language-hcl highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nx&quot;&gt;locals&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;cognitive_deployments&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+      &lt;span class=&quot;nx&quot;&gt;deployment_name&lt;/span&gt;       &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;dev-gpt-EU-a&quot;&lt;/span&gt;
+      &lt;span class=&quot;nx&quot;&gt;cognitive_account_id&lt;/span&gt;  &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&amp;lt;cognitive-account-id&amp;gt;&quot;&lt;/span&gt;
+      &lt;span class=&quot;nx&quot;&gt;model_name&lt;/span&gt;            &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;gpt-35-turbo&quot;&lt;/span&gt;
+      &lt;span class=&quot;nx&quot;&gt;version&lt;/span&gt;               &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;0301&quot;&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+      &lt;span class=&quot;nx&quot;&gt;deployment_name&lt;/span&gt;       &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;dev-gpt-EU-a&quot;&lt;/span&gt;
+      &lt;span class=&quot;nx&quot;&gt;cognitive_account_id&lt;/span&gt;  &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&amp;lt;cognitive-account-id&amp;gt;&quot;&lt;/span&gt;
+      &lt;span class=&quot;nx&quot;&gt;model_name&lt;/span&gt;            &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;code-davinci-002&quot;&lt;/span&gt;
+      &lt;span class=&quot;nx&quot;&gt;version&lt;/span&gt;               &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;1&quot;&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+      &lt;span class=&quot;nx&quot;&gt;deployment_name&lt;/span&gt;       &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;dev-gpt-US-a&quot;&lt;/span&gt;
+      &lt;span class=&quot;nx&quot;&gt;cognitive_account_id&lt;/span&gt;  &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&amp;lt;cognitive-account-id&amp;gt;&quot;&lt;/span&gt;
+      &lt;span class=&quot;nx&quot;&gt;model_name&lt;/span&gt;            &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;gpt-35-turbo&quot;&lt;/span&gt;
+      &lt;span class=&quot;nx&quot;&gt;version&lt;/span&gt;               &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;0301&quot;&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+      &lt;span class=&quot;nx&quot;&gt;deployment_name&lt;/span&gt;       &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;dev-gpt-US-a&quot;&lt;/span&gt;
+      &lt;span class=&quot;nx&quot;&gt;cognitive_account_id&lt;/span&gt;  &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&amp;lt;cognitive-account-id&amp;gt;&quot;&lt;/span&gt;
+      &lt;span class=&quot;nx&quot;&gt;model_name&lt;/span&gt;            &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;gpt-4&quot;&lt;/span&gt;
+      &lt;span class=&quot;nx&quot;&gt;version&lt;/span&gt;               &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;0314&quot;&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;&lt;strong class=&quot;important-statement&quot;&gt;i.e two deployments, each with specific model deployments relative to their region.&lt;/strong&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;for_each&lt;/code&gt;: Iterates over the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;local.cognitive_deployments&lt;/code&gt; list to create a cognitive deployment for each model within each deployment.&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;cognitive_account_id&lt;/code&gt;: Specifies the ID of the cognitive account associated with the deployment, obtained from &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;each.value.cognitive_account_id&lt;/code&gt;. This is dynamicaly assigned when the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;azurerm_cognitive_account&lt;/code&gt; resource block is deployed.&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;name&lt;/code&gt;: Sets the name of the cognitive deployment to &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;each.value.model_name&lt;/code&gt;, which corresponds to the model.&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;model&lt;/code&gt;: Defines the cognitive model to be deployed, including its format, name, and version. The format is set to “OpenAI”, and the name and version are obtained from
+    &lt;ul&gt;
+      &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;each.value.model_name&lt;/code&gt; and &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;each.value.version&lt;/code&gt;, respectively.&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;scale&lt;/code&gt;: Specifies the scale type for the deployment, which is set to “Standard” in this case.&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;timeouts&lt;/code&gt;: Configures timeouts for creating or updating the cognitive deployment.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;conclusion&quot;&gt;&lt;a href=&quot;#conclusion&quot;&gt;Conclusion&lt;/a&gt;&lt;/h2&gt;
+
+&lt;p&gt;By using nested loops and locals, we achieved several benefits. First, we eliminated the need for repetitive resource blocks and reduced code duplication. Second, we improved maintainability by centralizing the deployment logic and reducing the chances of human error. Finally, our solution significantly reduced deployment time, allowing us to scale efficiently.&lt;/p&gt;
+
+&lt;p&gt;Using Terraform now allows me to deploy multiple Cognitive accounts in different regions, with different model deployments per account in just a matter of minutes, something that took well over an hour via the GUI.&lt;/p&gt;
+
+&lt;p&gt;In conclusion, leveraging Terraform’s nested loops with locals provided a powerful and efficient solution for deploying multiple Azure OpenAI instances with multiple models. By automating the deployment process, we saved time, reduced errors, and improved maintainability. Now, we can focus on exploring the potential of Azure OpenAI without being weighed down by manual setup.&lt;/p&gt;
+
+&lt;p&gt;Happy Terraforming!&lt;/p&gt;
+
+&lt;h2 id=&quot;reference-code-repository&quot;&gt;&lt;a href=&quot;https://github.com/smurphin/azure-openai-terraform&quot;&gt;Reference code repository&lt;/a&gt;&lt;/h2&gt;
+
+&lt;p&gt;All the code referenced above can be found &lt;a href=&quot;https://github.com/smurphin/azure-openai-terraform&quot;&gt;here&lt;/a&gt;&lt;/p&gt;</content><author><name>Darren Murphy</name></author><category term="Terraform" /><category term="Azure" /><category term="AI" /><category term="Azure" /><category term="Open AI" /><category term="AI" /><category term="IaC" /><category term="Infrastructure" /><category term="Terraform" /><summary type="html">In this blog post, I’ll explore an efficient way to deploy multiple Azure OpenAI instances with multiple models using Terraform.</summary></entry><entry><title type="html">Configure Terraform to use an S3 backend</title><link href="http://localhost:4000/terraform/aws/2023/04/17/Terraform-S3-backend.html" rel="alternate" type="text/html" title="Configure Terraform to use an S3 backend" /><published>2023-04-17T01:00:00+01:00</published><updated>2023-04-17T01:00:00+01:00</updated><id>http://localhost:4000/terraform/aws/2023/04/17/Terraform-S3-backend</id><content type="html" xml:base="http://localhost:4000/terraform/aws/2023/04/17/Terraform-S3-backend.html">&lt;p&gt;Using S3 to store the Terraform state file allows multiple people in a team to work on the same Infra without risking the state file getting out of sync, it’s also really easy to set up.&lt;/p&gt;
+
+&lt;!-- toc --&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;#how-to-configure&quot;&gt;How to configure&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#how-to-migrate-an-existing-local-state-file-to-s3&quot;&gt;How to migrate an existing local state file to S3&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#how-to-switch-between-state-files-for-different-environments&quot;&gt;How to switch between state files for different environments&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;!-- tocstop --&gt;
+
+&lt;p&gt;For the purpose of this post I’ll just be running Terraform from my local machine and setting AWS credentials for my session, check out &lt;a href=&quot;/terraform/aws/2023/06/01/Get-setup-to-use-terraform-with-aws.html&quot;&gt;this&lt;/a&gt; post for more details on how I set that up.&lt;/p&gt;
+
+&lt;h2 id=&quot;how-to-configure&quot;&gt;How to configure&lt;/h2&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt; &lt;span class=&quot;nb&quot;&gt;export &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;AWS_ACCESS_KEY_ID&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;your_access_key_here
+ &lt;span class=&quot;nb&quot;&gt;export &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;AWS_SECRET_ACCESS_KEY&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;your_secret_key_here
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;Note: Adding a space in front of the EXPORT statement keeps the command out of your Bash history&lt;/p&gt;
+
+&lt;p&gt;Now that you’ve authenticated to AWS, you need to tell Terraform to use a remote S3 backend.  Edit your &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;main.tf&lt;/code&gt; file as shown:&lt;/p&gt;
+
+&lt;div class=&quot;language-hcl highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nx&quot;&gt;terraform&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;# configure the backend for remote state file storage&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;backend&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;s3&quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{}&lt;/span&gt;
+  
+  &lt;span class=&quot;nx&quot;&gt;required_providers&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+      &lt;span class=&quot;nx&quot;&gt;aws&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;nx&quot;&gt;source&lt;/span&gt;  &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;hashicorp/aws&quot;&lt;/span&gt;
+        &lt;span class=&quot;nx&quot;&gt;version&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;~&amp;gt; 4.0&quot;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;#dependant on what version you wish to use, check for latest version&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;you will then need to configure an &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;env.tfbackend&lt;/code&gt; file in your environment folder with the following details, similar to this &lt;a href=&quot;https://github.com/smurphin/aws-terraform-networking/blob/main/environments/eu-west-1/dev.tfbackend&quot; target=&quot;_blank&quot;&gt;example&lt;/a&gt;&lt;/p&gt;
+
+&lt;div class=&quot;language-hcl highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nx&quot;&gt;bucket&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;NameOfBucket&quot;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;#Enter the name of the S3 bucket you will use&lt;/span&gt;
+&lt;span class=&quot;nx&quot;&gt;key&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;NameOfStateFile&quot;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;#Enter the name you would like to save the state file as&lt;/span&gt;
+&lt;span class=&quot;nx&quot;&gt;region&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;REGION&quot;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;#Enter the region where your bucket is&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;keeping your backend config in the environment folder allows the same code to be used for different environments as detailed &lt;a href=&quot;/terraform/2023/06/07/how-I-structure-my-terraform-projects.html&quot;&gt;here&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;Note: The S3 bucket must already exist in the AWS account and must have a globally unique name&lt;/p&gt;
+
+&lt;p&gt;Now you’re ready to initialise Terraform and have it ready to store state in a central S3 bucket.&lt;/p&gt;
+
+&lt;div class=&quot;language-hcl highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nx&quot;&gt;terraform&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;init&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;backend&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;config&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;path_to_backend_file&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;tfbackend&lt;/span&gt;
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/terraform_terminal_1.png&quot; alt=&quot;Terminal output&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;And that’s it, now when you make any changes to your Terraform config, the state will be synced to a central S3 bucket.&lt;/p&gt;
+
+&lt;h2 id=&quot;how-to-migrate-an-existing-local-state-file-to-s3&quot;&gt;How to migrate an existing local state file to S3&lt;/h2&gt;
+
+&lt;p&gt;What if you already have a state file on your local machine while you’ve been testing your code and now you need to store it locally for others to collaborate?&lt;/p&gt;
+
+&lt;p&gt;This is where the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;-migrate-state &lt;/code&gt; option will help you out.&lt;/p&gt;
+
+&lt;p&gt;Configure the backend statement as above, but this time and the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;-migrate-state &lt;/code&gt;option at the end of the init command.&lt;/p&gt;
+
+&lt;div class=&quot;language-hcl highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nx&quot;&gt;terraform&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;init&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;migrate&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;state&lt;/span&gt;
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Terraform will detect the backend change and you’ll receive a prompt about migrating the state file to the S3 bucket, enter yes when prompted and you’ll receive something like the below;&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Initializing the backend...
+Backend configuration changed!
+
+Terraform has detected that the configuration specified for the backend
+has changed. Terraform will now check for existing state in the backends.
+
+Terraform detected that the backend type changed from &quot;remote&quot; to &quot;s3&quot;.
+Do you want to copy existing state to the new backend?
+  Pre-existing state was found while migrating the previous &quot;remote&quot; backend to the
+  newly configured &quot;s3&quot; backend. No existing state was found in the newly
+  configured &quot;s3&quot; backend. Do you want to copy this state to the new &quot;s3&quot;
+  backend? Enter &quot;yes&quot; to copy and &quot;no&quot; to start with an empty state.
+
+  Enter a value: yes
+
+Successfully configured the backend &quot;s3&quot;! Terraform will automatically
+use this backend unless the backend configuration changes.
+
+Terraform has been successfully initialized!
+
+You may now begin working with Terraform. Try running &quot;terraform plan&quot; to see
+any changes that are required for your infrastructure. All Terraform commands
+should now work.
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;how-to-switch-between-state-files-for-different-environments&quot;&gt;How to switch between state files for different environments&lt;/h2&gt;
+
+&lt;p&gt;When working with multiple environments (like development, staging, and production), you’ll need to manage separate state files for each. Here’s how you can do that effectively.  Ensure you have a folder setup that supports different environments as detailed &lt;a href=&quot;/terraform/2023/06/07/how-I-structure-my-terraform-projects.html&quot;&gt;here&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;Use the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;-reconfigure&lt;/code&gt; flag:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;When switching between environments, use the terraform init -reconfigure -backend-config=&lt;path_to_backend_file.tfbackend&gt; command. This tells Terraform to reinitialize the backend with the new configuration without prompting for state migration. For example:&lt;/path_to_backend_file.tfbackend&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;terraform init &lt;span class=&quot;nt&quot;&gt;-backend-config&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;path_to_backend_file.tfbackend &lt;span class=&quot;nt&quot;&gt;-reconfigure&lt;/span&gt;
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;This will use the config in the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;env.tfbackend&lt;/code&gt; file to switch the state file, allowing you to reuse your code across multiple environments.&lt;/p&gt;
+
+&lt;p&gt;I hope this is helpful! Please let me know if you have any feedback or questions. 😊&lt;/p&gt;</content><author><name>Darren Murphy</name></author><category term="Terraform" /><category term="AWS" /><category term="AWS" /><category term="S3" /><category term="IaC" /><category term="Infrastructure" /><category term="Terraform" /><summary type="html">Using S3 to store the Terraform state file allows multiple people in a team to work on the same Infra without risking the state file getting out of sync, it’s also really easy to set up.</summary></entry></feed>

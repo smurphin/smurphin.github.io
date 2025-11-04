@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-42GGHBDXW6"></script>
+    <script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-42GGHBDXW6');
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.8/clipboard.min.js"></script>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="keywords" content="automation, AI, productivity, technology radar, cloud infrastructure, emerging technologies, IT industry, IaC, Infrastructure as code, Network as code, Network engineering, Infrastructure engineering, Ansible, Python, Cybersecurity, Infosec, IT, Github, git">
+    <meta name="description" content="Welcome to my blog where I share my knowledge and experience on automation, AI, and their practical applications in improving productivity. Stay up-to-date with the latest technology trends, cloud infrastructure, emerging technologies, and insights from the IT industry. Topics include Infrastructure as Code (IaC), Network as Code, Network engineering, Infrastructure engineering, Ansible, Python, Cybersecurity, Infosec, IT, Github, and git."> 
+    <link rel="icon" href="/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="/assets/css/style.css?v=b74dcab777cd122bc989dbb1c76124a6ddb5970a">
+    <link rel="stylesheet" href="/assets/css/custom.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <!-- start custom head snippets, customize with your own _includes/head-custom.html file -->
+
+<!-- Setup theme-color -->
+<!-- start theme color meta headers -->
+<meta name="theme-color" content="#151515">
+<meta name="msapplication-navbutton-color" content="#151515">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<!-- end theme color meta headers -->
+
+
+<!-- Setup Google Analytics -->
+
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    ga('create', 'G-42GGHBDXW6', 'auto');
+    ga('send', 'pageview');
+  </script>
+
+
+
+<!-- You can set your favicon here -->
+<!-- link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" -->
+
+<!-- end custom head snippets -->
+
+
+<!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Automating Azure OpenAI Deployments with Terraform | Darren Murphy</title>
+<meta name="generator" content="Jekyll v3.9.3" />
+<meta property="og:title" content="Automating Azure OpenAI Deployments with Terraform" />
+<meta name="author" content="Darren Murphy" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="In this blog post, I’ll explore an efficient way to deploy multiple Azure OpenAI instances with multiple models using Terraform." />
+<meta property="og:description" content="In this blog post, I’ll explore an efficient way to deploy multiple Azure OpenAI instances with multiple models using Terraform." />
+<link rel="canonical" href="http://localhost:4000/terraform/azure/ai/2023/05/17/Azure-Open-AI-with-Terraform.html" />
+<meta property="og:url" content="http://localhost:4000/terraform/azure/ai/2023/05/17/Azure-Open-AI-with-Terraform.html" />
+<meta property="og:site_name" content="Darren Murphy" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2023-05-17T00:00:00+01:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Automating Azure OpenAI Deployments with Terraform" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Darren Murphy"},"dateModified":"2023-05-17T00:00:00+01:00","datePublished":"2023-05-17T00:00:00+01:00","description":"In this blog post, I’ll explore an efficient way to deploy multiple Azure OpenAI instances with multiple models using Terraform.","headline":"Automating Azure OpenAI Deployments with Terraform","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/terraform/azure/ai/2023/05/17/Azure-Open-AI-with-Terraform.html"},"url":"http://localhost:4000/terraform/azure/ai/2023/05/17/Azure-Open-AI-with-Terraform.html"}</script>
+<!-- End Jekyll SEO tag -->
+
+  </head>
+    
+  <body>
+    
+    <header>
+      <div class="container">
+        <a id="a-title" href="/">
+          <h1>Darren Murphy</h1>
+        </a>
+        <img src="/assets/images/skull_hacker1.png" class="header-logo" alt="Header Logo">
+        <h2>Full time network engineer, part time triathlete, technology lover.</h2>
+        
+        <section id="downloads">
+          
+          <a href="https://github.com/smurphin/smurphin.github.io" class="btn btn-github"><span class="icon"></span>View on GitHub</a>
+        </section>
+        <nav>
+    
+      <a href="/" >Home</a>
+    
+      <a href="/blog.html" >Blog</a>
+    
+      <a href="/cv.html" >CV</a>
+    
+  </nav>
+      </div>    
+    </header>
+
+    <div class="container home-container">
+      <div id="main-area">
+        <section id="main_content">
+          <small>17 May 2023</small>
+<h1>Automating Azure OpenAI Deployments with Terraform</h1>
+
+<p class="view">by Darren Murphy</p>
+
+<p>In this blog post, I’ll explore an efficient way to deploy multiple Azure OpenAI instances with multiple models using Terraform.</p>
+
+<p>Azure OpenAI provides powerful artificial intelligence capabilities, including natural language processing and machine learning models.</p>
+
+<ul>
+  <li><a href="#introduction-to-azure-openai">Introduction to Azure OpenAI</a>
+    <ul>
+      <li><a href="#azure-openai-vs-openai-whats-the-difference">Azure OpenAI vs. OpenAI: What’s the Difference?</a></li>
+    </ul>
+  </li>
+  <li><a href="#the-challenge-deploying-multiple-models-to-multiple-cognitive-accounts">The Challenge: Deploying Multiple Models to Multiple Cognitive Accounts</a></li>
+  <li><a href="#the-solution-nesting-loops-with-terraform-and-locals">The Solution: Nesting Loops with Terraform and Locals</a></li>
+  <li><a href="#project-structure">Project Structure</a>
+    <ul>
+      <li><a href="#maintf">main.tf</a></li>
+      <li><a href="#variablestf">variables.tf</a></li>
+      <li><a href="#devtfvars">dev.tfvars</a></li>
+      <li><a href="#localstf">locals.tf</a></li>
+    </ul>
+  </li>
+  <li><a href="#resource-grouptf">resource-group.tf</a></li>
+  <li><a href="#gpt-deploymenttf">gpt-deployment.tf</a>
+    <ul>
+      <li><a href="#azurerm_cognitive_account-resource-block">azurerm_cognitive_account Resource Block</a></li>
+      <li><a href="#azurerm_cognitive_deployment-resource-block">azurerm_cognitive_deployment Resource Block</a></li>
+    </ul>
+  </li>
+  <li><a href="#conclusion">Conclusion</a></li>
+  <li><a href="https://github.com/smurphin/azure-openai-terraform">Reference code repository</a></li>
+</ul>
+
+<h2 id="introduction-to-azure-openai"><a href="#introduction-to-azure-openai">Introduction to Azure OpenAI</a></h2>
+<p>Azure OpenAI is a cloud-based service offered by Microsoft Azure that enables developers and data scientists to build and deploy cutting-edge artificial intelligence models. It provides a wide range of AI capabilities, including natural language understanding, sentiment analysis, text translation, image recognition, and more. Azure OpenAI leverages advanced machine learning algorithms to enable sophisticated AI-driven applications and solutions.</p>
+
+<h3 id="azure-openai-vs-openai-whats-the-difference"><a href="#azure-openai-vs-openai-whats-the-difference">Azure OpenAI vs. OpenAI: What’s the Difference?</a></h3>
+<p>While both Azure OpenAI and OpenAI are related to artificial intelligence, they serve different purposes. OpenAI is an independent research organization focused on developing advanced AI models and technologies. On the other hand, Azure OpenAI is a cloud service provided by Microsoft Azure that integrates OpenAI’s models and technologies into the Azure ecosystem. Azure OpenAI enables users to leverage OpenAI’s models easily and integrate them into their own applications and workflows within the Azure cloud environment.</p>
+
+<h2 id="the-challenge-deploying-multiple-models-to-multiple-cognitive-accounts"><a href="#the-challenge-deploying-multiple-models-to-multiple-cognitive-accounts">The Challenge: Deploying Multiple Models to Multiple Cognitive Accounts</a></h2>
+
+<p>For a recent hackathon I had a requirement to deploy multiple Azure OpenAI cognitive accounts, with all of the available deployment models available.  Due to demand current Microsoft restrictions restrict how many cognitive AI deployments can be made per tenant, as well as API rate limits per deployment.</p>
+
+<p>We decided to deploy the maximum number of deployments possible (3 per region at time of writing) Manually creating and configuring each cognitive account and deployment model individually through the Azure portal GUI was a tedious and error-prone process.</p>
+
+<p>In addition there are different models available in different regions, GPT-4 is only available in the US region for example, so it couldn’t be just a simple copy / paste or loop exercise.</p>
+
+<p>Similarly, defining multiple resource blocks in Terraform for each cognitive deployment account was not an ideal solution either. It would result in repetitive code and decreased maintainability.</p>
+
+<p>I needed a better way to automate this process.</p>
+
+<h2 id="the-solution-nesting-loops-with-terraform-and-locals"><a href="#the-solution-nesting-loops-with-terraform-and-locals">The Solution: Nesting Loops with Terraform and Locals</a></h2>
+
+<p>To overcome these challenges, I leveraged the power of Terraform and its ability to nest loops using locals. By defining a nested loop structure, I was able to create a clean and efficient solution.</p>
+
+<p>Before diving into the code, it’s important to note that this blog post assumes you have some basic knowledge of Azure and Terraform. I won’t cover authenticating or connecting to your tenant. If you’re new to Azure or Terraform, don’t worry! The <a href="https://developer.hashicorp.com/terraform/tutorials/azure-get-started/azure-build">Azure provider documentation</a> from HashiCorp provides a step-by-step guide on getting started with Azure and Terraform.</p>
+
+<h2 id="project-structure"><a href="#project-structure">Project Structure</a></h2>
+
+<p>All the code referenced in this post can be found in the github repo <a href="https://github.com/smurphin/azure-openai-terraform">here</a></p>
+
+<p>To keep my Terraform project organized and modular, I divided it into multiple files. Here’s an overview of the project structure:</p>
+
+<ul>
+  <li><a href="#maintf">main.tf</a>: Contains the main Terraform configuration and provider settings.</li>
+  <li><a href="#variablestf">variables.tf</a>: Declares the variables used in the project, including the deployment configurations.</li>
+  <li><a href="#devtfvars">dev.tfvars</a>: Environment-specific variables file for the development environment.</li>
+  <li><a href="#localstf">locals.tf</a>: Defines the local values and logic for generating the cognitive deployments.</li>
+  <li><a href="#resource-grouptf">resource-group.tf</a>: Defines and manages the Azure resource group where the cognitive accounts and deployments will be organized and managed.</li>
+  <li><a href="#gpt-deploymenttf">gpt-deployment.tf</a>: Defines the configuration for deployment of Azure cognitive accounts and OpenAI models within the accounts.</li>
+</ul>
+
+<p>Let’s take a closer look at the key Terraform configuration files in the project.</p>
+
+<h3 id="maintf"><a href="https://github.com/smurphin/azure-openai-terraform/blob/main/main.tf" target="_blank">main.tf</a></h3>
+
+<p>In this file, I defined the Azure provider and its required version. I also configured additional provider features as needed. Here’s a snippet of the <code class="language-plaintext highlighter-rouge">main.tf</code> file:</p>
+
+<div class="language-hcl highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">terraform</span> <span class="p">{</span>
+  <span class="nx">required_providers</span> <span class="p">{</span>
+    <span class="nx">azurerm</span> <span class="p">=</span> <span class="p">{</span>
+      <span class="nx">source</span>  <span class="p">=</span> <span class="s2">"hashicorp/azurerm"</span>
+      <span class="nx">version</span> <span class="p">=</span> <span class="s2">"~&gt; 3.54.0"</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+
+  <span class="nx">required_version</span> <span class="p">=</span> <span class="s2">"&gt;= 1.1.0"</span>
+<span class="p">}</span>
+
+<span class="nx">provider</span> <span class="s2">"azurerm"</span> <span class="p">{</span>
+  <span class="nx">features</span> <span class="p">{}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="variablestf"><a href="https://github.com/smurphin/azure-openai-terraform/blob/main/variables.tf" target="_blank">variables.tf</a></h3>
+
+<p>The <code class="language-plaintext highlighter-rouge">variables.tf</code> file defines the variables used throughout the project. It includes variables for the environment, subscription, resource group, deployments, allowed subnets, and model versions. Here’s a snippet of the <code class="language-plaintext highlighter-rouge">variables.tf</code> file:</p>
+
+<div class="language-hcl highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">variable</span> <span class="s2">"env"</span> <span class="p">{}</span>
+
+<span class="nx">variable</span> <span class="s2">"subscription"</span> <span class="p">{}</span>
+
+<span class="nx">variable</span> <span class="s2">"resource-group"</span> <span class="p">{}</span>
+
+<span class="nx">variable</span> <span class="s2">"deployments"</span> <span class="p">{</span>
+  <span class="nx">type</span> <span class="p">=</span> <span class="nx">map</span><span class="err">(</span><span class="nx">object</span><span class="err">(</span><span class="p">{</span>
+    <span class="nx">location</span> <span class="p">=</span> <span class="nx">string</span>
+    <span class="nx">models</span>  <span class="p">=</span> <span class="nx">list</span><span class="err">(</span><span class="nx">string</span><span class="err">)</span>
+  <span class="p">}</span><span class="err">))</span>
+<span class="p">}</span>
+
+<span class="nx">variable</span> <span class="s2">"allowed-subnets"</span> <span class="p">{</span>
+  <span class="nx">default</span> <span class="p">=</span> <span class="p">[]</span>
+  <span class="nx">type</span>    <span class="p">=</span> <span class="nx">list</span><span class="err">(</span><span class="nx">string</span><span class="err">)</span>
+<span class="p">}</span>
+
+<span class="nx">variable</span> <span class="s2">"model_versions"</span> <span class="p">{</span>
+  <span class="nx">default</span> <span class="p">=</span> <span class="p">{</span>
+    <span class="s2">"gpt-35-turbo"</span>     <span class="p">=</span> <span class="s2">"0301"</span>
+    <span class="s2">"code-davinci-002"</span> <span class="p">=</span> <span class="s2">"1"</span>
+    <span class="s2">"gpt-4"</span>            <span class="p">=</span> <span class="s2">"0314"</span>
+  <span class="p">}</span>
+  <span class="nx">type</span> <span class="p">=</span> <span class="nx">map</span><span class="err">(</span><span class="nx">string</span><span class="err">)</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>In the <code class="language-plaintext highlighter-rouge">variables.tf</code> file, the variables are defined using the following format:</p>
+
+<div class="language-hcl highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">variable</span> <span class="s2">"&lt;variable_name&gt;"</span> <span class="p">{</span>
+  <span class="nx">type</span>        <span class="p">=</span> <span class="err">&lt;</span><span class="nx">variable_type</span><span class="err">&gt;</span>
+  <span class="nx">default</span>     <span class="p">=</span> <span class="err">&lt;</span><span class="nx">default_value</span><span class="err">&gt;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">&lt;variable_name&gt;</code>: This is the name of the variable you define. It should be unique within the file.</li>
+  <li><code class="language-plaintext highlighter-rouge">&lt;variable_type&gt;</code> (optional): It specifies the type of the variable, such as string, number, list, or map. If not specified, the variable type will be inferred based on the assigned value or the default value.</li>
+  <li><code class="language-plaintext highlighter-rouge">&lt;default_value&gt;</code> (optional): It represents the default value assigned to the variable if no other value is provided. If not specified, the variable is considered as required and must be provided during execution.</li>
+</ul>
+
+<p><strong class="important-statement">If a variable does not have a default value defined, it means it is mandatory and must be passed to the Terraform command either directly on the command line or through a <code class="language-plaintext highlighter-rouge">.tfvars</code> file.</strong></p>
+
+<h3 id="devtfvars"><a href="https://github.com/smurphin/azure-openai-terraform/blob/main/environments/development/dev.tfvars" target="_blank">dev.tfvars</a></h3>
+
+<p>The <code class="language-plaintext highlighter-rouge">dev.tfvars</code> file is a Terraform variable file tailored for the specific environment. It contains the values assigned to variables used in the Terraform configuration to customize and configure the infrastructure deployment for that environment.</p>
+
+<p>This file is written in plain text and follows the Terraform variable syntax. It allows you to specify values for variables defined in your Terraform configuration without modifying the actual code. By separating variable values into an external file, you can easily manage different environments and reuse the same Terraform codebase with different configurations.</p>
+
+<p>Here’s a snippet of the <code class="language-plaintext highlighter-rouge">dev.tfvars</code> file:</p>
+
+<div class="language-hcl highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">env</span> <span class="err">=</span> <span class="s2">"dev"</span>
+
+<span class="nx">subscription</span> <span class="err">=</span> <span class="s2">"xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxx"</span>
+
+<span class="nx">resource</span><span class="err">-</span><span class="nx">group</span> <span class="err">=</span> <span class="s2">"DEV-GPT"</span>
+
+<span class="nx">deployments</span> <span class="err">=</span> <span class="p">{</span>
+  <span class="s2">"dev-gpt-EU-a"</span> <span class="p">=</span> <span class="p">{</span>
+    <span class="nx">location</span> <span class="p">=</span> <span class="s2">"westeurope"</span>
+    <span class="nx">models</span>  <span class="p">=</span> <span class="p">[</span><span class="s2">"gpt-35-turbo"</span><span class="p">,</span> <span class="s2">"code-davinci-002"</span><span class="p">]</span>
+  <span class="p">}</span><span class="err">,</span>
+
+  <span class="s2">"dev-gpt-US-a"</span> <span class="p">=</span> <span class="p">{</span>
+    <span class="nx">location</span> <span class="p">=</span> <span class="s2">"eastus"</span>
+    <span class="nx">models</span>  <span class="p">=</span> <span class="p">[</span><span class="s2">"gpt-35-turbo"</span><span class="p">,</span> <span class="s2">"gpt-4"</span><span class="p">]</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="nx">allowed</span><span class="err">-</span><span class="nx">subnets</span> <span class="err">=</span> <span class="p">[</span>
+  <span class="s2">"189.31.106.126"</span><span class="p">,</span>
+<span class="p">]</span>
+</code></pre></div></div>
+
+<p>This is where the environment specific values for the variables defined in <code class="language-plaintext highlighter-rouge">variables.tf</code> are set, allowing us to use the same code for different environments.</p>
+
+<p>To use the <code class="language-plaintext highlighter-rouge">dev.tfvars</code> file, you can pass it to the Terraform command line using the <code class="language-plaintext highlighter-rouge">-var-file</code> option. 
+For example:</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+terraform apply <span class="nt">-var-file</span><span class="o">=</span>dev.tfvars
+
+</code></pre></div></div>
+
+<h3 id="localstf"><a href="https://github.com/smurphin/azure-openai-terraform/blob/main/locals.tf" target="_blank">locals.tf</a></h3>
+
+<p>The <code class="language-plaintext highlighter-rouge">locals.tf</code> file plays a crucial role in generating the cognitive deployments dynamically. It allows you to define local values and logic that can be used within your Terraform configuration. Let’s dive into a detailed explanation of the <code class="language-plaintext highlighter-rouge">locals.tf</code> file.</p>
+
+<div class="language-hcl highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">locals</span> <span class="p">{</span>
+  <span class="nx">cognitive_deployments</span> <span class="p">=</span> <span class="nx">flatten</span><span class="err">(</span><span class="p">[</span>
+    <span class="nx">for</span> <span class="nx">deployment</span><span class="p">,</span> <span class="nx">values</span> <span class="nx">in</span> <span class="nx">var</span><span class="err">.</span><span class="nx">deployments</span> <span class="err">:</span> <span class="p">[</span>
+      <span class="nx">for</span> <span class="nx">model</span> <span class="nx">in</span> <span class="nx">values</span><span class="err">.</span><span class="nx">models</span> <span class="err">:</span> <span class="p">{</span>
+        <span class="nx">deployment_name</span>        <span class="p">=</span> <span class="nx">deployment</span>
+        <span class="nx">cognitive_account_id</span>  <span class="p">=</span> <span class="nx">azurerm_cognitive_account</span><span class="err">.</span><span class="nx">gpt</span><span class="err">-</span><span class="nx">act</span><span class="p">[</span><span class="nx">deployment</span><span class="p">]</span><span class="err">.</span><span class="nx">id</span>
+        <span class="nx">model_name</span>            <span class="p">=</span> <span class="nx">model</span>
+        <span class="nx">version</span>               <span class="p">=</span> <span class="nx">var</span><span class="err">.</span><span class="nx">model_versions</span><span class="p">[</span><span class="nx">model</span><span class="p">]</span>
+      <span class="p">}</span>
+    <span class="p">]</span>
+  <span class="p">]</span><span class="err">)</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>The <code class="language-plaintext highlighter-rouge">cognitive_deployments</code> local value is defined as a flattened list generated using a nested for loop. This loop iterates over each deployment specified in the <code class="language-plaintext highlighter-rouge">var.deployments</code> variable, which contains the deployment configurations for each instance.</p>
+
+<p>For each deployment, another nested for loop is used to iterate over the models specified in the <code class="language-plaintext highlighter-rouge">values.models</code> list. This loop generates a map for each model within the deployment.</p>
+
+<p>Within each map, the following values are assigned:</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">deployment_name</code>: The name of the deployment, which is set as the current deployment being iterated.</li>
+  <li><code class="language-plaintext highlighter-rouge">cognitive_account_id</code>: The Azure Cognitive Account ID, which is fetched using the <code class="language-plaintext highlighter-rouge">azurerm_cognitive_account.gpt-act[deployment].id</code> expression.</li>
+  <li>This retrieves the ID of the corresponding cognitive account based on the deployment name.</li>
+  <li><code class="language-plaintext highlighter-rouge">model_name</code>: The name of the model, which is set as the current model being iterated.</li>
+  <li><code class="language-plaintext highlighter-rouge">version</code>: The version of the model, which is fetched from the <code class="language-plaintext highlighter-rouge">var.model_versions</code> variable using the <code class="language-plaintext highlighter-rouge">var.model_versions[model]</code> expression.</li>
+  <li>This retrieves the version based on the model name.</li>
+</ul>
+
+<p>The <code class="language-plaintext highlighter-rouge">cognitive_deployments</code> local value is generated as a flattened list, combining all the maps generated for each deployment and model</p>
+
+<p>This results in a list of maps, where each map represents a specific cognitive deployment.</p>
+
+<p>You can use the <code class="language-plaintext highlighter-rouge">cognitive_deployments</code> local value in other parts of your Terraform configuration to reference the dynamically generated deployment configurations.</p>
+
+<h2 id="resource-grouptf"><a href="https://github.com/smurphin/azure-openai-terraform/blob/main/resource-group.tf" target="_blank">resource-group.tf</a></h2>
+
+<p>The <code class="language-plaintext highlighter-rouge">resource-group.tf</code> file contains the definition of the Azure Resource Group resource using the <code class="language-plaintext highlighter-rouge">azurerm_resource_group</code> Terraform provider. This serves as a logical container for the related resources. It ensures that all the cognitive accounts and deployments associated with the project are organized and managed within the specified resource group, providing better resource management, access control, and overall organization of resources in the Azure environment.</p>
+
+<div class="language-hcl highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">resource</span> <span class="s2">"azurerm_resource_group"</span> <span class="s2">"gpt-rg"</span> <span class="p">{</span>
+    <span class="nx">location</span> <span class="p">=</span> <span class="s2">"westeurope"</span> <span class="c1">#Note: cognitive accounts can be deployed in different regions</span>
+    <span class="c1">#this is just where the resource group exists</span>
+    <span class="nx">name</span>     <span class="p">=</span> <span class="s2">"${var.env}-GPT"</span>
+    <span class="nx">tags</span>     <span class="p">=</span> <span class="p">{}</span>
+
+    <span class="nx">timeouts</span> <span class="p">{}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Explanation of the resource block:</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">azurerm_resource_group</code>: Specifies the Azure Resource Group resource type using the <code class="language-plaintext highlighter-rouge">azurerm_resource_group</code> provider.</li>
+  <li><code class="language-plaintext highlighter-rouge">"gpt-rg"</code>: Sets the resource name for referencing purposes within the Terraform configuration.</li>
+  <li><code class="language-plaintext highlighter-rouge">location = "westeurope"</code>: Specifies the Azure region where the resource group will be created.</li>
+  <li><code class="language-plaintext highlighter-rouge">name = "${var.env}-GPT"</code>: Sets the name of the resource group. The name is constructed using the value of the <code class="language-plaintext highlighter-rouge">var.env</code> variable, and then the <code class="language-plaintext highlighter-rouge">"GPT"</code> suffix.
+    <ul>
+      <li>This allows for dynamic naming based on the environment specified in the variables.</li>
+    </ul>
+  </li>
+  <li><code class="language-plaintext highlighter-rouge">tags = {}</code>: Specifies any tags that should be associated with the resource group. In this case, an empty set of tags is provided, but you can customize it as per your requirements.</li>
+  <li><code class="language-plaintext highlighter-rouge">timeouts {}</code>: Specifies the timeout configuration for resource operations. In this case, the default timeout values are used.</li>
+</ul>
+
+<h2 id="gpt-deploymenttf"><a href="https://github.com/smurphin/azure-openai-terraform/blob/main/gpt-deployment.tf" target="_blank">gpt-deployment.tf</a></h2>
+
+<p>The core deployment resources are defined in the <code class="language-plaintext highlighter-rouge">gpt-deployment.tf</code> file. This file includes the <code class="language-plaintext highlighter-rouge">azurerm_cognitive_account</code> and <code class="language-plaintext highlighter-rouge">azurerm_cognitive_deployment</code> resource blocks. Here’s a snippet of the <code class="language-plaintext highlighter-rouge">gpt-deployment.tf</code> file:</p>
+
+<div class="language-hcl highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">resource</span> <span class="s2">"azurerm_cognitive_account"</span> <span class="s2">"gpt-act"</span> <span class="p">{</span>
+    <span class="nx">for_each</span> <span class="p">=</span> <span class="nx">var</span><span class="err">.</span><span class="nx">deployments</span>
+    <span class="nx">custom_subdomain_name</span>              <span class="p">=</span> <span class="nx">each</span><span class="err">.</span><span class="nx">key</span>
+    <span class="nx">dynamic_throttling_enabled</span>         <span class="p">=</span> <span class="kc">false</span>
+    <span class="nx">kind</span>                               <span class="p">=</span> <span class="s2">"OpenAI"</span>
+    <span class="nx">local_auth_enabled</span>                 <span class="p">=</span> <span class="kc">true</span>
+    <span class="nx">location</span>                           <span class="p">=</span> <span class="nx">each</span><span class="err">.</span><span class="nx">value</span><span class="err">.</span><span class="nx">location</span>
+    <span class="nx">name</span>                               <span class="p">=</span> <span class="nx">each</span><span class="err">.</span><span class="nx">key</span>
+    <span class="nx">outbound_network_access_restricted</span> <span class="p">=</span> <span class="kc">false</span>
+    <span class="nx">public_network_access_enabled</span>      <span class="p">=</span> <span class="kc">true</span>
+    <span class="nx">resource_group_name</span>                <span class="p">=</span> <span class="nx">azurerm_resource_group</span><span class="err">.</span><span class="nx">gpt</span><span class="err">-</span><span class="nx">rg</span><span class="err">.</span><span class="nx">name</span>
+    <span class="nx">sku_name</span>                           <span class="p">=</span> <span class="s2">"S0"</span>
+    <span class="nx">tags</span>                               <span class="p">=</span> <span class="p">{}</span>
+
+    <span class="nx">network_acls</span> <span class="p">{</span>
+        <span class="nx">default_action</span> <span class="p">=</span> <span class="s2">"Deny"</span>
+        <span class="nx">ip_rules</span>       <span class="p">=</span> <span class="nx">var</span><span class="err">.</span><span class="nx">allowed</span><span class="err">-</span><span class="nx">subnets</span>
+    <span class="p">}</span>
+
+    <span class="nx">timeouts</span> <span class="p">{}</span>
+
+<span class="p">}</span>
+
+<span class="nx">resource</span> <span class="s2">"azurerm_cognitive_deployment"</span> <span class="s2">"gpt-deployment"</span> <span class="p">{</span>
+  <span class="nx">for_each</span> <span class="p">=</span> <span class="p">{</span> <span class="nx">for</span> <span class="nx">idx</span><span class="err">,</span> <span class="nx">dep</span> <span class="nx">in</span> <span class="nx">local</span><span class="err">.</span><span class="nx">cognitive_deployments</span> <span class="err">:</span> <span class="nx">idx</span> <span class="p">=</span><span class="err">&gt;</span> <span class="nx">dep</span> <span class="p">}</span>
+
+  <span class="nx">cognitive_account_id</span> <span class="p">=</span> <span class="nx">each</span><span class="err">.</span><span class="nx">value</span><span class="err">.</span><span class="nx">cognitive_account_id</span>
+  <span class="nx">name</span>                 <span class="p">=</span> <span class="nx">each</span><span class="err">.</span><span class="nx">value</span><span class="err">.</span><span class="nx">model_name</span>
+
+  <span class="nx">model</span> <span class="p">{</span>
+    <span class="nx">format</span>  <span class="p">=</span> <span class="s2">"OpenAI"</span>
+    <span class="nx">name</span>    <span class="p">=</span> <span class="nx">each</span><span class="err">.</span><span class="nx">value</span><span class="err">.</span><span class="nx">model_name</span>
+    <span class="nx">version</span> <span class="p">=</span> <span class="nx">each</span><span class="err">.</span><span class="nx">value</span><span class="err">.</span><span class="nx">version</span>
+  <span class="p">}</span>
+
+  <span class="nx">scale</span> <span class="p">{</span>
+    <span class="nx">type</span> <span class="p">=</span> <span class="s2">"Standard"</span>
+  <span class="p">}</span>
+
+  <span class="nx">timeouts</span> <span class="p">{}</span>
+<span class="p">}</span>
+
+</code></pre></div></div>
+
+<h3 id="azurerm_cognitive_account-resource-block"><a href="https://github.com/smurphin/azure-openai-terraform/blob/7c41318e3b761a6c2dca9f5decdc18742a021ff3/gpt-deployment.tf#L1" target="_blank">azurerm_cognitive_account Resource Block</a></h3>
+
+<p>The <code class="language-plaintext highlighter-rouge">azurerm_cognitive_account</code> resource block provisions a cognitive account in Azure for the GPT project. It uses the <code class="language-plaintext highlighter-rouge">for_each</code> meta-argument to iterate over the <code class="language-plaintext highlighter-rouge">var.deployments</code> variable, which contains a map of deployment configurations for different regions or environments.</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">for_each</code>: Iterates over the <code class="language-plaintext highlighter-rouge">var.deployments</code> map to create a cognitive account for each deployment.</li>
+  <li><code class="language-plaintext highlighter-rouge">custom_subdomain_name</code>: Specifies the custom subdomain name for the cognitive account.
+    <ul>
+      <li>i.e <code class="language-plaintext highlighter-rouge">dev-gpt-EU-a</code>.</li>
+    </ul>
+  </li>
+  <li><code class="language-plaintext highlighter-rouge">dynamic_throttling_enabled</code>: Determines if dynamic throttling is enabled for the cognitive account.</li>
+  <li><code class="language-plaintext highlighter-rouge">kind</code>: Specifies the kind of cognitive service, which is set to “OpenAI” in this case.</li>
+  <li><code class="language-plaintext highlighter-rouge">local_auth_enabled</code>: Indicates whether local authentication is enabled.</li>
+  <li><code class="language-plaintext highlighter-rouge">location</code>: Specifies the location for the cognitive account, obtained from <code class="language-plaintext highlighter-rouge">each.value.location</code>.
+    <ul>
+      <li>i.e <code class="language-plaintext highlighter-rouge">westeurope</code>.</li>
+    </ul>
+  </li>
+  <li><code class="language-plaintext highlighter-rouge">name</code>: Sets the name of the cognitive account to <code class="language-plaintext highlighter-rouge">each.key</code>, which corresponds to the deployment name.
+    <ul>
+      <li>i.e <code class="language-plaintext highlighter-rouge">dev-gpt-EU-a</code>.</li>
+    </ul>
+  </li>
+  <li><code class="language-plaintext highlighter-rouge">outbound_network_access_restricted</code>: Specifies if outbound network access is restricted for the cognitive account.</li>
+  <li><code class="language-plaintext highlighter-rouge">public_network_access_enabled</code>: Determines if public network access is enabled for the cognitive account.</li>
+  <li><code class="language-plaintext highlighter-rouge">resource_group_name</code>: Specifies the name of the resource group where the cognitive account is created.
+    <ul>
+      <li>i.e <code class="language-plaintext highlighter-rouge">DEV-GPT</code>.</li>
+    </ul>
+  </li>
+  <li><code class="language-plaintext highlighter-rouge">sku_name</code>: Sets the SKU (service level) for the cognitive account to “S0”.</li>
+  <li><code class="language-plaintext highlighter-rouge">tags</code>: Specifies any tags to be associated with the cognitive account.</li>
+  <li><code class="language-plaintext highlighter-rouge">network_acls</code>: Defines the network access control rules for the cognitive account, including the default action and IP rules.</li>
+  <li><code class="language-plaintext highlighter-rouge">timeouts</code>: Configures timeouts for creating or updating the cognitive account.</li>
+</ul>
+
+<h3 id="azurerm_cognitive_deployment-resource-block"><a href="https://github.com/smurphin/azure-openai-terraform/blob/7c41318e3b761a6c2dca9f5decdc18742a021ff3/gpt-deployment.tf#L24" target="_blank">azurerm_cognitive_deployment Resource Block</a></h3>
+
+<p>The <code class="language-plaintext highlighter-rouge">azurerm_cognitive_deployment</code> resource block defines the deployment of cognitive models within the cognitive account. It uses the <code class="language-plaintext highlighter-rouge">for_each</code> meta-argument to iterate over the <code class="language-plaintext highlighter-rouge">local.cognitive_deployments</code> list, which contains the flattened list of deployment configurations.</p>
+
+<p>given the variables defined above in <code class="language-plaintext highlighter-rouge">variables.tf</code> and <code class="language-plaintext highlighter-rouge">dev.tfvars</code> we would end up with a flattened list like so</p>
+
+<div class="language-hcl highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">locals</span> <span class="p">{</span>
+  <span class="nx">cognitive_deployments</span> <span class="p">=</span> <span class="p">[</span>
+    <span class="p">{</span>
+      <span class="nx">deployment_name</span>       <span class="p">=</span> <span class="s2">"dev-gpt-EU-a"</span>
+      <span class="nx">cognitive_account_id</span>  <span class="p">=</span> <span class="s2">"&lt;cognitive-account-id&gt;"</span>
+      <span class="nx">model_name</span>            <span class="p">=</span> <span class="s2">"gpt-35-turbo"</span>
+      <span class="nx">version</span>               <span class="p">=</span> <span class="s2">"0301"</span>
+    <span class="p">},</span>
+    <span class="p">{</span>
+      <span class="nx">deployment_name</span>       <span class="p">=</span> <span class="s2">"dev-gpt-EU-a"</span>
+      <span class="nx">cognitive_account_id</span>  <span class="p">=</span> <span class="s2">"&lt;cognitive-account-id&gt;"</span>
+      <span class="nx">model_name</span>            <span class="p">=</span> <span class="s2">"code-davinci-002"</span>
+      <span class="nx">version</span>               <span class="p">=</span> <span class="s2">"1"</span>
+    <span class="p">},</span>
+    <span class="p">{</span>
+      <span class="nx">deployment_name</span>       <span class="p">=</span> <span class="s2">"dev-gpt-US-a"</span>
+      <span class="nx">cognitive_account_id</span>  <span class="p">=</span> <span class="s2">"&lt;cognitive-account-id&gt;"</span>
+      <span class="nx">model_name</span>            <span class="p">=</span> <span class="s2">"gpt-35-turbo"</span>
+      <span class="nx">version</span>               <span class="p">=</span> <span class="s2">"0301"</span>
+    <span class="p">},</span>
+    <span class="p">{</span>
+      <span class="nx">deployment_name</span>       <span class="p">=</span> <span class="s2">"dev-gpt-US-a"</span>
+      <span class="nx">cognitive_account_id</span>  <span class="p">=</span> <span class="s2">"&lt;cognitive-account-id&gt;"</span>
+      <span class="nx">model_name</span>            <span class="p">=</span> <span class="s2">"gpt-4"</span>
+      <span class="nx">version</span>               <span class="p">=</span> <span class="s2">"0314"</span>
+    <span class="p">}</span>
+  <span class="p">]</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p><strong class="important-statement">i.e two deployments, each with specific model deployments relative to their region.</strong></p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">for_each</code>: Iterates over the <code class="language-plaintext highlighter-rouge">local.cognitive_deployments</code> list to create a cognitive deployment for each model within each deployment.</li>
+  <li><code class="language-plaintext highlighter-rouge">cognitive_account_id</code>: Specifies the ID of the cognitive account associated with the deployment, obtained from <code class="language-plaintext highlighter-rouge">each.value.cognitive_account_id</code>. This is dynamicaly assigned when the <code class="language-plaintext highlighter-rouge">azurerm_cognitive_account</code> resource block is deployed.</li>
+  <li><code class="language-plaintext highlighter-rouge">name</code>: Sets the name of the cognitive deployment to <code class="language-plaintext highlighter-rouge">each.value.model_name</code>, which corresponds to the model.</li>
+  <li><code class="language-plaintext highlighter-rouge">model</code>: Defines the cognitive model to be deployed, including its format, name, and version. The format is set to “OpenAI”, and the name and version are obtained from
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">each.value.model_name</code> and <code class="language-plaintext highlighter-rouge">each.value.version</code>, respectively.</li>
+    </ul>
+  </li>
+  <li><code class="language-plaintext highlighter-rouge">scale</code>: Specifies the scale type for the deployment, which is set to “Standard” in this case.</li>
+  <li><code class="language-plaintext highlighter-rouge">timeouts</code>: Configures timeouts for creating or updating the cognitive deployment.</li>
+</ul>
+
+<h2 id="conclusion"><a href="#conclusion">Conclusion</a></h2>
+
+<p>By using nested loops and locals, we achieved several benefits. First, we eliminated the need for repetitive resource blocks and reduced code duplication. Second, we improved maintainability by centralizing the deployment logic and reducing the chances of human error. Finally, our solution significantly reduced deployment time, allowing us to scale efficiently.</p>
+
+<p>Using Terraform now allows me to deploy multiple Cognitive accounts in different regions, with different model deployments per account in just a matter of minutes, something that took well over an hour via the GUI.</p>
+
+<p>In conclusion, leveraging Terraform’s nested loops with locals provided a powerful and efficient solution for deploying multiple Azure OpenAI instances with multiple models. By automating the deployment process, we saved time, reduced errors, and improved maintainability. Now, we can focus on exploring the potential of Azure OpenAI without being weighed down by manual setup.</p>
+
+<p>Happy Terraforming!</p>
+
+<h2 id="reference-code-repository"><a href="https://github.com/smurphin/azure-openai-terraform">Reference code repository</a></h2>
+
+<p>All the code referenced above can be found <a href="https://github.com/smurphin/azure-openai-terraform">here</a></p>
+
+
+
+  <small>tags: <em>Azure</em> - <em>Open AI</em> - <em>AI</em> - <em>IaC</em> - <em>Infrastructure</em> - <em>Terraform</em></small>
+
+
+<script src="https://utteranc.es/client.js"
+        repo="smurphin/smurphin.github.io"
+        issue-term="pathname"
+        theme="github-dark"
+        crossorigin="anonymous"
+        async>
+</script>
+        </section>
+      </div>   
+    </div>
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        var codeBlocks = document.querySelectorAll('pre code');
+    
+        codeBlocks.forEach(function(codeBlock) {
+          var parentElement = codeBlock.parentNode;
+    
+          var button = document.createElement('button');
+          button.className = 'btn-copy';
+          button.innerHTML = '<i class="far fa-clipboard"></i> Copy';
+          button.addEventListener('click', function() {
+            var codeText = codeBlock.innerText;
+    
+            navigator.clipboard.writeText(codeText).then(function() {
+              button.innerHTML = '<i class="fas fa-check"></i> Copied';
+    
+              setTimeout(function() {
+                button.innerHTML = '<i class="far fa-clipboard"></i> Copy';
+              }, 2000);
+            }).catch(function(error) {
+              console.error('Copy failed:', error);
+            });
+          });
+    
+          parentElement.insertBefore(button, codeBlock);
+        });
+      });
+    </script>
+    <script>
+      document.addEventListener('DOMContentLoaded', (event) => {
+        let categories = document.querySelectorAll('.category-item');
+      
+        categories.forEach((category) => {
+          category.addEventListener('click', (event) => {
+            let posts = category.querySelector('.category-posts');
+            if (posts.style.display === "none") {
+              posts.style.display = "block";
+            } else {
+              posts.style.display = "none";
+            }
+          });
+        });
+      });
+      </script>     
+  </body>
+</html>

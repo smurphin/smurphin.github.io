@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-42GGHBDXW6"></script>
+    <script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-42GGHBDXW6');
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.8/clipboard.min.js"></script>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="keywords" content="automation, AI, productivity, technology radar, cloud infrastructure, emerging technologies, IT industry, IaC, Infrastructure as code, Network as code, Network engineering, Infrastructure engineering, Ansible, Python, Cybersecurity, Infosec, IT, Github, git">
+    <meta name="description" content="Welcome to my blog where I share my knowledge and experience on automation, AI, and their practical applications in improving productivity. Stay up-to-date with the latest technology trends, cloud infrastructure, emerging technologies, and insights from the IT industry. Topics include Infrastructure as Code (IaC), Network as Code, Network engineering, Infrastructure engineering, Ansible, Python, Cybersecurity, Infosec, IT, Github, and git."> 
+    <link rel="icon" href="/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="/assets/css/style.css?v=b74dcab777cd122bc989dbb1c76124a6ddb5970a">
+    <link rel="stylesheet" href="/assets/css/custom.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <!-- start custom head snippets, customize with your own _includes/head-custom.html file -->
+
+<!-- Setup theme-color -->
+<!-- start theme color meta headers -->
+<meta name="theme-color" content="#151515">
+<meta name="msapplication-navbutton-color" content="#151515">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<!-- end theme color meta headers -->
+
+
+<!-- Setup Google Analytics -->
+
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    ga('create', 'G-42GGHBDXW6', 'auto');
+    ga('send', 'pageview');
+  </script>
+
+
+
+<!-- You can set your favicon here -->
+<!-- link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" -->
+
+<!-- end custom head snippets -->
+
+
+<!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Configure Terraform to use an S3 backend | Darren Murphy</title>
+<meta name="generator" content="Jekyll v3.9.3" />
+<meta property="og:title" content="Configure Terraform to use an S3 backend" />
+<meta name="author" content="Darren Murphy" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Using S3 to store the Terraform state file allows multiple people in a team to work on the same Infra without risking the state file getting out of sync, it’s also really easy to set up." />
+<meta property="og:description" content="Using S3 to store the Terraform state file allows multiple people in a team to work on the same Infra without risking the state file getting out of sync, it’s also really easy to set up." />
+<link rel="canonical" href="http://localhost:4000/terraform/aws/2023/04/17/Terraform-S3-backend.html" />
+<meta property="og:url" content="http://localhost:4000/terraform/aws/2023/04/17/Terraform-S3-backend.html" />
+<meta property="og:site_name" content="Darren Murphy" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2023-04-17T01:00:00+01:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Configure Terraform to use an S3 backend" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Darren Murphy"},"dateModified":"2023-04-17T01:00:00+01:00","datePublished":"2023-04-17T01:00:00+01:00","description":"Using S3 to store the Terraform state file allows multiple people in a team to work on the same Infra without risking the state file getting out of sync, it’s also really easy to set up.","headline":"Configure Terraform to use an S3 backend","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/terraform/aws/2023/04/17/Terraform-S3-backend.html"},"url":"http://localhost:4000/terraform/aws/2023/04/17/Terraform-S3-backend.html"}</script>
+<!-- End Jekyll SEO tag -->
+
+  </head>
+    
+  <body>
+    
+    <header>
+      <div class="container">
+        <a id="a-title" href="/">
+          <h1>Darren Murphy</h1>
+        </a>
+        <img src="/assets/images/skull_hacker1.png" class="header-logo" alt="Header Logo">
+        <h2>Full time network engineer, part time triathlete, technology lover.</h2>
+        
+        <section id="downloads">
+          
+          <a href="https://github.com/smurphin/smurphin.github.io" class="btn btn-github"><span class="icon"></span>View on GitHub</a>
+        </section>
+        <nav>
+    
+      <a href="/" >Home</a>
+    
+      <a href="/blog.html" >Blog</a>
+    
+      <a href="/cv.html" >CV</a>
+    
+  </nav>
+      </div>    
+    </header>
+
+    <div class="container home-container">
+      <div id="main-area">
+        <section id="main_content">
+          <small>17 April 2023</small>
+<h1>Configure Terraform to use an S3 backend</h1>
+
+<p class="view">by Darren Murphy</p>
+
+<p>Using S3 to store the Terraform state file allows multiple people in a team to work on the same Infra without risking the state file getting out of sync, it’s also really easy to set up.</p>
+
+<!-- toc -->
+
+<ul>
+  <li><a href="#how-to-configure">How to configure</a></li>
+  <li><a href="#how-to-migrate-an-existing-local-state-file-to-s3">How to migrate an existing local state file to S3</a></li>
+  <li><a href="#how-to-switch-between-state-files-for-different-environments">How to switch between state files for different environments</a></li>
+</ul>
+
+<!-- tocstop -->
+
+<p>For the purpose of this post I’ll just be running Terraform from my local machine and setting AWS credentials for my session, check out <a href="/terraform/aws/2023/06/01/Get-setup-to-use-terraform-with-aws.html">this</a> post for more details on how I set that up.</p>
+
+<h2 id="how-to-configure">How to configure</h2>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="nb">export </span><span class="nv">AWS_ACCESS_KEY_ID</span><span class="o">=</span>your_access_key_here
+ <span class="nb">export </span><span class="nv">AWS_SECRET_ACCESS_KEY</span><span class="o">=</span>your_secret_key_here
+
+</code></pre></div></div>
+<p>Note: Adding a space in front of the EXPORT statement keeps the command out of your Bash history</p>
+
+<p>Now that you’ve authenticated to AWS, you need to tell Terraform to use a remote S3 backend.  Edit your <code class="language-plaintext highlighter-rouge">main.tf</code> file as shown:</p>
+
+<div class="language-hcl highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">terraform</span> <span class="p">{</span>
+<span class="c1"># configure the backend for remote state file storage</span>
+  <span class="nx">backend</span> <span class="s2">"s3"</span> <span class="p">{}</span>
+  
+  <span class="nx">required_providers</span> <span class="p">{</span>
+      <span class="nx">aws</span> <span class="p">=</span> <span class="p">{</span>
+        <span class="nx">source</span>  <span class="p">=</span> <span class="s2">"hashicorp/aws"</span>
+        <span class="nx">version</span> <span class="p">=</span> <span class="s2">"~&gt; 4.0"</span> <span class="c1">#dependant on what version you wish to use, check for latest version</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+</code></pre></div></div>
+<p>you will then need to configure an <code class="language-plaintext highlighter-rouge">env.tfbackend</code> file in your environment folder with the following details, similar to this <a href="https://github.com/smurphin/aws-terraform-networking/blob/main/environments/eu-west-1/dev.tfbackend" target="_blank">example</a></p>
+
+<div class="language-hcl highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">bucket</span> <span class="err">=</span> <span class="s2">"NameOfBucket"</span> <span class="c1">#Enter the name of the S3 bucket you will use</span>
+<span class="nx">key</span> <span class="err">=</span> <span class="s2">"NameOfStateFile"</span> <span class="c1">#Enter the name you would like to save the state file as</span>
+<span class="nx">region</span> <span class="err">=</span> <span class="s2">"REGION"</span> <span class="c1">#Enter the region where your bucket is</span>
+</code></pre></div></div>
+
+<p>keeping your backend config in the environment folder allows the same code to be used for different environments as detailed <a href="/terraform/2023/06/07/how-I-structure-my-terraform-projects.html">here</a></p>
+
+<p>Note: The S3 bucket must already exist in the AWS account and must have a globally unique name</p>
+
+<p>Now you’re ready to initialise Terraform and have it ready to store state in a central S3 bucket.</p>
+
+<div class="language-hcl highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">terraform</span> <span class="nx">init</span> <span class="err">-</span><span class="nx">backend</span><span class="err">-</span><span class="nx">config</span><span class="err">=</span><span class="nx">path_to_backend_file</span><span class="err">.</span><span class="nx">tfbackend</span>
+
+</code></pre></div></div>
+
+<p><img src="/assets/images/terraform_terminal_1.png" alt="Terminal output" /></p>
+
+<p>And that’s it, now when you make any changes to your Terraform config, the state will be synced to a central S3 bucket.</p>
+
+<h2 id="how-to-migrate-an-existing-local-state-file-to-s3">How to migrate an existing local state file to S3</h2>
+
+<p>What if you already have a state file on your local machine while you’ve been testing your code and now you need to store it locally for others to collaborate?</p>
+
+<p>This is where the <code class="language-plaintext highlighter-rouge">-migrate-state </code> option will help you out.</p>
+
+<p>Configure the backend statement as above, but this time and the <code class="language-plaintext highlighter-rouge">-migrate-state </code>option at the end of the init command.</p>
+
+<div class="language-hcl highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">terraform</span> <span class="nx">init</span> <span class="err">-</span><span class="nx">migrate</span><span class="err">-</span><span class="nx">state</span>
+
+</code></pre></div></div>
+
+<p>Terraform will detect the backend change and you’ll receive a prompt about migrating the state file to the S3 bucket, enter yes when prompted and you’ll receive something like the below;</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Initializing the backend...
+Backend configuration changed!
+
+Terraform has detected that the configuration specified for the backend
+has changed. Terraform will now check for existing state in the backends.
+
+Terraform detected that the backend type changed from "remote" to "s3".
+Do you want to copy existing state to the new backend?
+  Pre-existing state was found while migrating the previous "remote" backend to the
+  newly configured "s3" backend. No existing state was found in the newly
+  configured "s3" backend. Do you want to copy this state to the new "s3"
+  backend? Enter "yes" to copy and "no" to start with an empty state.
+
+  Enter a value: yes
+
+Successfully configured the backend "s3"! Terraform will automatically
+use this backend unless the backend configuration changes.
+
+Terraform has been successfully initialized!
+
+You may now begin working with Terraform. Try running "terraform plan" to see
+any changes that are required for your infrastructure. All Terraform commands
+should now work.
+</code></pre></div></div>
+
+<h2 id="how-to-switch-between-state-files-for-different-environments">How to switch between state files for different environments</h2>
+
+<p>When working with multiple environments (like development, staging, and production), you’ll need to manage separate state files for each. Here’s how you can do that effectively.  Ensure you have a folder setup that supports different environments as detailed <a href="/terraform/2023/06/07/how-I-structure-my-terraform-projects.html">here</a></p>
+
+<p>Use the <code class="language-plaintext highlighter-rouge">-reconfigure</code> flag:</p>
+
+<ul>
+  <li>When switching between environments, use the terraform init -reconfigure -backend-config=<path_to_backend_file.tfbackend> command. This tells Terraform to reinitialize the backend with the new configuration without prompting for state migration. For example:</path_to_backend_file.tfbackend></li>
+</ul>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>terraform init <span class="nt">-backend-config</span><span class="o">=</span>path_to_backend_file.tfbackend <span class="nt">-reconfigure</span>
+
+</code></pre></div></div>
+
+<p>This will use the config in the <code class="language-plaintext highlighter-rouge">env.tfbackend</code> file to switch the state file, allowing you to reuse your code across multiple environments.</p>
+
+<p>I hope this is helpful! Please let me know if you have any feedback or questions. 😊</p>
+
+
+
+
+  <small>tags: <em>AWS</em> - <em>S3</em> - <em>IaC</em> - <em>Infrastructure</em> - <em>Terraform</em></small>
+
+
+<script src="https://utteranc.es/client.js"
+        repo="smurphin/smurphin.github.io"
+        issue-term="pathname"
+        theme="github-dark"
+        crossorigin="anonymous"
+        async>
+</script>
+        </section>
+      </div>   
+    </div>
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        var codeBlocks = document.querySelectorAll('pre code');
+    
+        codeBlocks.forEach(function(codeBlock) {
+          var parentElement = codeBlock.parentNode;
+    
+          var button = document.createElement('button');
+          button.className = 'btn-copy';
+          button.innerHTML = '<i class="far fa-clipboard"></i> Copy';
+          button.addEventListener('click', function() {
+            var codeText = codeBlock.innerText;
+    
+            navigator.clipboard.writeText(codeText).then(function() {
+              button.innerHTML = '<i class="fas fa-check"></i> Copied';
+    
+              setTimeout(function() {
+                button.innerHTML = '<i class="far fa-clipboard"></i> Copy';
+              }, 2000);
+            }).catch(function(error) {
+              console.error('Copy failed:', error);
+            });
+          });
+    
+          parentElement.insertBefore(button, codeBlock);
+        });
+      });
+    </script>
+    <script>
+      document.addEventListener('DOMContentLoaded', (event) => {
+        let categories = document.querySelectorAll('.category-item');
+      
+        categories.forEach((category) => {
+          category.addEventListener('click', (event) => {
+            let posts = category.querySelector('.category-posts');
+            if (posts.style.display === "none") {
+              posts.style.display = "block";
+            } else {
+              posts.style.display = "none";
+            }
+          });
+        });
+      });
+      </script>     
+  </body>
+</html>
