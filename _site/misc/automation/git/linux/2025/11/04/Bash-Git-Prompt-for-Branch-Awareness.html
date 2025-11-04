@@ -17,7 +17,7 @@
     <meta name="keywords" content="automation, AI, productivity, technology radar, cloud infrastructure, emerging technologies, IT industry, IaC, Infrastructure as code, Network as code, Network engineering, Infrastructure engineering, Ansible, Python, Cybersecurity, Infosec, IT, Github, git">
     <meta name="description" content="Welcome to my blog where I share my knowledge and experience on automation, AI, and their practical applications in improving productivity. Stay up-to-date with the latest technology trends, cloud infrastructure, emerging technologies, and insights from the IT industry. Topics include Infrastructure as Code (IaC), Network as Code, Network engineering, Infrastructure engineering, Ansible, Python, Cybersecurity, Infosec, IT, Github, and git."> 
     <link rel="icon" href="/favicon.ico" type="image/x-icon">
-    <link rel="stylesheet" href="/assets/css/style.css?v=b74dcab777cd122bc989dbb1c76124a6ddb5970a">
+    <link rel="stylesheet" href="/assets/css/style.css?v=ad90ab8fa0a6c1afa8ac7f29219146ac8351213e">
     <link rel="stylesheet" href="/assets/css/custom.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <!-- start custom head snippets, customize with your own _includes/head-custom.html file -->
@@ -184,6 +184,110 @@ parse_git_branch<span class="o">()</span> <span class="o">{</span>
 </code></pre></div></div>
 
 <p>Now, when you navigate into a Git-initialized directory, you’ll see the branch name clearly displayed in <strong>green</strong>, right before the command prompt!  If it’s not a Git directory your prompt will work just like before.</p>
+
+<h2 id="advanced-config-displaying-the-git-branch-state">Advanced Config: Displaying the Git Branch State</h2>
+
+<p>The simple prompt introduced earlier is great, but to truly reduce errors and boost productivity, we need the terminal to reflect the <strong>state</strong> of the Git repository—not just the branch name. This “advanced” configuration uses <strong>color coding</strong> to give you immediate visual feedback on whether you have uncommitted changes.</p>
+
+<p>This is a critical improvement for managing Infrastructure as Code (IaC) with tools like <strong>Terraform</strong>, ensuring you don’t accidentally commit half-finished changes.</p>
+
+<h3 id="visual-feedback-and-functionality">Visual Feedback and Functionality</h3>
+
+<p>The key benefit of this advanced setup is the immediate <strong>color-coded status</strong> of your active branch. You can tell your repo’s state at a glance:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Git Status</th>
+      <th>Colour</th>
+      <th>Meaning</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>Clean/Synced</strong></td>
+      <td><strong>Green</strong></td>
+      <td>The repository is clean. All changes are committed and pushed (or ready to be pushed). You are safe to switch branches or pull updates.</td>
+    </tr>
+    <tr>
+      <td><strong>Staged</strong></td>
+      <td><strong>Yellow</strong></td>
+      <td>Files have been <strong>staged</strong> (<code class="language-plaintext highlighter-rouge">git add</code>) but not yet committed (<code class="language-plaintext highlighter-rouge">git commit</code>). You are ready for a commit.</td>
+    </tr>
+    <tr>
+      <td><strong>Dirty/Uncommitted</strong></td>
+      <td><strong>Red</strong></td>
+      <td>You have <strong>unstaged changes</strong> (files modified or newly created). This is a strong visual warning to save, stage, or discard your work before proceeding.</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>This dynamic visual confirmation improves your workflow and drastically reduces the chance of making accidental commits, helping you maintain a clean and reliable codebase.</p>
+
+<h3 id="the-code-git-status-via-prompt_command">The Code: Git Status via <code class="language-plaintext highlighter-rouge">PROMPT_COMMAND</code></h3>
+
+<p>Replace the previous Git prompt code block in your <code class="language-plaintext highlighter-rouge">~/.bashrc</code> file with this more powerful configuration. It uses a dynamic function run via <code class="language-plaintext highlighter-rouge">PROMPT_COMMAND</code> to check the repository status before every prompt:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># --- Custom Git Prompt (Final Version) ---</span>
+
+<span class="c"># This function is called before each prompt</span>
+_build_my_prompt<span class="o">()</span> <span class="o">{</span>
+    <span class="c"># 1. Define colors (raw codes, without wrappers)</span>
+    <span class="nb">local </span><span class="nv">C_RESET</span><span class="o">=</span><span class="s1">'\033[00m'</span>
+    <span class="nb">local </span><span class="nv">C_USER</span><span class="o">=</span><span class="s1">'\033[00;36m'</span>     <span class="c"># Cyan</span>
+    <span class="nb">local </span><span class="nv">C_HOST</span><span class="o">=</span><span class="s1">'\033[00;36m'</span>     <span class="c"># Cyan</span>
+    <span class="nb">local </span><span class="nv">C_DIR</span><span class="o">=</span><span class="s1">'\033[01;36m'</span>      <span class="c"># Bold Cyan</span>
+    <span class="nb">local </span><span class="nv">C_GREEN</span><span class="o">=</span><span class="s1">'\033[00;32m'</span>    <span class="c"># Green</span>
+    <span class="nb">local </span><span class="nv">C_RED</span><span class="o">=</span><span class="s1">'\033[00;31m'</span>      <span class="c"># Red</span>
+    <span class="nb">local </span><span class="nv">C_YELLOW</span><span class="o">=</span><span class="s1">'\033[00;33m'</span>   <span class="c"># Yellow</span>
+
+    <span class="c"># 2. Build the main prompt part (user, host, dir)</span>
+    <span class="c">#    We add the \[...\] wrappers here</span>
+    <span class="nb">local </span><span class="nv">prompt_start</span><span class="o">=</span><span class="s2">"</span><span class="se">\[</span><span class="k">${</span><span class="nv">C_USER</span><span class="k">}</span><span class="se">\]\u\[</span><span class="k">${</span><span class="nv">C_HOST</span><span class="k">}</span><span class="se">\]</span><span class="s2">@</span><span class="se">\h\[</span><span class="k">${</span><span class="nv">C_RESET</span><span class="k">}</span><span class="se">\]</span><span class="s2">:</span><span class="se">\[</span><span class="k">${</span><span class="nv">C_DIR</span><span class="k">}</span><span class="se">\]\w\[</span><span class="k">${</span><span class="nv">C_RESET</span><span class="k">}</span><span class="se">\]</span><span class="s2">"</span>
+
+    <span class="c"># 3. Build the git part</span>
+    <span class="nb">local </span><span class="nv">git_info</span><span class="o">=</span><span class="s2">""</span>
+    <span class="nb">local </span><span class="nv">branch</span><span class="o">=</span><span class="si">$(</span>git branch <span class="nt">--show-current</span> 2&gt; /dev/null<span class="si">)</span>
+
+    <span class="k">if</span> <span class="o">[</span> <span class="nt">-n</span> <span class="s2">"</span><span class="nv">$branch</span><span class="s2">"</span> <span class="o">]</span><span class="p">;</span> <span class="k">then
+        </span><span class="nb">local </span><span class="nv">color</span><span class="o">=</span><span class="nv">$C_GREEN</span> <span class="c"># Default to green (in sync)</span>
+
+        <span class="c"># Check for uncommitted files (dirty)</span>
+        <span class="k">if</span> <span class="o">!</span> git diff-files <span class="nt">--quiet</span> 2&gt; /dev/null<span class="p">;</span> <span class="k">then
+            </span><span class="nv">color</span><span class="o">=</span><span class="nv">$C_RED</span>
+        <span class="c"># Check for staged files</span>
+        <span class="k">elif</span> <span class="o">!</span> git diff-index <span class="nt">--cached</span> <span class="nt">--quiet</span> HEAD 2&gt; /dev/null<span class="p">;</span> <span class="k">then
+            </span><span class="nv">color</span><span class="o">=</span><span class="nv">$C_YELLOW</span>
+        <span class="k">fi</span>
+
+        <span class="c"># Add wrappers *around* the color</span>
+        <span class="nv">git_info</span><span class="o">=</span><span class="s2">" (</span><span class="se">\[</span><span class="k">${</span><span class="nv">color</span><span class="k">}</span><span class="se">\]</span><span class="nv">$branch</span><span class="se">\[</span><span class="k">${</span><span class="nv">C_RESET</span><span class="k">}</span><span class="se">\]</span><span class="s2">)"</span>
+    <span class="k">fi</span>
+
+    <span class="c"># 4. Set the final PS1 string</span>
+    <span class="nv">PS1</span><span class="o">=</span><span class="s2">"</span><span class="k">${</span><span class="nv">prompt_start</span><span class="k">}${</span><span class="nv">git_info</span><span class="k">}</span><span class="s2"> </span><span class="se">\$</span><span class="s2"> "</span>
+<span class="o">}</span>
+
+<span class="c"># Tell Bash to run this function before each prompt</span>
+<span class="nb">export </span><span class="nv">PROMPT_COMMAND</span><span class="o">=</span><span class="s2">"_build_my_prompt"</span>
+
+<span class="c"># --- End Custom Git Prompt ---</span>
+</code></pre></div></div>
+
+<h3 id="save-and-reload">Save and Reload</h3>
+
+<p>Remember to save the changes to your <code class="language-plaintext highlighter-rouge">.bashrc</code> file:</p>
+
+<ul>
+  <li>Press <code class="language-plaintext highlighter-rouge">Ctrl+X</code> to exit the <code class="language-plaintext highlighter-rouge">nano</code> editor.</li>
+  <li>Press <code class="language-plaintext highlighter-rouge">Y</code> to confirm you want to save.</li>
+  <li>Press <code class="language-plaintext highlighter-rouge">Enter</code> to confirm the file name (<code class="language-plaintext highlighter-rouge">.bashrc</code>).</li>
+</ul>
+
+<p>Finally, reload your terminal configuration for the changes to take effect immediately:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">source</span> ~/.bashrc
+</code></pre></div></div>
 
 <h2 id="final-thoughts"><strong>Final Thoughts</strong></h2>
 

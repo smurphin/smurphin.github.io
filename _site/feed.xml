@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.3">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2025-11-04T11:47:03+00:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Darren Murphy</title><author><name>Darren Murphy</name></author><entry><title type="html">Simple Bash Git Prompt: Always Know Your Current Branch</title><link href="http://localhost:4000/misc/automation/git/linux/2025/11/04/Bash-Git-Prompt-for-Branch-Awareness.html" rel="alternate" type="text/html" title="Simple Bash Git Prompt: Always Know Your Current Branch" /><published>2025-11-04T00:00:00+00:00</published><updated>2025-11-04T00:00:00+00:00</updated><id>http://localhost:4000/misc/automation/git/linux/2025/11/04/Bash-Git-Prompt-for-Branch-Awareness</id><content type="html" xml:base="http://localhost:4000/misc/automation/git/linux/2025/11/04/Bash-Git-Prompt-for-Branch-Awareness.html">&lt;p&gt;This guide adds a minimal, colorful prompt to your Bash terminal in Ubuntu/WSL that shows the current Git branch.&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.3">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2025-11-04T13:41:36+00:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Darren Murphy</title><author><name>Darren Murphy</name></author><entry><title type="html">Simple Bash Git Prompt: Always Know Your Current Branch</title><link href="http://localhost:4000/misc/automation/git/linux/2025/11/04/Bash-Git-Prompt-for-Branch-Awareness.html" rel="alternate" type="text/html" title="Simple Bash Git Prompt: Always Know Your Current Branch" /><published>2025-11-04T00:00:00+00:00</published><updated>2025-11-04T00:00:00+00:00</updated><id>http://localhost:4000/misc/automation/git/linux/2025/11/04/Bash-Git-Prompt-for-Branch-Awareness</id><content type="html" xml:base="http://localhost:4000/misc/automation/git/linux/2025/11/04/Bash-Git-Prompt-for-Branch-Awareness.html">&lt;p&gt;This guide adds a minimal, colorful prompt to your Bash terminal in Ubuntu/WSL that shows the current Git branch.&lt;/p&gt;
 
 &lt;!-- toc --&gt;
 
@@ -78,6 +78,110 @@ parse_git_branch&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt; &lt;span class=&
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;Now, when you navigate into a Git-initialized directory, you’ll see the branch name clearly displayed in &lt;strong&gt;green&lt;/strong&gt;, right before the command prompt!  If it’s not a Git directory your prompt will work just like before.&lt;/p&gt;
+
+&lt;h2 id=&quot;advanced-config-displaying-the-git-branch-state&quot;&gt;Advanced Config: Displaying the Git Branch State&lt;/h2&gt;
+
+&lt;p&gt;The simple prompt introduced earlier is great, but to truly reduce errors and boost productivity, we need the terminal to reflect the &lt;strong&gt;state&lt;/strong&gt; of the Git repository—not just the branch name. This “advanced” configuration uses &lt;strong&gt;color coding&lt;/strong&gt; to give you immediate visual feedback on whether you have uncommitted changes.&lt;/p&gt;
+
+&lt;p&gt;This is a critical improvement for managing Infrastructure as Code (IaC) with tools like &lt;strong&gt;Terraform&lt;/strong&gt;, ensuring you don’t accidentally commit half-finished changes.&lt;/p&gt;
+
+&lt;h3 id=&quot;visual-feedback-and-functionality&quot;&gt;Visual Feedback and Functionality&lt;/h3&gt;
+
+&lt;p&gt;The key benefit of this advanced setup is the immediate &lt;strong&gt;color-coded status&lt;/strong&gt; of your active branch. You can tell your repo’s state at a glance:&lt;/p&gt;
+
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th&gt;Git Status&lt;/th&gt;
+      &lt;th&gt;Colour&lt;/th&gt;
+      &lt;th&gt;Meaning&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;strong&gt;Clean/Synced&lt;/strong&gt;&lt;/td&gt;
+      &lt;td&gt;&lt;strong&gt;Green&lt;/strong&gt;&lt;/td&gt;
+      &lt;td&gt;The repository is clean. All changes are committed and pushed (or ready to be pushed). You are safe to switch branches or pull updates.&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;strong&gt;Staged&lt;/strong&gt;&lt;/td&gt;
+      &lt;td&gt;&lt;strong&gt;Yellow&lt;/strong&gt;&lt;/td&gt;
+      &lt;td&gt;Files have been &lt;strong&gt;staged&lt;/strong&gt; (&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;git add&lt;/code&gt;) but not yet committed (&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;git commit&lt;/code&gt;). You are ready for a commit.&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;strong&gt;Dirty/Uncommitted&lt;/strong&gt;&lt;/td&gt;
+      &lt;td&gt;&lt;strong&gt;Red&lt;/strong&gt;&lt;/td&gt;
+      &lt;td&gt;You have &lt;strong&gt;unstaged changes&lt;/strong&gt; (files modified or newly created). This is a strong visual warning to save, stage, or discard your work before proceeding.&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;p&gt;This dynamic visual confirmation improves your workflow and drastically reduces the chance of making accidental commits, helping you maintain a clean and reliable codebase.&lt;/p&gt;
+
+&lt;h3 id=&quot;the-code-git-status-via-prompt_command&quot;&gt;The Code: Git Status via &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;PROMPT_COMMAND&lt;/code&gt;&lt;/h3&gt;
+
+&lt;p&gt;Replace the previous Git prompt code block in your &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;~/.bashrc&lt;/code&gt; file with this more powerful configuration. It uses a dynamic function run via &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;PROMPT_COMMAND&lt;/code&gt; to check the repository status before every prompt:&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;# --- Custom Git Prompt (Final Version) ---&lt;/span&gt;
+
+&lt;span class=&quot;c&quot;&gt;# This function is called before each prompt&lt;/span&gt;
+_build_my_prompt&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;c&quot;&gt;# 1. Define colors (raw codes, without wrappers)&lt;/span&gt;
+    &lt;span class=&quot;nb&quot;&gt;local &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;C_RESET&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&apos;\033[00m&apos;&lt;/span&gt;
+    &lt;span class=&quot;nb&quot;&gt;local &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;C_USER&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&apos;\033[00;36m&apos;&lt;/span&gt;     &lt;span class=&quot;c&quot;&gt;# Cyan&lt;/span&gt;
+    &lt;span class=&quot;nb&quot;&gt;local &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;C_HOST&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&apos;\033[00;36m&apos;&lt;/span&gt;     &lt;span class=&quot;c&quot;&gt;# Cyan&lt;/span&gt;
+    &lt;span class=&quot;nb&quot;&gt;local &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;C_DIR&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&apos;\033[01;36m&apos;&lt;/span&gt;      &lt;span class=&quot;c&quot;&gt;# Bold Cyan&lt;/span&gt;
+    &lt;span class=&quot;nb&quot;&gt;local &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;C_GREEN&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&apos;\033[00;32m&apos;&lt;/span&gt;    &lt;span class=&quot;c&quot;&gt;# Green&lt;/span&gt;
+    &lt;span class=&quot;nb&quot;&gt;local &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;C_RED&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&apos;\033[00;31m&apos;&lt;/span&gt;      &lt;span class=&quot;c&quot;&gt;# Red&lt;/span&gt;
+    &lt;span class=&quot;nb&quot;&gt;local &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;C_YELLOW&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&apos;\033[00;33m&apos;&lt;/span&gt;   &lt;span class=&quot;c&quot;&gt;# Yellow&lt;/span&gt;
+
+    &lt;span class=&quot;c&quot;&gt;# 2. Build the main prompt part (user, host, dir)&lt;/span&gt;
+    &lt;span class=&quot;c&quot;&gt;#    We add the \[...\] wrappers here&lt;/span&gt;
+    &lt;span class=&quot;nb&quot;&gt;local &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;prompt_start&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\[&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;C_USER&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\]\u\[&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;C_HOST&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\]&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;@&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\h\[&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;C_RESET&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\]&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\[&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;C_DIR&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\]\w\[&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;C_RESET&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\]&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;
+
+    &lt;span class=&quot;c&quot;&gt;# 3. Build the git part&lt;/span&gt;
+    &lt;span class=&quot;nb&quot;&gt;local &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;git_info&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&quot;&lt;/span&gt;
+    &lt;span class=&quot;nb&quot;&gt;local &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;branch&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;$(&lt;/span&gt;git branch &lt;span class=&quot;nt&quot;&gt;--show-current&lt;/span&gt; 2&amp;gt; /dev/null&lt;span class=&quot;si&quot;&gt;)&lt;/span&gt;
+
+    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-n&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$branch&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;then
+        &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;local &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;color&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$C_GREEN&lt;/span&gt; &lt;span class=&quot;c&quot;&gt;# Default to green (in sync)&lt;/span&gt;
+
+        &lt;span class=&quot;c&quot;&gt;# Check for uncommitted files (dirty)&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;!&lt;/span&gt; git diff-files &lt;span class=&quot;nt&quot;&gt;--quiet&lt;/span&gt; 2&amp;gt; /dev/null&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;then
+            &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;color&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$C_RED&lt;/span&gt;
+        &lt;span class=&quot;c&quot;&gt;# Check for staged files&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;elif&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;!&lt;/span&gt; git diff-index &lt;span class=&quot;nt&quot;&gt;--cached&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;--quiet&lt;/span&gt; HEAD 2&amp;gt; /dev/null&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;then
+            &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;color&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$C_YELLOW&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;fi&lt;/span&gt;
+
+        &lt;span class=&quot;c&quot;&gt;# Add wrappers *around* the color&lt;/span&gt;
+        &lt;span class=&quot;nv&quot;&gt;git_info&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot; (&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\[&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;color&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\]&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$branch&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\[&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;C_RESET&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\]&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;)&quot;&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;fi&lt;/span&gt;
+
+    &lt;span class=&quot;c&quot;&gt;# 4. Set the final PS1 string&lt;/span&gt;
+    &lt;span class=&quot;nv&quot;&gt;PS1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;prompt_start&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;git_info&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt; &lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\$&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt; &quot;&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;c&quot;&gt;# Tell Bash to run this function before each prompt&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;export &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;PROMPT_COMMAND&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;_build_my_prompt&quot;&lt;/span&gt;
+
+&lt;span class=&quot;c&quot;&gt;# --- End Custom Git Prompt ---&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;save-and-reload&quot;&gt;Save and Reload&lt;/h3&gt;
+
+&lt;p&gt;Remember to save the changes to your &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;.bashrc&lt;/code&gt; file:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Press &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Ctrl+X&lt;/code&gt; to exit the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;nano&lt;/code&gt; editor.&lt;/li&gt;
+  &lt;li&gt;Press &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Y&lt;/code&gt; to confirm you want to save.&lt;/li&gt;
+  &lt;li&gt;Press &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Enter&lt;/code&gt; to confirm the file name (&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;.bashrc&lt;/code&gt;).&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Finally, reload your terminal configuration for the changes to take effect immediately:&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;source&lt;/span&gt; ~/.bashrc
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;h2 id=&quot;final-thoughts&quot;&gt;&lt;strong&gt;Final Thoughts&lt;/strong&gt;&lt;/h2&gt;
 

@@ -21,6 +21,10 @@ header h1 {
   color: royalblue;
   text-shadow: none;
 }
+
+table th {
+    border-bottom: 1px dashed royalblue;
+}
  
 a {
     color: royalblue;
