@@ -1,5 +1,18 @@
 ---
-{}
+layout: post
+title: "Simple Bash Git Prompt: Always Know Your Current Branch"
+date: 2025-11-04T00:00:00.000Z
+categories: Misc Automation Git Linux
+short_title: Bash Git Prompt Setup
+tags:
+  - Misc
+  - bash
+  - git
+  - workflow
+  - productivity
+  - linux
+  - wsl
+  - automation
 ---
 This guide adds a minimal, colorful prompt to your Bash terminal in Ubuntu/WSL that shows the current Git branch.
 
