@@ -22,6 +22,11 @@ header h1 {
   text-shadow: none;
 }
 
+table {
+    border-collapse: collapse;
+    border-bottom: 1px dashed royalblue;
+}
+
 table th {
     border-bottom: 1px dashed royalblue;
 }
