@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Simple Bash Git Prompt: Always Know Your Current Branch"
+title: 'Simple Bash Git Prompt: Always Know Your Current Branch'
 date: 2025-11-04T00:00:00.000Z
 categories: Misc Automation Git Linux
 short_title: Bash Git Prompt Setup
@@ -23,6 +23,10 @@ This guide adds a minimal, colorful prompt to your Bash terminal in Ubuntu/WSL t
   * [1. Open your `.bashrc` file](#1-open-your-bashrc-file)
   * [2\. Paste the custom code](#2-paste-the-custom-code)
   * [3\. Save and Reload](#3-save-and-reload)
+- [Advanced Config: Displaying the Git Branch State](#advanced-config-displaying-the-git-branch-state)
+  * [Visual Feedback and Functionality](#visual-feedback-and-functionality)
+  * [The Code: Git Status via `PROMPT_COMMAND`](#the-code-git-status-via-prompt_command)
+  * [Save and Reload](#save-and-reload)
 - [**Final Thoughts**](#final-thoughts)
 
 <!-- tocstop -->
@@ -179,6 +183,7 @@ source ~/.bashrc
 It's the small, simple quality-of-life automations like this that truly compound to create a more efficient and less error-prone work environment.
 
 Happy automating\!
+
 
 
 
